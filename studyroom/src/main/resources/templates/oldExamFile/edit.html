@@ -1,0 +1,26 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layout}">
+    <head>
+        <title>[[#{oldExamFile.edit.headline}]]</title>
+    </head>
+    <body>
+        <div layout:fragment="content">
+            <div class="d-flex flex-wrap mb-4">
+                <h1 class="flex-grow-1">[[#{oldExamFile.edit.headline}]]</h1>
+                <div>
+                    <a th:href="@{/oldExamFiles}" class="btn btn-secondary">[[#{oldExamFile.edit.back}]]</a>
+                </div>
+            </div>
+            <div th:replace="~{fragments/forms::globalErrors('oldExamFile')}" />
+            <form th:action="${requestUri}" method="post">
+                <div th:replace="~{fragments/forms::inputRow(object='oldExamFile', field='oefId', disabled=true, type='number')}" />
+                <div th:replace="~{fragments/forms::inputRow(object='oldExamFile', field='uuid', required=true)}" />
+                <div th:replace="~{fragments/forms::inputRow(object='oldExamFile', field='src', required=true)}" />
+                <div th:replace="~{fragments/forms::inputRow(object='oldExamFile', field='fileName', required=true)}" />
+                <div th:replace="~{fragments/forms::inputRow(object='oldExamFile', field='oeId', required=true, type='select')}" />
+                <input type="submit" th:value="#{oldExamFile.edit.headline}" class="btn btn-primary mt-4" />
+            </form>
+        </div>
+    </body>
+</html>

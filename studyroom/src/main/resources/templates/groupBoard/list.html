@@ -1,0 +1,48 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layout}">
+    <head>
+        <title>[[#{groupBoard.list.headline}]]</title>
+    </head>
+    <body>
+        <div layout:fragment="content">
+            <div class="d-flex flex-wrap mb-4">
+                <h1 class="flex-grow-1">[[#{groupBoard.list.headline}]]</h1>
+                <div>
+                    <a th:href="@{/groupBoards/add}" class="btn btn-primary ms-2">[[#{groupBoard.list.createNew}]]</a>
+                </div>
+            </div>
+            <div th:if="${groupBoards.empty}">[[#{groupBoard.list.empty}]]</div>
+            <div th:if="${!groupBoards.empty}" class="table-responsive">
+                <table class="table table-striped table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th scope="col">[[#{groupBoard.gbId.label}]]</th>
+                            <th scope="col">[[#{groupBoard.title.label}]]</th>
+                            <th scope="col">[[#{groupBoard.author.label}]]</th>
+                            <th scope="col">[[#{groupBoard.gpId.label}]]</th>
+                            <th><!-- --></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="groupBoard : ${groupBoards}">
+                            <td>[[${groupBoard.gbId}]]</td>
+                            <td>[[${groupBoard.title}]]</td>
+                            <td>[[${groupBoard.author}]]</td>
+                            <td>[[${groupBoard.gpId}]]</td>
+                            <td>
+                                <div class="float-end text-nowrap">
+                                    <a th:href="@{/groupBoards/edit/{gbId}(gbId=${groupBoard.gbId})}" class="btn btn-sm btn-secondary">[[#{groupBoard.list.edit}]]</a>
+                                    <form th:action="@{/groupBoards/delete/{gbId}(gbId=${groupBoard.gbId})}"
+                                            th:hx-confirm="#{delete.confirm}" method="post" class="d-inline">
+                                        <button type="submit" class="btn btn-sm btn-secondary">[[#{groupBoard.list.delete}]]</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </body>
+</html>

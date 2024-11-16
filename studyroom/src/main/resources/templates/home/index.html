@@ -1,0 +1,36 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layout}">
+    <head>
+        <title>[[#{home.index.headline}]]</title>
+        <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    </head>
+    <body>
+        <div layout:fragment="content">
+            <h1 class="mb-4">[[#{home.index.headline}]]</h1>
+            <p class="mb-5">[(#{home.index.text})]</p>
+            <div class="col-md-4 mb-5">
+                <h4 class="mb-3">[[#{home.index.exploreEntities}]]</h4>
+                <div class="list-group">
+                    <a th:href="@{/users}" class="list-group-item list-group-item-action">[[#{user.list.headline}]]</a>
+                    <a th:href="@{/lectureLists}" class="list-group-item list-group-item-action">[[#{lectureList.list.headline}]]</a>
+                    <a th:href="@{/groupProjects}" class="list-group-item list-group-item-action">[[#{groupProject.list.headline}]]</a>
+                    <a th:href="@{/groupBoards}" class="list-group-item list-group-item-action">[[#{groupBoard.list.headline}]]</a>
+                    <a th:href="@{/groupBoardFiles}" class="list-group-item list-group-item-action">[[#{groupBoardFile.list.headline}]]</a>
+                    <a th:href="@{/groupBoardComments}" class="list-group-item list-group-item-action">[[#{groupBoardComment.list.headline}]]</a>
+                    <a th:href="@{/noticeBoards}" class="list-group-item list-group-item-action">[[#{noticeBoard.list.headline}]]</a>
+                    <a th:href="@{/questionBoards}" class="list-group-item list-group-item-action">[[#{questionBoard.list.headline}]]</a>
+                    <a th:href="@{/questionComments}" class="list-group-item list-group-item-action">[[#{questionComment.list.headline}]]</a>
+                    <a th:href="@{/sharingBoards}" class="list-group-item list-group-item-action">[[#{sharingBoard.list.headline}]]</a>
+                    <a th:href="@{/sharingComments}" class="list-group-item list-group-item-action">[[#{sharingComment.list.headline}]]</a>
+                    <a th:href="@{/oldExams}" class="list-group-item list-group-item-action">[[#{oldExam.list.headline}]]</a>
+                    <a th:href="@{/oldExamFiles}" class="list-group-item list-group-item-action">[[#{oldExamFile.list.headline}]]</a>
+                    <a th:href="@{/lectureRequests}" class="list-group-item list-group-item-action">[[#{lectureRequest.list.headline}]]</a>
+                    <a th:href="@{/communicationBoards}" class="list-group-item list-group-item-action">[[#{communicationBoard.list.headline}]]</a>
+                    <a th:href="@{/alarms}" class="list-group-item list-group-item-action">[[#{alarm.list.headline}]]</a>
+                    <a th:href="@{/sharingFiles}" class="list-group-item list-group-item-action">[[#{sharingFile.list.headline}]]</a>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

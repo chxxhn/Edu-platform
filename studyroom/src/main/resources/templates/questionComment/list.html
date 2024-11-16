@@ -1,0 +1,48 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layout}">
+    <head>
+        <title>[[#{questionComment.list.headline}]]</title>
+    </head>
+    <body>
+        <div layout:fragment="content">
+            <div class="d-flex flex-wrap mb-4">
+                <h1 class="flex-grow-1">[[#{questionComment.list.headline}]]</h1>
+                <div>
+                    <a th:href="@{/questionComments/add}" class="btn btn-primary ms-2">[[#{questionComment.list.createNew}]]</a>
+                </div>
+            </div>
+            <div th:if="${questionComments.empty}">[[#{questionComment.list.empty}]]</div>
+            <div th:if="${!questionComments.empty}" class="table-responsive">
+                <table class="table table-striped table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th scope="col">[[#{questionComment.qcomId.label}]]</th>
+                            <th scope="col">[[#{questionComment.content.label}]]</th>
+                            <th scope="col">[[#{questionComment.author.label}]]</th>
+                            <th scope="col">[[#{questionComment.qId.label}]]</th>
+                            <th><!-- --></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="questionComment : ${questionComments}">
+                            <td>[[${questionComment.qcomId}]]</td>
+                            <td>[[${questionComment.content}]]</td>
+                            <td>[[${questionComment.author}]]</td>
+                            <td>[[${questionComment.qId}]]</td>
+                            <td>
+                                <div class="float-end text-nowrap">
+                                    <a th:href="@{/questionComments/edit/{qcomId}(qcomId=${questionComment.qcomId})}" class="btn btn-sm btn-secondary">[[#{questionComment.list.edit}]]</a>
+                                    <form th:action="@{/questionComments/delete/{qcomId}(qcomId=${questionComment.qcomId})}"
+                                            th:hx-confirm="#{delete.confirm}" method="post" class="d-inline">
+                                        <button type="submit" class="btn btn-sm btn-secondary">[[#{questionComment.list.delete}]]</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </body>
+</html>

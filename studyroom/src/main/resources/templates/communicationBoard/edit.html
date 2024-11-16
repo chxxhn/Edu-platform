@@ -1,0 +1,27 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layout}">
+    <head>
+        <title>[[#{communicationBoard.edit.headline}]]</title>
+    </head>
+    <body>
+        <div layout:fragment="content">
+            <div class="d-flex flex-wrap mb-4">
+                <h1 class="flex-grow-1">[[#{communicationBoard.edit.headline}]]</h1>
+                <div>
+                    <a th:href="@{/communicationBoards}" class="btn btn-secondary">[[#{communicationBoard.edit.back}]]</a>
+                </div>
+            </div>
+            <div th:replace="~{fragments/forms::globalErrors('communicationBoard')}" />
+            <form th:action="${requestUri}" method="post">
+                <div th:replace="~{fragments/forms::inputRow(object='communicationBoard', field='comnId', disabled=true, type='number')}" />
+                <div th:replace="~{fragments/forms::inputRow(object='communicationBoard', field='content', required=true, type='textarea')}" />
+                <div th:replace="~{fragments/forms::inputRow(object='communicationBoard', field='maxnum', required=true, type='number')}" />
+                <div th:replace="~{fragments/forms::inputRow(object='communicationBoard', field='valid', type='checkbox')}" />
+                <div th:replace="~{fragments/forms::inputRow(object='communicationBoard', field='author', required=true, type='select')}" />
+                <div th:replace="~{fragments/forms::inputRow(object='communicationBoard', field='lectureId', required=true, type='select')}" />
+                <input type="submit" th:value="#{communicationBoard.edit.headline}" class="btn btn-primary mt-4" />
+            </form>
+        </div>
+    </body>
+</html>

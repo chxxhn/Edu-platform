@@ -1,0 +1,50 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layout}">
+    <head>
+        <title>[[#{groupProject.list.headline}]]</title>
+    </head>
+    <body>
+        <div layout:fragment="content">
+            <div class="d-flex flex-wrap mb-4">
+                <h1 class="flex-grow-1">[[#{groupProject.list.headline}]]</h1>
+                <div>
+                    <a th:href="@{/groupProjects/add}" class="btn btn-primary ms-2">[[#{groupProject.list.createNew}]]</a>
+                </div>
+            </div>
+            <div th:if="${groupProjects.empty}">[[#{groupProject.list.empty}]]</div>
+            <div th:if="${!groupProjects.empty}" class="table-responsive">
+                <table class="table table-striped table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th scope="col">[[#{groupProject.gpId.label}]]</th>
+                            <th scope="col">[[#{groupProject.groupValid.label}]]</th>
+                            <th scope="col">[[#{groupProject.groupName.label}]]</th>
+                            <th scope="col">[[#{groupProject.createdUserId.label}]]</th>
+                            <th scope="col">[[#{groupProject.lectureId.label}]]</th>
+                            <th><!-- --></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="groupProject : ${groupProjects}">
+                            <td>[[${groupProject.gpId}]]</td>
+                            <td>[[${groupProject.groupValid}]]</td>
+                            <td>[[${groupProject.groupName}]]</td>
+                            <td>[[${groupProject.createdUserId}]]</td>
+                            <td>[[${groupProject.lectureId}]]</td>
+                            <td>
+                                <div class="float-end text-nowrap">
+                                    <a th:href="@{/groupProjects/edit/{gpId}(gpId=${groupProject.gpId})}" class="btn btn-sm btn-secondary">[[#{groupProject.list.edit}]]</a>
+                                    <form th:action="@{/groupProjects/delete/{gpId}(gpId=${groupProject.gpId})}"
+                                            th:hx-confirm="#{delete.confirm}" method="post" class="d-inline">
+                                        <button type="submit" class="btn btn-sm btn-secondary">[[#{groupProject.list.delete}]]</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </body>
+</html>

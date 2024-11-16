@@ -1,0 +1,26 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layout}">
+    <head>
+        <title>[[#{groupProject.add.headline}]]</title>
+    </head>
+    <body>
+        <div layout:fragment="content">
+            <div class="d-flex flex-wrap mb-4">
+                <h1 class="flex-grow-1">[[#{groupProject.add.headline}]]</h1>
+                <div>
+                    <a th:href="@{/groupProjects}" class="btn btn-secondary">[[#{groupProject.add.back}]]</a>
+                </div>
+            </div>
+            <div th:replace="~{fragments/forms::globalErrors('groupProject')}" />
+            <form th:action="${requestUri}" method="post">
+                <div th:replace="~{fragments/forms::inputRow(object='groupProject', field='groupValid', type='checkbox')}" />
+                <div th:replace="~{fragments/forms::inputRow(object='groupProject', field='groupName', required=true)}" />
+                <div th:replace="~{fragments/forms::inputRow(object='groupProject', field='groupDetail', type='textarea')}" />
+                <div th:replace="~{fragments/forms::inputRow(object='groupProject', field='createdUserId', required=true, type='select')}" />
+                <div th:replace="~{fragments/forms::inputRow(object='groupProject', field='lectureId', required=true, type='select')}" />
+                <input type="submit" th:value="#{groupProject.add.headline}" class="btn btn-primary mt-4" />
+            </form>
+        </div>
+    </body>
+</html>

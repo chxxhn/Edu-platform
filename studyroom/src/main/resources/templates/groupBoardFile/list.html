@@ -1,0 +1,50 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layout}">
+    <head>
+        <title>[[#{groupBoardFile.list.headline}]]</title>
+    </head>
+    <body>
+        <div layout:fragment="content">
+            <div class="d-flex flex-wrap mb-4">
+                <h1 class="flex-grow-1">[[#{groupBoardFile.list.headline}]]</h1>
+                <div>
+                    <a th:href="@{/groupBoardFiles/add}" class="btn btn-primary ms-2">[[#{groupBoardFile.list.createNew}]]</a>
+                </div>
+            </div>
+            <div th:if="${groupBoardFiles.empty}">[[#{groupBoardFile.list.empty}]]</div>
+            <div th:if="${!groupBoardFiles.empty}" class="table-responsive">
+                <table class="table table-striped table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th scope="col">[[#{groupBoardFile.gbfId.label}]]</th>
+                            <th scope="col">[[#{groupBoardFile.src.label}]]</th>
+                            <th scope="col">[[#{groupBoardFile.uuid.label}]]</th>
+                            <th scope="col">[[#{groupBoardFile.fileName.label}]]</th>
+                            <th scope="col">[[#{groupBoardFile.gbId.label}]]</th>
+                            <th><!-- --></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="groupBoardFile : ${groupBoardFiles}">
+                            <td>[[${groupBoardFile.gbfId}]]</td>
+                            <td>[[${groupBoardFile.src}]]</td>
+                            <td>[[${groupBoardFile.uuid}]]</td>
+                            <td>[[${groupBoardFile.fileName}]]</td>
+                            <td>[[${groupBoardFile.gbId}]]</td>
+                            <td>
+                                <div class="float-end text-nowrap">
+                                    <a th:href="@{/groupBoardFiles/edit/{gbfId}(gbfId=${groupBoardFile.gbfId})}" class="btn btn-sm btn-secondary">[[#{groupBoardFile.list.edit}]]</a>
+                                    <form th:action="@{/groupBoardFiles/delete/{gbfId}(gbfId=${groupBoardFile.gbfId})}"
+                                            th:hx-confirm="#{delete.confirm}" method="post" class="d-inline">
+                                        <button type="submit" class="btn btn-sm btn-secondary">[[#{groupBoardFile.list.delete}]]</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,25 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layout}">
+    <head>
+        <title>[[#{sharingComment.edit.headline}]]</title>
+    </head>
+    <body>
+        <div layout:fragment="content">
+            <div class="d-flex flex-wrap mb-4">
+                <h1 class="flex-grow-1">[[#{sharingComment.edit.headline}]]</h1>
+                <div>
+                    <a th:href="@{/sharingComments}" class="btn btn-secondary">[[#{sharingComment.edit.back}]]</a>
+                </div>
+            </div>
+            <div th:replace="~{fragments/forms::globalErrors('sharingComment')}" />
+            <form th:action="${requestUri}" method="post">
+                <div th:replace="~{fragments/forms::inputRow(object='sharingComment', field='shcomId', disabled=true, type='number')}" />
+                <div th:replace="~{fragments/forms::inputRow(object='sharingComment', field='content', required=true, type='textarea')}" />
+                <div th:replace="~{fragments/forms::inputRow(object='sharingComment', field='author', required=true, type='select')}" />
+                <div th:replace="~{fragments/forms::inputRow(object='sharingComment', field='shId', required=true, type='select')}" />
+                <input type="submit" th:value="#{sharingComment.edit.headline}" class="btn btn-primary mt-4" />
+            </form>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layout}">
+    <head>
+        <title>[[#{questionBoard.list.headline}]]</title>
+    </head>
+    <body>
+        <div layout:fragment="content">
+            <div class="d-flex flex-wrap mb-4">
+                <h1 class="flex-grow-1">[[#{questionBoard.list.headline}]]</h1>
+                <div>
+                    <a th:href="@{/questionBoards/add}" class="btn btn-primary ms-2">[[#{questionBoard.list.createNew}]]</a>
+                </div>
+            </div>
+            <div th:if="${questionBoards.empty}">[[#{questionBoard.list.empty}]]</div>
+            <div th:if="${!questionBoards.empty}" class="table-responsive">
+                <table class="table table-striped table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th scope="col">[[#{questionBoard.questionId.label}]]</th>
+                            <th scope="col">[[#{questionBoard.title.label}]]</th>
+                            <th scope="col">[[#{questionBoard.warnCount.label}]]</th>
+                            <th scope="col">[[#{questionBoard.likeCount.label}]]</th>
+                            <th scope="col">[[#{questionBoard.author.label}]]</th>
+                            <th scope="col">[[#{questionBoard.lectureId.label}]]</th>
+                            <th><!-- --></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="questionBoard : ${questionBoards}">
+                            <td>[[${questionBoard.questionId}]]</td>
+                            <td>[[${questionBoard.title}]]</td>
+                            <td>[[${questionBoard.warnCount}]]</td>
+                            <td>[[${questionBoard.likeCount}]]</td>
+                            <td>[[${questionBoard.author}]]</td>
+                            <td>[[${questionBoard.lectureId}]]</td>
+                            <td>
+                                <div class="float-end text-nowrap">
+                                    <a th:href="@{/questionBoards/edit/{questionId}(questionId=${questionBoard.questionId})}" class="btn btn-sm btn-secondary">[[#{questionBoard.list.edit}]]</a>
+                                    <form th:action="@{/questionBoards/delete/{questionId}(questionId=${questionBoard.questionId})}"
+                                            th:hx-confirm="#{delete.confirm}" method="post" class="d-inline">
+                                        <button type="submit" class="btn btn-sm btn-secondary">[[#{questionBoard.list.delete}]]</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </body>
+</html>

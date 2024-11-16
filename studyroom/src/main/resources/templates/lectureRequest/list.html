@@ -1,0 +1,50 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layout}">
+    <head>
+        <title>[[#{lectureRequest.list.headline}]]</title>
+    </head>
+    <body>
+        <div layout:fragment="content">
+            <div class="d-flex flex-wrap mb-4">
+                <h1 class="flex-grow-1">[[#{lectureRequest.list.headline}]]</h1>
+                <div>
+                    <a th:href="@{/lectureRequests/add}" class="btn btn-primary ms-2">[[#{lectureRequest.list.createNew}]]</a>
+                </div>
+            </div>
+            <div th:if="${lectureRequests.empty}">[[#{lectureRequest.list.empty}]]</div>
+            <div th:if="${!lectureRequests.empty}" class="table-responsive">
+                <table class="table table-striped table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th scope="col">[[#{lectureRequest.rqId.label}]]</th>
+                            <th scope="col">[[#{lectureRequest.title.label}]]</th>
+                            <th scope="col">[[#{lectureRequest.numberDesired.label}]]</th>
+                            <th scope="col">[[#{lectureRequest.lectureValid.label}]]</th>
+                            <th scope="col">[[#{lectureRequest.lectureId.label}]]</th>
+                            <th><!-- --></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="lectureRequest : ${lectureRequests}">
+                            <td>[[${lectureRequest.rqId}]]</td>
+                            <td>[[${lectureRequest.title}]]</td>
+                            <td>[[${lectureRequest.numberDesired}]]</td>
+                            <td>[[${lectureRequest.lectureValid}]]</td>
+                            <td>[[${lectureRequest.lectureId}]]</td>
+                            <td>
+                                <div class="float-end text-nowrap">
+                                    <a th:href="@{/lectureRequests/edit/{rqId}(rqId=${lectureRequest.rqId})}" class="btn btn-sm btn-secondary">[[#{lectureRequest.list.edit}]]</a>
+                                    <form th:action="@{/lectureRequests/delete/{rqId}(rqId=${lectureRequest.rqId})}"
+                                            th:hx-confirm="#{delete.confirm}" method="post" class="d-inline">
+                                        <button type="submit" class="btn btn-sm btn-secondary">[[#{lectureRequest.list.delete}]]</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </body>
+</html>
