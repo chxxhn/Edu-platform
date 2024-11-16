@@ -3,9 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/EduBoardPlatformProject.iml" filepath="$PROJECT_DIR$/.idea/EduBoardPlatformProject.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/studyroom.iml" filepath="$PROJECT_DIR$/.idea/modules/studyroom.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/studyroom.main.iml" filepath="$PROJECT_DIR$/.idea/modules/studyroom.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/studyroom.test.iml" filepath="$PROJECT_DIR$/.idea/modules/studyroom.test.iml" />
     </modules>
   </component>
 </project>
