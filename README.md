@@ -1,0 +1,2 @@
+# EduBoardPlatformProject
+2024_Database_TermProject
