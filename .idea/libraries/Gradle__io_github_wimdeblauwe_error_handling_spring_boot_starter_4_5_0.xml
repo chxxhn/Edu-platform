@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="Gradle: io.github.wimdeblauwe:error-handling-spring-boot-starter:4.5.0" type="java-imported" external-system-id="GRADLE">
+    <properties groupId="io.github.wimdeblauwe" artifactId="error-handling-spring-boot-starter" version="4.5.0" />
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.github.wimdeblauwe/error-handling-spring-boot-starter/4.5.0/cf3cbd280c8645586a8a4aa85a65f8ba85531b2e/error-handling-spring-boot-starter-4.5.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

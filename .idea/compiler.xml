@@ -11,5 +11,10 @@
         <module name="studyroom.test" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="studyroom" target="21" />
+      <module name="studyroom.main" target="21" />
+      <module name="studyroom.test" target="21" />
+    </bytecodeTargetLevel>
   </component>
 </project>
