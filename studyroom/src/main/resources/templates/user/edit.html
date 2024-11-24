@@ -15,6 +15,7 @@
             <div th:replace="~{fragments/forms::globalErrors('user')}" />
             <form th:action="${requestUri}" method="post">
                 <div th:replace="~{fragments/forms::inputRow(object='user', field='stdId', disabled=true, type='number')}" />
+                <div th:replace="~{fragments/forms::inputRow(object='user', field='stdNum', required=true)}" />
                 <div th:replace="~{fragments/forms::inputRow(object='user', field='name', required=true)}" />
                 <div th:replace="~{fragments/forms::inputRow(object='user', field='nickname', required=true)}" />
                 <div th:replace="~{fragments/forms::inputRow(object='user', field='password', required=true)}" />

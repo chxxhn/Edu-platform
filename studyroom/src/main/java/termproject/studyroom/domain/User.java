@@ -1,15 +1,7 @@
 package termproject.studyroom.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.SequenceGenerator;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
 import java.time.OffsetDateTime;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,7 +19,7 @@ import termproject.studyroom.model.Grade;
 public class User {
 
     @Id
-    @Column(nullable = false, updatable = false)
+    @Column(name = "StdId")
     @SequenceGenerator(
             name = "primary_sequence",
             sequenceName = "primary_sequence",
@@ -39,6 +31,9 @@ public class User {
             generator = "primary_sequence"
     )
     private Integer stdId;
+
+    @Column(nullable = false, unique = true)
+    private Integer stdNum;
 
     @Column(nullable = false, length = 10)
     private String name;

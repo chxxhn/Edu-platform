@@ -13,6 +13,9 @@ public class UserDTO {
     private Integer stdId;
 
     @NotNull
+    private Integer stdNum;
+
+    @NotNull
     @Size(max = 10)
     private String name;
 
