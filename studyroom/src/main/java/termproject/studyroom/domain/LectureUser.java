@@ -15,12 +15,12 @@ public class LectureUser {
 
     @Id
     @ManyToOne
-    @JoinColumn(name = "Users", referencedColumnName = "stdId") // User 테이블의 PK 참조
+    @JoinColumn(name = "std_id", nullable = false)
     private User userId;
 
     @Id
     @ManyToOne
-    @JoinColumn(name = "lectureid", referencedColumnName = "lectureid")
+    @JoinColumn(name = "lecturelist_id", nullable = false)
     private LectureList lectureId;
 
 }

@@ -1,2 +1,4 @@
-package termproject.studyroom.controller;public class LectureUserController {
+package termproject.studyroom.controller;
+
+public class LectureUserController {
 }

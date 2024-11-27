@@ -2,10 +2,10 @@ package termproject.studyroom.domain;
 
 import jakarta.persistence.JoinColumn;
 
-public class LectureUserId {
+public class   LectureUserId {
     @JoinColumn(name = "std_id")
-    private Integer userId;
+    private User userId;
 
     @JoinColumn(name="lecturelist_id")
-    private Integer lectureId;
+    private LectureList lectureListId;
 }
