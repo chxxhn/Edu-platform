@@ -1,10 +1,10 @@
 spring:
   datasource:
-    url: ${JDBC_DATABASE_URL:jdbc:postgresql://localhost:5432/studyroom}
-    username: ${JDBC_DATABASE_USERNAME:termdb}
-    password: ${JDBC_DATABASE_PASSWORD:<<1234>>}
+    url: jdbc:postgresql://localhost:5432/studyroom
+    username: termdb
+    password: 1234
     hikari:
-      connection-timeout: 30000
+      connection-timeout: 60000
       maximum-pool-size: 10
   jpa:
     hibernate:
@@ -17,7 +17,6 @@ spring:
             non_contextual_creation: true
         id:
           new_generator_mappings: true
-        dialect: org.hibernate.dialect.PostgreSQLDialect
 
 error:
   handling:

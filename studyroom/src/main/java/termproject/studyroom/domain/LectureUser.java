@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Entity
 @Table(name = "LectureUser")
-@IdClass(LectureUserId.class) // 복합 키 사용
+//@IdClass(LectureUserId.class) // 복합 키 사용
 public class LectureUser {
 
     @Id
