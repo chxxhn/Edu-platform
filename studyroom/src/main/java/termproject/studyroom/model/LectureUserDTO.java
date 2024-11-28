@@ -10,8 +10,8 @@ import lombok.Setter;
 public class LectureUserDTO {
 
     @NotNull
-    private Integer user_id;
+    private Integer userId;
 
     @NotNull
-    private Integer lecture_id;
+    private Integer lectureId;
 }

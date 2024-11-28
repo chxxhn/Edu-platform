@@ -10,17 +10,18 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Entity
 @Table(name = "LectureUser")
-//@IdClass(LectureUserId.class) // 복합 키 사용
 public class LectureUser {
 
-    @Id
+    @EmbeddedId
+    private LectureUserId id;
+
     @ManyToOne
+    @MapsId("userId") // LectureUserId의 userId를 매핑
     @JoinColumn(name = "std_id", nullable = false)
-    private User userId;
+    private User user;
 
-    @Id
     @ManyToOne
+    @MapsId("lectureId") // LectureUserId의 lectureId를 매핑
     @JoinColumn(name = "lecturelist_id", nullable = false)
-    private LectureList lectureId;
-
+    private LectureList lecture;
 }
