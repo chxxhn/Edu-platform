@@ -1,68 +1,66 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
-    <head>
-        <title layout:title-pattern="$CONTENT_TITLE | $LAYOUT_TITLE">[[#{app.title}]]</title>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <link th:href="@{/webjars/bootstrap/5.3.3/css/bootstrap.min.css}" rel="stylesheet" />
-        <link th:href="@{/css/app.css}" rel="stylesheet" />
-        <script th:src="@{/webjars/bootstrap/5.3.3/js/bootstrap.bundle.min.js}" defer></script>
-        <script th:src="@{/webjars/htmx.org/2.0.3/dist/htmx.min.js}" defer></script>
-        <script th:src="@{/js/app.js}" defer></script>
-    </head>
-    <body hx-boost="true">
-        <header class="bg-light">
-            <div class="container">
-                <nav class="navbar navbar-light navbar-expand-md">
-                    <a th:href="@{/}" class="navbar-brand">
-                        <img th:src="@{/images/logo.png}" th:alt="#{app.title}" width="30" height="30" class="d-inline-block align-top">
-                        <span class="ps-1">[[#{app.title}]]</span>
-                    </a>
-                    <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarToggle"
-                            th:aria-label="#{navigation.toggle}" aria-controls="navbarToggle" aria-expanded="false">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="collapse navbar-collapse" id="navbarToggle">
-                        <ul class="navbar-nav ms-auto">
-                            <li class="navbar-item">
-                                <a th:href="@{/}" class="nav-link">[[#{navigation.home}]]</a>
-                            </li>
-                            <li class="navbar-item dropdown">
-                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" id="navbarEntitiesLink" role="button"
-                                        aria-expanded="false">[[#{navigation.entities}]]</a>
-                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarEntitiesLink">
-                                    <li><a th:href="@{/users}" class="dropdown-item">[[#{user.list.headline}]]</a></li>
-                                    <li><a th:href="@{/lectureLists}" class="dropdown-item">[[#{lectureList.list.headline}]]</a></li>
-                                    <li><a th:href="@{/groupProjects}" class="dropdown-item">[[#{groupProject.list.headline}]]</a></li>
-                                    <li><a th:href="@{/groupBoards}" class="dropdown-item">[[#{groupBoard.list.headline}]]</a></li>
-                                    <li><a th:href="@{/groupBoardFiles}" class="dropdown-item">[[#{groupBoardFile.list.headline}]]</a></li>
-                                    <li><a th:href="@{/groupBoardComments}" class="dropdown-item">[[#{groupBoardComment.list.headline}]]</a></li>
-                                    <li><a th:href="@{/noticeBoards}" class="dropdown-item">[[#{noticeBoard.list.headline}]]</a></li>
-                                    <li><a th:href="@{/questionBoards}" class="dropdown-item">[[#{questionBoard.list.headline}]]</a></li>
-                                    <li><a th:href="@{/questionComments}" class="dropdown-item">[[#{questionComment.list.headline}]]</a></li>
-                                    <li><a th:href="@{/sharingBoards}" class="dropdown-item">[[#{sharingBoard.list.headline}]]</a></li>
-                                    <li><a th:href="@{/sharingComments}" class="dropdown-item">[[#{sharingComment.list.headline}]]</a></li>
-                                    <li><a th:href="@{/oldExams}" class="dropdown-item">[[#{oldExam.list.headline}]]</a></li>
-                                    <li><a th:href="@{/oldExamFiles}" class="dropdown-item">[[#{oldExamFile.list.headline}]]</a></li>
-                                    <li><a th:href="@{/lectureRequests}" class="dropdown-item">[[#{lectureRequest.list.headline}]]</a></li>
-                                    <li><a th:href="@{/communicationBoards}" class="dropdown-item">[[#{communicationBoard.list.headline}]]</a></li>
-                                    <li><a th:href="@{/alarms}" class="dropdown-item">[[#{alarm.list.headline}]]</a></li>
-                                    <li><a th:href="@{/sharingFiles}" class="dropdown-item">[[#{sharingFile.list.headline}]]</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </div>
-                </nav>
+<head>
+    <title layout:title-pattern="$CONTENT_TITLE | $LAYOUT_TITLE">[[#{app.title}]]</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" />
+    <link th:href="@{/css/app.css}" rel="stylesheet" />
+    <script th:src="@{/webjars/bootstrap/5.3.3/js/bootstrap.bundle.min.js}" defer></script>
+    <script th:src="@{/webjars/htmx.org/2.0.3/dist/htmx.min.js}" defer></script>
+    <script th:src="@{/js/app.js}" defer></script>
+</head>
+<body hx-boost="true">
+<header>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-success">
+        <div class="container-fluid">
+            <!-- home 버튼 -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <a class="navbar-brand" href="/">studyroom</a>
+
+            <!-- 중앙 메뉴 -->
+            <div class="collapse navbar-collapse" id="navbarContent">
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">수업자료 공유</a>
+                        <div class="dropdown-menu" aria-labelledby="resourcesDropdown">
+                            <a class="dropdown-item" th:href="@{/sharingBoards}">수업필기공유</a>
+                            <a class="dropdown-item" th:href="@{/oldExams}">족보</a>
+                            <a class="dropdown-item" th:href="@{/lectureRequests}">강의요청</a>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/groupProjects}">팀플게시판</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/communicationBoards}">만남게시판</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/noticeBoards}">공지게시판</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/questionBoards}">질문게시판</a>
+                    </li>
+                </ul>
             </div>
-        </header>
-        <main class="my-5">
-            <div class="container">
-                <p th:if="${MSG_SUCCESS}" class="alert alert-success mb-4" role="alert">[[${MSG_SUCCESS}]]</p>
-                <p th:if="${MSG_INFO}" class="alert alert-info mb-4" role="alert">[[${MSG_INFO}]]</p>
-                <p th:if="${MSG_ERROR}" class="alert alert-danger mb-4" role="alert">[[${MSG_ERROR}]]</p>
-                <div layout:fragment="content" />
+
+            <!-- 알림 버튼 -->
+            <div class="d-flex">
+                <a th:href="@{/alarms}" class="btn btn-outline-light">알람</a>
             </div>
-        </main>
-    </body>
+        </div>
+    </nav>
+</header>
+<main class="my-5">
+    <div class="container">
+        <p th:if="${MSG_SUCCESS}" class="alert alert-success mb-4" role="alert">[[${MSG_SUCCESS}]]</p>
+        <p th:if="${MSG_INFO}" class="alert alert-info mb-4" role="alert">[[${MSG_INFO}]]</p>
+        <p th:if="${MSG_ERROR}" class="alert alert-danger mb-4" role="alert">[[${MSG_ERROR}]]</p>
+        <div layout:fragment="content" />
+    </div>
+</main>
+</body>
 </html>

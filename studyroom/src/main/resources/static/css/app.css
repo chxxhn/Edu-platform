@@ -1,0 +1,17 @@
+.nav-item .nav-link {
+    font-size: 1rem; /* 글자 크기 */
+    margin: 0 40px; /* 메뉴 간격 조정 */
+}
+
+.btn-outline-light {
+    margin-right: 15px; /* 오른쪽 여백 추가 */
+}
+
+.navbar-brand {
+    margin-left: 15px; /* 왼쪽 여백 추가 */
+}
+
+.nav-item.dropdown:hover .dropdown-menu {
+    display: block; /* 마우스를 올리면 드롭다운 표시 */
+    margin-top: 0; /* 기본 위치 유지 */
+}
