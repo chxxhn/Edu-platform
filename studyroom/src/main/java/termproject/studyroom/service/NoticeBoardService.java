@@ -63,7 +63,7 @@ public class NoticeBoardService {
         noticeBoardDTO.setNoticeId(noticeBoard.getNoticeId());
         noticeBoardDTO.setTitle(noticeBoard.getTitle());
         noticeBoardDTO.setContent(noticeBoard.getContent());
-        noticeBoardDTO.setAuthor(noticeBoard.getAuthor() == null ? null : noticeBoard.getAuthor().getStdId());
+        noticeBoardDTO.setAuthor(noticeBoard.getAuthor() == null ? null : noticeBoard.getAuthor());
         noticeBoardDTO.setLectureId(noticeBoard.getLectureId() == null ? null : noticeBoard.getLectureId().getLectureId());
         return noticeBoardDTO;
     }
@@ -72,7 +72,7 @@ public class NoticeBoardService {
             final NoticeBoard noticeBoard) {
         noticeBoard.setTitle(noticeBoardDTO.getTitle());
         noticeBoard.setContent(noticeBoardDTO.getContent());
-        final User author = noticeBoardDTO.getAuthor() == null ? null : userRepository.findById(noticeBoardDTO.getAuthor())
+        final User author = noticeBoardDTO.getAuthor() == null ? null : userRepository.findById(noticeBoardDTO.getAuthor().getStdId())
                 .orElseThrow(() -> new NotFoundException("author not found"));
         noticeBoard.setAuthor(author);
         final LectureList lectureId = noticeBoardDTO.getLectureId() == null ? null : lectureListRepository.findById(noticeBoardDTO.getLectureId())

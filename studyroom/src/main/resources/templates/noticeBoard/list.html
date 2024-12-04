@@ -28,7 +28,7 @@
                         <tr th:each="noticeBoard : ${noticeBoards}">
                             <td>[[${noticeBoard.noticeId}]]</td>
                             <td>[[${noticeBoard.title}]]</td>
-                            <td>[[${noticeBoard.author}]]</td>
+                            <td>[[${noticeBoard.author.name}]]</td>
                             <td>[[${noticeBoard.lectureId}]]</td>
                             <td>
                                 <div class="float-end text-nowrap">
