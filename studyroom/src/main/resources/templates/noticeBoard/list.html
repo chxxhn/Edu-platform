@@ -20,7 +20,7 @@
                             <th scope="col">[[#{noticeBoard.noticeId.label}]]</th>
                             <th scope="col">[[#{noticeBoard.title.label}]]</th>
                             <th scope="col">[[#{noticeBoard.author.label}]]</th>
-                            <th scope="col">[[#{noticeBoard.lectureId.label}]]</th>
+                            <th scope="col">Lecture</th>
                             <th><!-- --></th>
                         </tr>
                     </thead>
@@ -29,7 +29,7 @@
                             <td>[[${noticeBoard.noticeId}]]</td>
                             <td>[[${noticeBoard.title}]]</td>
                             <td>[[${noticeBoard.author.name}]]</td>
-                            <td>[[${noticeBoard.lectureId}]]</td>
+                            <td>[[${noticeBoard.lectureId.name}]]</td>
                             <td>
                                 <div class="float-end text-nowrap">
                                     <a th:href="@{/noticeBoards/edit/{noticeId}(noticeId=${noticeBoard.noticeId})}" class="btn btn-sm btn-secondary">[[#{noticeBoard.list.edit}]]</a>
