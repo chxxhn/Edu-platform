@@ -65,6 +65,7 @@ public class NoticeBoardService {
         noticeBoardDTO.setContent(noticeBoard.getContent());
         noticeBoardDTO.setAuthor(noticeBoard.getAuthor() == null ? null : noticeBoard.getAuthor());
         noticeBoardDTO.setLectureId(noticeBoard.getLectureId() == null ? null : noticeBoard.getLectureId());
+        noticeBoardDTO.setDateCreated(noticeBoard.getDateCreated().toLocalDateTime());
         return noticeBoardDTO;
     }
 

@@ -95,4 +95,11 @@ public class NoticeBoardController {
         return "redirect:/noticeBoards";
     }
 
+    @GetMapping(value = "/detail/{noticeId}")
+    public String detail(@PathVariable(name = "noticeId") final Integer noticeId, final Model model) {
+        NoticeBoardDTO notice = noticeBoardService.get(noticeId);
+        model.addAttribute("noticeBoard", notice);
+        return "noticeBoard/detail";
+    }
+
 }

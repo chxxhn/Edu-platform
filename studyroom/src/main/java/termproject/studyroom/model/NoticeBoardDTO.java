@@ -7,6 +7,10 @@ import lombok.Setter;
 import termproject.studyroom.domain.LectureList;
 import termproject.studyroom.domain.User;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+
 
 @Getter
 @Setter
@@ -26,5 +30,8 @@ public class NoticeBoardDTO {
 
     @NotNull
     private LectureList lectureId;
+
+    @NotNull
+    private LocalDateTime dateCreated;
 
 }
