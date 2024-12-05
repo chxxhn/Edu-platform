@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Question board detail</title>
+</head>
+<body>
+<div layout:fragment="content" class="container mt-3">
+    <!-- Title -->
+    <div class="mb-4">
+        <h1 class="fw-bold text-primary" th:text="${questionBoard.title}"></h1>
+    </div>
+
+    <!-- Question Card -->
+    <div class="card">
+        <div class="card-body">
+            <!-- Content -->
+            <p class="card-text fs-5" th:text="${questionBoard.content}"></p>
+
+            <!-- Metadata -->
+            <hr>
+            <div class="d-flex justify-content-between">
+                <div class="text-muted">
+                    <span>Author:</span>
+                    <span class="fw-bold text-dark" th:text="${questionBoard.author.name}"></span>
+                    <span class="text-muted ms-3">Lecture:</span>
+                    <span class="fw-bold text-dark" th:text="${questionBoard.lectureId.name}"></span>
+                    <!--                    <span class="fw-bold text-dark">Created At:</span>-->
+                    <!--                    <span class="fw-bold text-dark" th:text="${#dates.format(noticeBoard.dateCreated, 'yyyy-MM-dd HH:mm')}"></span>-->
+                    <span class="text-muted ms-3">Warn count:</span>
+                    <span class="fw-bold text-dark" th:text="${questionBoard.warnCount}"></span>
+                    <span class="text-muted ms-3">Like count:</span>
+                    <span class="fw-bold text-dark" th:text="${questionBoard.likeCount}"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="d-flex align-items-center justify-content-between mt-4">
+        <!-- Pagination -->
+        <nav class="pagination-container" style="margin-left: auto; margin-right: 24rem;">
+            <ul class="pagination mb-0">
+                <li class="page-item">
+                    <a class="page-link" th:href="@{/questionBoards?page=1}">1</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" th:href="@{/questionBoards?page=2}">2</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" th:href="@{/questionBoards?page=3}">3</a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Back Button -->
+        <a th:href="@{/questionBoards}" class="btn btn-outline-primary">
+            Back to question Board
+        </a>
+    </div>
+</div>
+</body>
+</html>

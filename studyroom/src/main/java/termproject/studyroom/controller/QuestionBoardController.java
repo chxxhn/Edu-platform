@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import termproject.studyroom.domain.LectureList;
 import termproject.studyroom.domain.User;
+import termproject.studyroom.model.NoticeBoardDTO;
 import termproject.studyroom.model.QuestionBoardDTO;
 import termproject.studyroom.repos.LectureListRepository;
 import termproject.studyroom.repos.UserRepository;
@@ -102,6 +103,13 @@ public class QuestionBoardController {
             redirectAttributes.addFlashAttribute(WebUtils.MSG_INFO, WebUtils.getMessage("questionBoard.delete.success"));
         }
         return "redirect:/questionBoards";
+    }
+
+    @GetMapping(value = "/detail/{questionId}")
+    public String detail(@PathVariable(name = "questionId") final Integer questionId, final Model model) {
+        QuestionBoardDTO question = questionBoardService.get(questionId);
+        model.addAttribute("questionBoard", question);
+        return "questionBoard/detail";
     }
 
 }
