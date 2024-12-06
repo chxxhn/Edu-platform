@@ -2,14 +2,11 @@ package termproject.studyroom.controller;
 
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import termproject.studyroom.domain.LectureList;
 import termproject.studyroom.domain.User;
@@ -124,4 +121,16 @@ public class QuestionBoardController {
         return "questionBoard/detail";
     }
 
+    @PostMapping("/dislike/{questionId}")
+    public ResponseEntity<Map<String, Integer>> dislike(@PathVariable(name = "questionId") Integer questionId) {
+        // Call the service to increment warn count
+        questionBoardService.incrementWarnCount(questionId);
+
+        // Fetch the updated QuestionBoard to return the latest warnCount
+        QuestionBoardDTO questionBoard = questionBoardService.get(questionId);
+
+        Map<String, Integer> response = new HashMap<>();
+        response.put("warnCount", questionBoard.getWarnCount());
+        return ResponseEntity.ok(response);
+    }
 }

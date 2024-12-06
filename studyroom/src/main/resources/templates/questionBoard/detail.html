@@ -20,17 +20,18 @@
             <!-- Metadata -->
             <hr>
             <div class="d-flex justify-content-between">
-                <div class="text-muted">
+                <div class="d-flex align-items-center">
+                    <button class="btn btn-outline-danger btn-sm me-3" onclick="incrementWarnCount([[${questionBoard.questionId}]])">
+                        warn <span class="badge bg-danger" id="warnCount" th:text="${questionBoard.warnCount}">0</span>
+                    </button>
+                    <span class="text-muted">Like count:</span>
+                    <span class="fw-bold text-dark ms-2" th:text="${questionBoard.likeCount}"></span>
+                </div>
+                <div class="d-flex align-items-center text-muted">
                     <span>Author:</span>
-                    <span class="fw-bold text-dark" th:text="${questionBoard.author.name}"></span>
-                    <span class="text-muted ms-3">Lecture:</span>
-                    <span class="fw-bold text-dark" th:text="${questionBoard.lectureId.name}"></span>
-                    <!--                    <span class="fw-bold text-dark">Created At:</span>-->
-                    <!--                    <span class="fw-bold text-dark" th:text="${#dates.format(noticeBoard.dateCreated, 'yyyy-MM-dd HH:mm')}"></span>-->
-                    <span class="text-muted ms-3">Warn count:</span>
-                    <span class="fw-bold text-dark" th:text="${questionBoard.warnCount}"></span>
-                    <span class="text-muted ms-3">Like count:</span>
-                    <span class="fw-bold text-dark" th:text="${questionBoard.likeCount}"></span>
+                    <span class="fw-bold text-dark ms-2" th:text="${questionBoard.author.nickname}"></span>
+                    <span class="text-muted ms-4">Lecture:</span>
+                    <span class="fw-bold text-dark ms-2" th:text="${questionBoard.lectureId.name}"></span>
                 </div>
             </div>
         </div>
@@ -42,20 +43,14 @@
             <li class="list-group-item d-flex justify-content-between align-items-start" th:each="comment : ${questionComment}">
                 <div class="ms-2 me-auto">
                     <!-- 댓글 내용 -->
-                    <div th:if="${comment.editing == null || !comment.editing}">
-                        <div class="fw-bold text-dark" th:text="${comment.author.name}">작성자 이름</div>
-                        <span th:text="${comment.content}">댓글 내용</span>
+                    <div class="fw-bold text-dark"
+                         th:text="${comment.author.nickname + ' - ' + comment.author.grade}">
+                        작성자 이름 - 등급
                     </div>
-                    <!-- 수정 폼 -->
-                    <form th:if="${comment.editing}" th:action="@{/questionComments/edit/{qcomId}(qcomId=${comment.qcomId})}" method="post">
-                        <label>
-                            <textarea class="form-control mb-3" name="content" rows="2" th:text="${comment.content}"></textarea>
-                        </label>
-                        <button type="submit" class="btn btn-secondary btn-sm">수정 완료</button>
-                    </form>
+                    <span th:text="${comment.content}">댓글 내용</span>
                 </div>
                 <div>
-                    <button class="btn btn-sm btn-secondary" onclick="toggleEdit(this)">edit</button>
+                    <a th:href="@{/questionComments/edit/{qcomId}(qcomId=${comment.qcomId})}" class="btn btn-sm btn-secondary">edit</a>
                     <form th:action="@{/questionComments/delete/{qcomId}(qcomId=${comment.qcomId})}" method="post" class="d-inline">
                         <button type="submit" class="btn btn-sm btn-secondary">delete</button>
                     </form>
@@ -85,25 +80,31 @@
         </a>
     </div>
 </div>
+<script>
+    function incrementWarnCount(questionId) {
+        fetch(`/questionBoards/dislike/${questionId}`, {
+            method: 'POST'
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error('Failed to update dislike count');
+                }
+            })
+            .then(data => {
+                // 서버에서 반환된 warnCount 값으로 업데이트
+                const warnCountSpan = document.getElementById('warnCount');
+                warnCountSpan.textContent = data.warnCount;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+</script>
 </body>
 </html>
 
-<script>
-    function toggleEdit(button) {
-        const listItem = button.closest('li'); // 해당 리스트 아이템을 찾음
-        console.log(listItem); // 디버깅용 로그
-        const contentDiv = listItem.querySelector('div[th\\:if*="!comment.editing"]');
-        const editForm = listItem.querySelector('form[th\\:if*="comment.editing"]');
-        console.log(contentDiv, editForm); // 디버깅용 로그
 
-        if (contentDiv.style.display === 'none') {
-            contentDiv.style.display = '';
-            editForm.style.display = 'none';
-        } else {
-            contentDiv.style.display = 'none';
-            editForm.style.display = '';
-        }
-    }
-</script>
 
 

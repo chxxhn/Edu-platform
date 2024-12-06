@@ -25,6 +25,4 @@ public class QuestionCommentDTO {
     @JsonProperty("qId")
     private Integer qId;
 
-    private boolean editing;
-
 }
