@@ -36,6 +36,16 @@
         </div>
     </div>
     <div>
+        <h3>댓글 목록</h3>
+        <ul>
+            <!-- 반복문으로 각 댓글 출력 -->
+            <li th:each="comment : ${answer}">
+                <p>댓글 수: <span th:text="${#lists.size(answer)}"></span></p>
+                <span th:text="${comment.content}"></span>
+            </li>
+        </ul>
+    </div>
+    <div>
         <form th:action="@{/questionComments/add/{questionId}(questionId=${questionBoard.questionId})}" method="post">
             <label for="exampleTextarea" class="form-label mt-4">댓글 작성</label>
             <textarea class="form-control" id="exampleTextarea" name="content" rows="3"></textarea>

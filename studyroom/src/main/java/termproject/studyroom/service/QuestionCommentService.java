@@ -1,6 +1,8 @@
 package termproject.studyroom.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import termproject.studyroom.domain.QuestionBoard;
@@ -39,6 +41,15 @@ public class QuestionCommentService {
         return questionCommentRepository.findById(qcomId)
                 .map(questionComment -> mapToDTO(questionComment, new QuestionCommentDTO()))
                 .orElseThrow(NotFoundException::new);
+    }
+
+    public List<QuestionCommentDTO> findByQuestionId(Integer questionId) {
+        List<QuestionComment> questionComments = questionCommentRepository.findByqIdQuestionId(questionId);
+        System.out.println("helo");
+        System.out.println("Fetched comments: " + questionComments);
+        return questionComments.stream()
+                .map(questionComment -> mapToDTO(questionComment, new QuestionCommentDTO()))
+                .toList();
     }
 
     public Integer create(final QuestionCommentDTO questionCommentDTO) {

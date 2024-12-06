@@ -17,6 +17,8 @@ import termproject.studyroom.util.CustomCollectors;
 import termproject.studyroom.util.NotFoundException;
 import termproject.studyroom.util.WebUtils;
 
+import java.util.List;
+
 
 @Controller
 @RequestMapping("/questionComments")
@@ -50,23 +52,12 @@ public class QuestionCommentController {
         return "questionComment/list";
     }
 
-//    @GetMapping("/add")
-//    public String add(
-//            @ModelAttribute("questionComment") final QuestionCommentDTO questionCommentDTO) {
-//        return "questionComment/add";
-//    }
-//
-//    @PostMapping("/add")
-//    public String add(
-//            @ModelAttribute("questionComment") @Valid final QuestionCommentDTO questionCommentDTO,
-//            final BindingResult bindingResult, final RedirectAttributes redirectAttributes) {
-//        if (bindingResult.hasErrors()) {
-//            return "questionComment/add";
-//        }
-//        questionCommentService.create(questionCommentDTO);
-//        redirectAttributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("questionComment.create.success"));
-//        return "redirect:/questionComments";
-//    }
+    @GetMapping("/add/{questionId}")
+    public String add(final Model model, @PathVariable(name = "questionId") final Integer questionId) {
+        List<QuestionCommentDTO> questionCommentDTOS = questionCommentService.findByQuestionId(questionId);
+        model.addAttribute("answer", questionCommentDTOS);
+        return "questionComment/add";
+    }
 
     @PostMapping("/add/{questionId}")
     public String add(@PathVariable(name = "questionId") final Integer questionId, @RequestParam(value="content") String content,
