@@ -7,7 +7,7 @@
     <body>
         <div layout:fragment="content">
             <div class="d-flex flex-wrap mb-4">
-                <h1 class="flex-grow-1">Question board</h1>
+                <h1 class="flex-grow-1">질문게시판</h1>
                 <div>
                     <a th:href="@{/questionBoards/add}" class="btn btn-primary ms-2">[[#{questionBoard.list.createNew}]]</a>
                 </div>
@@ -21,8 +21,8 @@
                             <th scope="col">[[#{questionBoard.title.label}]]</th>
                             <th scope="col">[[#{questionBoard.author.label}]]</th>
                             <th scope="col">Lecture</th>
-                            <th scope="col">[[#{questionBoard.warnCount.label}]]</th>
-                            <th scope="col">[[#{questionBoard.likeCount.label}]]</th>
+                            <th scope="col">warn</th>
+                            <th scope="col">like</th>
                             <th><!-- --></th>
                         </tr>
                     </thead>
@@ -32,7 +32,7 @@
                             style="cursor: pointer;">
                             <td>[[${questionBoard.questionId}]]</td>
                             <td>[[${questionBoard.title}]]</td>
-                            <td>[[${questionBoard.author.name}]]</td>
+                            <td>[[${questionBoard.author.nickname + '(' + questionBoard.author.grade + ')'}]]</td>
                             <td>[[${questionBoard.lectureId.name}]]</td>
                             <td>[[${questionBoard.warnCount}]]</td>
                             <td>[[${questionBoard.likeCount}]]</td>

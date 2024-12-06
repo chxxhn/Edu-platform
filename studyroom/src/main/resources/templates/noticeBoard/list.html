@@ -7,7 +7,7 @@
     <body>
         <div layout:fragment="content">
             <div class="d-flex flex-wrap mb-4">
-                <h1 class="flex-grow-1">Notice board</h1>
+                <h1 class="flex-grow-1">공지게시판</h1>
                 <div>
                     <a th:href="@{/noticeBoards/add}" class="btn btn-primary ms-2">[[#{noticeBoard.list.createNew}]]</a>
                 </div>
@@ -30,7 +30,7 @@
                         style="cursor: pointer;">
                         <td>[[${noticeBoard.noticeId}]]</td>
                         <td>[[${noticeBoard.title}]]</td>
-                        <td>[[${noticeBoard.author.name}]]</td>
+                        <td>[[${noticeBoard.author.nickname + '(' + noticeBoard.author.grade + ')'}]]</td>
                         <td>[[${noticeBoard.lectureId.name}]]</td>
                         <td>
                             <div class="float-end text-nowrap">
@@ -49,6 +49,22 @@
                     </tr>
                     </tbody>
                 </table>
+            </div>
+            <div class="d-flex justify-content-center mt-3">
+                <!-- Pagination -->
+                <nav class="pagination-container">
+                    <ul class="pagination mb-0">
+                        <li class="page-item">
+                            <a class="page-link" th:href="@{/questionBoards?page=1}">1</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" th:href="@{/questionBoards?page=2}">2</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" th:href="@{/questionBoards?page=3}">3</a>
+                        </li>
+                    </ul>
+                </nav>
             </div>
         </div>
     </body>

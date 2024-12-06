@@ -24,12 +24,12 @@
                     <button class="btn btn-outline-danger btn-sm me-3" onclick="incrementWarnCount([[${questionBoard.questionId}]])">
                         warn <span class="badge bg-danger" id="warnCount" th:text="${questionBoard.warnCount}">0</span>
                     </button>
-                    <span class="text-muted">Like count:</span>
+                    <span class="text-muted">Like:</span>
                     <span class="fw-bold text-dark ms-2" th:text="${questionBoard.likeCount}"></span>
                 </div>
                 <div class="d-flex align-items-center text-muted">
                     <span>Author:</span>
-                    <span class="fw-bold text-dark ms-2" th:text="${questionBoard.author.nickname}"></span>
+                    <span class="fw-bold text-dark ms-2" th:text="${questionBoard.author.nickname + ' (' + questionBoard.author.grade + ')'}"></span>
                     <span class="text-muted ms-4">Lecture:</span>
                     <span class="fw-bold text-dark ms-2" th:text="${questionBoard.lectureId.name}"></span>
                 </div>
@@ -44,7 +44,7 @@
                 <div class="ms-2 me-auto">
                     <!-- 댓글 내용 -->
                     <div class="fw-bold text-dark"
-                         th:text="${comment.author.nickname + ' - ' + comment.author.grade}">
+                         th:text="${comment.author.nickname + ' ( ' + comment.author.grade + ' ) '}">
                         작성자 이름 - 등급
                     </div>
                     <span th:text="${comment.content}">댓글 내용</span>

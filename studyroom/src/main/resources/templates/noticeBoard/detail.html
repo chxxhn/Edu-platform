@@ -19,34 +19,19 @@
 
             <!-- Metadata -->
             <hr>
-            <div class="d-flex justify-content-between">
+            <div class="d-flex justify-content-end">
                 <div class="text-muted">
                     <span>Author:</span>
-                    <span class="fw-bold text-dark" th:text="${noticeBoard.author.name}"></span>
+                    <span class="fw-bold text-dark" th:text="${noticeBoard.author.name + ' (' + noticeBoard.author.grade + ')'}"></span>
                     <span class="text-muted ms-3">Lecture:</span>
                     <span class="fw-bold text-dark" th:text="${noticeBoard.lectureId.name}"></span>
-<!--                    <span class="fw-bold text-dark">Created At:</span>-->
-<!--                    <span class="fw-bold text-dark" th:text="${#dates.format(noticeBoard.dateCreated, 'yyyy-MM-dd HH:mm')}"></span>-->
+                    <!-- <span class="fw-bold text-dark">Created At:</span> -->
+                    <!-- <span class="fw-bold text-dark" th:text="${#dates.format(noticeBoard.dateCreated, 'yyyy-MM-dd HH:mm')}"></span> -->
                 </div>
             </div>
         </div>
     </div>
-    <div class="d-flex align-items-center justify-content-between mt-4">
-        <!-- Pagination -->
-        <nav class="pagination-container" style="margin-left: auto; margin-right: 24rem;">
-            <ul class="pagination mb-0">
-                <li class="page-item">
-                    <a class="page-link" th:href="@{/noticeBoards?page=1}">1</a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" th:href="@{/noticeBoards?page=2}">2</a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" th:href="@{/noticeBoards?page=3}">3</a>
-                </li>
-            </ul>
-        </nav>
-
+    <div class="d-flex justify-content-end mt-4">
         <!-- Back Button -->
         <a th:href="@{/noticeBoards}" class="btn btn-outline-primary">
             Back to Notice Board
