@@ -62,7 +62,7 @@ public class QuestionCommentService {
             final QuestionCommentDTO questionCommentDTO) {
         questionCommentDTO.setQcomId(questionComment.getQcomId());
         questionCommentDTO.setContent(questionComment.getContent());
-        questionCommentDTO.setAuthor(questionComment.getAuthor() == null ? null : questionComment.getAuthor().getStdId());
+        questionCommentDTO.setAuthor(questionComment.getAuthor() == null ? null : questionComment.getAuthor());
         questionCommentDTO.setQId(questionComment.getQId() == null ? null : questionComment.getQId().getQuestionId());
         return questionCommentDTO;
     }
@@ -70,7 +70,7 @@ public class QuestionCommentService {
     private QuestionComment mapToEntity(final QuestionCommentDTO questionCommentDTO,
             final QuestionComment questionComment) {
         questionComment.setContent(questionCommentDTO.getContent());
-        final User author = questionCommentDTO.getAuthor() == null ? null : userRepository.findById(questionCommentDTO.getAuthor())
+        final User author = questionCommentDTO.getAuthor() == null ? null : userRepository.findById(questionCommentDTO.getAuthor().getStdId())
                 .orElseThrow(() -> new NotFoundException("author not found"));
         questionComment.setAuthor(author);
         final QuestionBoard qId = questionCommentDTO.getQId() == null ? null : questionBoardRepository.findById(questionCommentDTO.getQId())
