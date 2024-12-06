@@ -10,10 +10,8 @@ import lombok.Setter;
 @Setter
 public class UserDTO {
 
-    private Integer stdId;
-
     @NotNull
-    private Integer stdNum;
+    private Integer stdId;
 
     @NotNull
     @Size(max = 10)

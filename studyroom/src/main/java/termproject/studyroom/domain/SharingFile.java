@@ -30,14 +30,14 @@ public class SharingFile {
     @Id
     @Column(nullable = false, updatable = false)
     @SequenceGenerator(
-            name = "primary_sequence",
-            sequenceName = "primary_sequence",
+            name = "primary_sequence_SF",
+            sequenceName = "primary_sequence_SF",
             allocationSize = 1,
             initialValue = 0
     )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
-            generator = "primary_sequence"
+            generator = "primary_sequence_SF"
     )
     private Integer shfId;
 

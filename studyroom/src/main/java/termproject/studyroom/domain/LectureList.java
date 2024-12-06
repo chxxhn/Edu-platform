@@ -29,14 +29,14 @@ public class LectureList {
     @Id
     @Column(nullable = false, updatable = false)
     @SequenceGenerator(
-            name = "primary_sequence",
-            sequenceName = "primary_sequence",
+            name = "primary_sequence_lectureList",
+            sequenceName = "primary_sequence_lecture",
             allocationSize = 1,
             initialValue = 0
     )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
-            generator = "primary_sequence"
+            generator = "primary_sequence_lectureList"
     )
     private Integer lectureId;
 

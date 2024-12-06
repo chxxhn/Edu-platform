@@ -19,21 +19,8 @@ import termproject.studyroom.model.Grade;
 public class User {
 
     @Id
-    @Column(name = "StdId")
-    @SequenceGenerator(
-            name = "primary_sequence",
-            sequenceName = "primary_sequence",
-            allocationSize = 1,
-            initialValue = 0
-    )
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "primary_sequence"
-    )
-    private Integer stdId;
-
     @Column(nullable = false, unique = true)
-    private Integer stdNum;
+    private Integer stdId;
 
     @Column(nullable = false, length = 10)
     private String name;

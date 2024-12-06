@@ -1,11 +1,9 @@
 package termproject.studyroom.domain;
 
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import termproject.studyroom.model.Grade;
 import termproject.studyroom.model.Team;
 
 @Data
@@ -16,24 +14,24 @@ import termproject.studyroom.model.Team;
 public class GroupUser {
 
     @EmbeddedId
-    private GroupUserId GroupUserId;
+    private GroupUserId groupUserId; // 복합 키 클래스
 
     @ManyToOne
-    @MapsId("userId") // LectureUserId의 userId를 매핑
-    @JoinColumn(name = "std_id", nullable = false)
+    @MapsId("userId") // 복합 키의 userId 필드를 매핑
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @ManyToOne
-    @MapsId("groupId") // LectureUserId의 lectureId를 매핑
-    @JoinColumn(name = "group_Id", nullable = false)
-    private GroupProject group;
+    @MapsId("lectureId") // 복합 키의 lectureId 필드를 매핑
+    @JoinColumn(name = "lecture_id", nullable = false)
+    private LectureList lectureList;
+
+    @ManyToOne
+    @MapsId("groupId") // 복합 키의 groupId 필드를 매핑
+    @JoinColumn(name = "group_id", nullable = false)
+    private GroupProject groupProject;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Team team;
-
-    @ManyToOne
-    @MapsId("lecture_Id")
-    @JoinColumn(name= "lecture_Id", nullable = false)
-    private LectureList lectureList;
 }

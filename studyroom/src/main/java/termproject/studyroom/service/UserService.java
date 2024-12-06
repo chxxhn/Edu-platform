@@ -110,7 +110,6 @@ public class UserService {
     }
 
     private UserDTO mapToDTO(final User user, final UserDTO userDTO) {
-        userDTO.setStdNum(user.getStdNum());
         userDTO.setStdId(user.getStdId());
         userDTO.setName(user.getName());
         userDTO.setNickname(user.getNickname());
@@ -121,7 +120,7 @@ public class UserService {
     }
 
     private User mapToEntity(final UserDTO userDTO, final User user) {
-        user.setStdNum(userDTO.getStdNum());
+        user.setStdId(userDTO.getStdId());
         user.setName(userDTO.getName());
         user.setNickname(userDTO.getNickname());
         user.setPassword(userDTO.getPassword());
