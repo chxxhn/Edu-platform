@@ -35,39 +35,50 @@
             </div>
         </div>
     </div>
+    <hr style="width: 30%; margin: 4rem auto 2rem auto; border: 2px solid #ccc;">
+    <div class="mt-5">
+        <h4 class="text-secondary">댓글 목록</h4>
+        <ul class="list-group mt-3">
+            <li class="list-group-item d-flex justify-content-between align-items-start" th:each="comment : ${questionComment}">
+                <div class="ms-2 me-auto">
+                    <!-- 댓글 내용 -->
+                    <div th:if="${comment.editing == null || !comment.editing}">
+                        <div class="fw-bold text-dark" th:text="${comment.author.name}">작성자 이름</div>
+                        <span th:text="${comment.content}">댓글 내용</span>
+                    </div>
+                    <!-- 수정 폼 -->
+                    <form th:if="${comment.editing}" th:action="@{/questionComments/edit/{qcomId}(qcomId=${comment.qcomId})}" method="post">
+                        <label>
+                            <textarea class="form-control mb-3" name="content" rows="2" th:text="${comment.content}"></textarea>
+                        </label>
+                        <button type="submit" class="btn btn-secondary btn-sm">수정 완료</button>
+                    </form>
+                </div>
+                <div>
+                    <button class="btn btn-sm btn-secondary" onclick="toggleEdit(this)">edit</button>
+                    <form th:action="@{/questionComments/delete/{qcomId}(qcomId=${comment.qcomId})}" method="post" class="d-inline">
+                        <button type="submit" class="btn btn-sm btn-secondary">delete</button>
+                    </form>
+                </div>
+            </li>
+        </ul>
+
+    </div>
     <div>
-        <h3>댓글 목록</h3>
-        <ul>
-            <!-- 반복문으로 각 댓글 출력 -->
-            <li th:each="comment : ${answer}">
-                <p>댓글 수: <span th:text="${#lists.size(answer)}"></span></p>
-                <span th:text="${comment.content}"></span>
+        <!-- 댓글 작성 -->
+        <h4 class="text-secondary mt-5">댓글 작성</h4>
+        <ul class="list-group mt-4">
+            <li class="list-group-item">
+                <form th:action="@{/questionComments/add/{questionId}(questionId=${questionBoard.questionId})}" method="post" class="d-flex flex-column">
+                    <label for="exampleTextarea" class="form-label fw-bold">내용</label>
+                    <textarea class="form-control mb-3" id="exampleTextarea" name="content" rows="3" placeholder="댓글을 입력하세요..."></textarea>
+                    <button type="submit" class="btn btn-secondary align-self-start">댓글 등록</button>
+                </form>
             </li>
         </ul>
     </div>
-    <div>
-        <form th:action="@{/questionComments/add/{questionId}(questionId=${questionBoard.questionId})}" method="post">
-            <label for="exampleTextarea" class="form-label mt-4">댓글 작성</label>
-            <textarea class="form-control" id="exampleTextarea" name="content" rows="3"></textarea>
-            <input type="submit" class="btn btn-success mt-3" value="댓글 등록">
-        </form>
-    </div>
-    <div class="d-flex align-items-center justify-content-between mt-4">
-        <!-- Pagination -->
-        <nav class="pagination-container" style="margin-left: auto; margin-right: 24rem;">
-            <ul class="pagination mb-0">
-                <li class="page-item">
-                    <a class="page-link" th:href="@{/questionBoards?page=1}">1</a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" th:href="@{/questionBoards?page=2}">2</a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" th:href="@{/questionBoards?page=3}">3</a>
-                </li>
-            </ul>
-        </nav>
 
+    <div class="d-flex justify-content-end mt-4">
         <!-- Back Button -->
         <a th:href="@{/questionBoards}" class="btn btn-outline-primary">
             Back to question Board
@@ -76,3 +87,23 @@
 </div>
 </body>
 </html>
+
+<script>
+    function toggleEdit(button) {
+        const listItem = button.closest('li'); // 해당 리스트 아이템을 찾음
+        console.log(listItem); // 디버깅용 로그
+        const contentDiv = listItem.querySelector('div[th\\:if*="!comment.editing"]');
+        const editForm = listItem.querySelector('form[th\\:if*="comment.editing"]');
+        console.log(contentDiv, editForm); // 디버깅용 로그
+
+        if (contentDiv.style.display === 'none') {
+            contentDiv.style.display = '';
+            editForm.style.display = 'none';
+        } else {
+            contentDiv.style.display = 'none';
+            editForm.style.display = '';
+        }
+    }
+</script>
+
+

@@ -45,8 +45,6 @@ public class QuestionCommentService {
 
     public List<QuestionCommentDTO> findByQuestionId(Integer questionId) {
         List<QuestionComment> questionComments = questionCommentRepository.findByqIdQuestionId(questionId);
-        System.out.println("helo");
-        System.out.println("Fetched comments: " + questionComments);
         return questionComments.stream()
                 .map(questionComment -> mapToDTO(questionComment, new QuestionCommentDTO()))
                 .toList();

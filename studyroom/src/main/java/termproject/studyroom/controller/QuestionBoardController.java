@@ -15,12 +15,18 @@ import termproject.studyroom.domain.LectureList;
 import termproject.studyroom.domain.User;
 import termproject.studyroom.model.NoticeBoardDTO;
 import termproject.studyroom.model.QuestionBoardDTO;
+import termproject.studyroom.model.QuestionCommentDTO;
 import termproject.studyroom.repos.LectureListRepository;
 import termproject.studyroom.repos.UserRepository;
 import termproject.studyroom.service.QuestionBoardService;
+import termproject.studyroom.service.QuestionCommentService;
 import termproject.studyroom.util.CustomCollectors;
 import termproject.studyroom.util.ReferencedWarning;
 import termproject.studyroom.util.WebUtils;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 @Controller
@@ -30,13 +36,16 @@ public class QuestionBoardController {
     private final QuestionBoardService questionBoardService;
     private final UserRepository userRepository;
     private final LectureListRepository lectureListRepository;
+    private final QuestionCommentService questionCommentService;
+
 
     public QuestionBoardController(final QuestionBoardService questionBoardService,
-            final UserRepository userRepository,
-            final LectureListRepository lectureListRepository) {
+                                   final UserRepository userRepository,
+                                   final LectureListRepository lectureListRepository, QuestionCommentService questionCommentService) {
         this.questionBoardService = questionBoardService;
         this.userRepository = userRepository;
         this.lectureListRepository = lectureListRepository;
+        this.questionCommentService = questionCommentService;
     }
 
     @ModelAttribute
@@ -51,7 +60,8 @@ public class QuestionBoardController {
 
     @GetMapping
     public String list(final Model model) {
-        model.addAttribute("questionBoards", questionBoardService.findAll());
+        List<QuestionBoardDTO> questionBoards = questionBoardService.findAll();
+        model.addAttribute("questionBoards", questionBoards);
         return "questionBoard/list";
     }
 
@@ -108,7 +118,9 @@ public class QuestionBoardController {
     @GetMapping(value = "/detail/{questionId}")
     public String detail(@PathVariable(name = "questionId") final Integer questionId, final Model model) {
         QuestionBoardDTO question = questionBoardService.get(questionId);
+        List<QuestionCommentDTO> comments = questionCommentService.findByQuestionId(questionId);
         model.addAttribute("questionBoard", question);
+        model.addAttribute("questionComment", comments);
         return "questionBoard/detail";
     }
 

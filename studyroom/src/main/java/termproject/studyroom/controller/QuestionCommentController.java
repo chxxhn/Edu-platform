@@ -17,8 +17,6 @@ import termproject.studyroom.util.CustomCollectors;
 import termproject.studyroom.util.NotFoundException;
 import termproject.studyroom.util.WebUtils;
 
-import java.util.List;
-
 
 @Controller
 @RequestMapping("/questionComments")
@@ -52,13 +50,6 @@ public class QuestionCommentController {
         return "questionComment/list";
     }
 
-    @GetMapping("/add/{questionId}")
-    public String add(final Model model, @PathVariable(name = "questionId") final Integer questionId) {
-        List<QuestionCommentDTO> questionCommentDTOS = questionCommentService.findByQuestionId(questionId);
-        model.addAttribute("answer", questionCommentDTOS);
-        return "questionComment/add";
-    }
-
     @PostMapping("/add/{questionId}")
     public String add(@PathVariable(name = "questionId") final Integer questionId, @RequestParam(value="content") String content,
                       final RedirectAttributes redirectAttributes) {
@@ -78,8 +69,13 @@ public class QuestionCommentController {
 
     @GetMapping("/edit/{qcomId}")
     public String edit(@PathVariable(name = "qcomId") final Integer qcomId, final Model model) {
-        model.addAttribute("questionComment", questionCommentService.get(qcomId));
-        return "questionComment/edit";
+        QuestionCommentDTO comment = questionCommentService.get(qcomId);
+        Integer questionId = comment.getQId();
+        System.out.println("good");
+        comment.setEditing(true); // 수정 상태로 변경
+        System.out.println("good");
+        model.addAttribute("questionComment", comment);
+        return "redirect:/questionBoards/detail/" + questionId;
     }
 
     @PostMapping("/edit/{qcomId}")
@@ -97,9 +93,11 @@ public class QuestionCommentController {
     @PostMapping("/delete/{qcomId}")
     public String delete(@PathVariable(name = "qcomId") final Integer qcomId,
             final RedirectAttributes redirectAttributes) {
+        QuestionCommentDTO comment = questionCommentService.get(qcomId);
+        Integer questionId = comment.getQId();
         questionCommentService.delete(qcomId);
         redirectAttributes.addFlashAttribute(WebUtils.MSG_INFO, WebUtils.getMessage("questionComment.delete.success"));
-        return "redirect:/questionComments";
+        return "redirect:/questionBoards/detail/" + questionId;
     }
 
 }
