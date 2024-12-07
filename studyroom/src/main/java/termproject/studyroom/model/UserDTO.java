@@ -31,7 +31,7 @@ public class UserDTO {
     @UserEmailUnique
     private String email;
 
-    @NotNull
+
     private Grade grade;
 
 }

@@ -8,7 +8,7 @@ spring:
       maximum-pool-size: 10
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     open-in-view: false
     properties:
       hibernate:
@@ -19,9 +19,9 @@ spring:
           new_generator_mappings: true
   sql:
     init:
-      platform: local
-      data-locations: classpath*:db/data.sql
-      mode: embedded
+      mode: always
+      continue-on-error: true
+      schema-locations: classpath:db/schema.sql
 error:
   handling:
     http-status-in-json-response: true
@@ -37,3 +37,8 @@ error:
       GroupBoardFileGbIdUnique: GROUP_BOARD_FILE_GB_ID_UNIQUE
       OldExamFileOeIdUnique: OLD_EXAM_FILE_OE_ID_UNIQUE
       SharingFileShIdUnique: SHARING_FILE_SH_ID_UNIQUE
+
+server:
+  servlet:
+    session:
+      timeout: 30m
