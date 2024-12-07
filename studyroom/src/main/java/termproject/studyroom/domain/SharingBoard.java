@@ -49,11 +49,11 @@ public class SharingBoard {
     @Column(nullable = false)
     private Integer warnCount;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id_id", nullable = false)
     private User userId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "lecture_id_id", nullable = false)
     private LectureList lectureId;
 

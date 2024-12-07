@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Sharing board detail</title>
+</head>
+<body>
+<div layout:fragment="content" class="container mt-3">
+    <!-- Title -->
+    <div class="mb-4">
+        <h1 class="fw-bold text-primary" th:text="${sharingBoard.title}"></h1>
+    </div>
+
+    <!-- Sharing Card -->
+    <div class="card">
+        <div class="card-body">
+            <!-- Content -->
+            <p class="card-text fs-5" th:text="${sharingBoard.content}"></p>
+
+            <!-- Metadata -->
+            <hr>
+            <div class="d-flex justify-content-between">
+                <div class="d-flex align-items-center">
+<!--                    <button class="btn btn-outline-danger btn-sm me-3" onclick="incrementWarnCount([[${sharingBoard.sharingId}]])">-->
+<!--                        warn <span class="badge bg-danger" id="warnCount" th:text="${sharingBoard.warnCount}">0</span>-->
+<!--                    </button>-->
+                    <span class="text-muted">Like:</span>
+                </div>
+                <div class="d-flex align-items-center text-muted">
+                    <span>Author:</span>
+                    <span class="fw-bold text-dark ms-2" th:text="${sharingBoard.userId.nickname + ' (' + sharingBoard.userId.grade + ')'}"></span>
+                    <span class="text-muted ms-4">Lecture:</span>
+                    <span class="fw-bold text-dark ms-2" th:text="${sharingBoard.lectureId.name}"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr style="width: 30%; margin: 4rem auto 2rem auto; border: 2px solid #ccc;">
+    <div class="mt-5" th:if="${#lists.size(sharingComment) > 0}">
+        <h4 class="text-secondary">댓글 목록</h4>
+        <ul class="list-group mt-3">
+            <li class="list-group-item d-flex justify-content-between align-items-start" th:each="comment : ${sharingComment}">
+                <div class="ms-2 me-auto">
+                    <!-- 댓글 내용 -->
+                    <div class="fw-bold text-dark"
+                         th:text="${comment.author.nickname + ' ( ' + comment.author.grade + ' ) '}">
+                        작성자 이름 - 등급
+                    </div>
+                    <span th:text="${comment.content}">댓글 내용</span>
+                </div>
+                <div>
+                    <a th:href="@{/sharingComments/edit/{shcomId}(shcomId=${comment.shcomId})}" class="btn btn-sm btn-secondary">edit</a>
+                    <form th:action="@{/sharingComments/delete/{shcomId}(shcomId=${comment.shcomId})}" method="post" class="d-inline">
+                        <button type="submit" class="btn btn-sm btn-secondary">delete</button>
+                    </form>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div>
+        <!-- 댓글 작성 -->
+        <h4 class="text-secondary mt-5">댓글 작성</h4>
+        <ul class="list-group mt-4">
+            <li class="list-group-item">
+                <form th:action="@{/sharingComments/add/{sharingId}(sharingId=${sharingBoard.sharingId})}" method="post" class="d-flex flex-column">
+                    <label for="exampleTextarea" class="form-label fw-bold">내용</label>
+                    <textarea class="form-control mb-3" id="exampleTextarea" name="content" rows="3" placeholder="댓글을 입력하세요..."></textarea>
+                    <button type="submit" class="btn btn-secondary align-self-start">댓글 등록</button>
+                </form>
+            </li>
+        </ul>
+    </div>
+    <div class="d-flex justify-content-end mt-4">
+        <!-- Back Button -->
+        <a th:href="@{/sharingBoards}" class="btn btn-outline-primary">
+            Back to sharing Board
+        </a>
+    </div>
+</div>
+<!--<script>-->
+<!--    function incrementWarnCount(questionId) {-->
+<!--        fetch(`/sharingBoards/dislike/${questionId}`, {-->
+<!--            method: 'POST'-->
+<!--        })-->
+<!--            .then(response => {-->
+<!--                if (response.ok) {-->
+<!--                    return response.json();-->
+<!--                } else {-->
+<!--                    throw new Error('Failed to update dislike count');-->
+<!--                }-->
+<!--            })-->
+<!--            .then(data => {-->
+<!--                // 서버에서 반환된 warnCount 값으로 업데이트-->
+<!--                const warnCountSpan = document.getElementById('warnCount');-->
+<!--                warnCountSpan.textContent = data.warnCount;-->
+<!--            })-->
+<!--            .catch(error => {-->
+<!--                console.error('Error:', error);-->
+<!--            });-->
+<!--    }-->
+<!--</script>-->
+</body>
+</html>
+
+
+
+
