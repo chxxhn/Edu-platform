@@ -7,7 +7,7 @@
     <body>
         <div layout:fragment="content">
             <div class="d-flex flex-wrap mb-4">
-                <h1 class="flex-grow-1">[[#{lectureRequest.list.headline}]]</h1>
+                <h1 class="flex-grow-1">강의요청 게시판</h1>
                 <div>
                     <a th:href="@{/lectureRequests/add}" class="btn btn-primary ms-2">[[#{lectureRequest.list.createNew}]]</a>
                 </div>
@@ -17,26 +17,29 @@
                 <table class="table table-striped table-hover align-middle">
                     <thead>
                         <tr>
-                            <th scope="col">[[#{lectureRequest.rqId.label}]]</th>
+                            <th scope="col">Id</th>
                             <th scope="col">[[#{lectureRequest.title.label}]]</th>
                             <th scope="col">[[#{lectureRequest.numberDesired.label}]]</th>
-                            <th scope="col">[[#{lectureRequest.lectureValid.label}]]</th>
-                            <th scope="col">[[#{lectureRequest.lectureId.label}]]</th>
+                            <th scope="col">Approval</th>
+                            <th scope="col">Lecture</th>
                             <th><!-- --></th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr th:each="lectureRequest : ${lectureRequests}">
+                        <tr th:each="lectureRequest : ${lectureRequests}"
+                            th:onclick="|window.location='@{/lectureRequests/detail/{rqId}(rqId=${lectureRequest.rqId})}'|"
+                            style="cursor: pointer;">
                             <td>[[${lectureRequest.rqId}]]</td>
                             <td>[[${lectureRequest.title}]]</td>
                             <td>[[${lectureRequest.numberDesired}]]</td>
                             <td>[[${lectureRequest.lectureValid}]]</td>
-                            <td>[[${lectureRequest.lectureId}]]</td>
+                            <td>[[${lectureRequest.lectureId.name}]]</td>
                             <td>
                                 <div class="float-end text-nowrap">
-                                    <a th:href="@{/lectureRequests/edit/{rqId}(rqId=${lectureRequest.rqId})}" class="btn btn-sm btn-secondary">[[#{lectureRequest.list.edit}]]</a>
+                                    <a th:href="@{/lectureRequests/edit/{rqId}(rqId=${lectureRequest.rqId})}" class="btn btn-sm btn-secondary"
+                                       onclick="event.stopPropagation();">[[#{lectureRequest.list.edit}]]</a>
                                     <form th:action="@{/lectureRequests/delete/{rqId}(rqId=${lectureRequest.rqId})}"
-                                            th:hx-confirm="#{delete.confirm}" method="post" class="d-inline">
+                                            th:hx-confirm="#{delete.confirm}" method="post" class="d-inline" onclick="event.stopPropagation();">
                                         <button type="submit" class="btn btn-sm btn-secondary">[[#{lectureRequest.list.delete}]]</button>
                                     </form>
                                 </div>

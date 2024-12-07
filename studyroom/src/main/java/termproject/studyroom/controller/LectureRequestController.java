@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import termproject.studyroom.domain.LectureList;
+import termproject.studyroom.domain.LectureRequest;
 import termproject.studyroom.model.LectureRequestDTO;
+import termproject.studyroom.model.NoticeBoardDTO;
 import termproject.studyroom.repos.LectureListRepository;
 import termproject.studyroom.service.LectureRequestService;
 import termproject.studyroom.util.CustomCollectors;
@@ -86,6 +88,13 @@ public class LectureRequestController {
         lectureRequestService.delete(rqId);
         redirectAttributes.addFlashAttribute(WebUtils.MSG_INFO, WebUtils.getMessage("lectureRequest.delete.success"));
         return "redirect:/lectureRequests";
+    }
+
+    @GetMapping(value = "/detail/{rqId}")
+    public String detail(@PathVariable(name = "rqId") final Integer rqId, final Model model) {
+        LectureRequestDTO request = lectureRequestService.get(rqId);
+        model.addAttribute("lectureRequest", request);
+        return "lectureRequest/detail";
     }
 
 }

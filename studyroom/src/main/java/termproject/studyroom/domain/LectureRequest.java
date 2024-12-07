@@ -52,7 +52,7 @@ public class LectureRequest {
     @Column(nullable = false)
     private Boolean lectureValid;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "lecture_id_id", nullable = false)
     private LectureList lectureId;
 
