@@ -1,10 +1,15 @@
 package termproject.studyroom.service;
 
 import java.util.List;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import termproject.studyroom.domain.CommunicationBoard;
 import termproject.studyroom.domain.LectureList;
+import termproject.studyroom.domain.OldExam;
 import termproject.studyroom.domain.User;
 import termproject.studyroom.model.CommunicationBoardDTO;
 import termproject.studyroom.repos.CommunicationBoardRepository;
@@ -40,6 +45,11 @@ public class CommunicationBoardService {
         return communicationBoardRepository.findById(comnId)
                 .map(communicationBoard -> mapToDTO(communicationBoard, new CommunicationBoardDTO()))
                 .orElseThrow(NotFoundException::new);
+    }
+
+    public Page<CommunicationBoard> getList(int page) {
+        Pageable pageable = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "comnId"));
+        return this.communicationBoardRepository.findAll(pageable);
     }
 
     public Integer create(final CommunicationBoardDTO communicationBoardDTO) {

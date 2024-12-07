@@ -26,7 +26,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr th:each="lectureRequest : ${lectureRequests}"
+                        <tr th:each="lectureRequest : ${paging.content}"
                             th:onclick="|window.location='@{/lectureRequests/detail/{rqId}(rqId=${lectureRequest.rqId})}'|"
                             style="cursor: pointer;">
                             <td>[[${lectureRequest.rqId}]]</td>
@@ -47,6 +47,33 @@
                         </tr>
                     </tbody>
                 </table>
+            </div>
+            <div class="d-flex justify-content-center mt-3">
+                <!-- Pagination -->
+                <nav class="pagination-container">
+                    <ul class="pagination mb-0">
+                        <!-- Previous Page -->
+                        <li th:classappend="${paging.first} ? 'disabled' : ''" class="page-item">
+                            <a class="page-link" th:href="@{/lectureRequests}" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+
+                        <!-- Page Numbers -->
+                        <li th:each="i : ${#numbers.sequence(0, paging.totalPages - 1)}"
+                            th:classappend="${i == paging.number} ? 'active' : ''"
+                            class="page-item">
+                            <a class="page-link" th:href="@{/lectureRequests(page=${i})}" th:text="${i + 1}">1</a>
+                        </li>
+
+                        <!-- Next Page -->
+                        <li th:classappend="${paging.last} ? 'disabled' : ''" class="page-item">
+                            <a class="page-link" th:href="@{/lectureRequests(page=${paging.number + 1})}" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
             </div>
         </div>
     </body>

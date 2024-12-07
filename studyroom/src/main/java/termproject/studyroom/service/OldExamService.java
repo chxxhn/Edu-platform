@@ -1,12 +1,13 @@
 package termproject.studyroom.service;
 
 import java.util.List;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import termproject.studyroom.domain.LectureList;
-import termproject.studyroom.domain.OldExam;
-import termproject.studyroom.domain.OldExamFile;
-import termproject.studyroom.domain.User;
+import termproject.studyroom.domain.*;
 import termproject.studyroom.model.OldExamDTO;
 import termproject.studyroom.repos.LectureListRepository;
 import termproject.studyroom.repos.OldExamFileRepository;
@@ -44,6 +45,11 @@ public class OldExamService {
         return oldExamRepository.findById(oeId)
                 .map(oldExam -> mapToDTO(oldExam, new OldExamDTO()))
                 .orElseThrow(NotFoundException::new);
+    }
+
+    public Page<OldExam> getList(int page) {
+        Pageable pageable = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "oeId"));
+        return this.oldExamRepository.findAll(pageable);
     }
 
     public Integer create(final OldExamDTO oldExamDTO) {

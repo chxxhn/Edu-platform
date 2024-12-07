@@ -1,13 +1,13 @@
 package termproject.studyroom.service;
 
 import java.util.List;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import termproject.studyroom.domain.LectureList;
-import termproject.studyroom.domain.SharingBoard;
-import termproject.studyroom.domain.SharingComment;
-import termproject.studyroom.domain.SharingFile;
-import termproject.studyroom.domain.User;
+import termproject.studyroom.domain.*;
 import termproject.studyroom.model.SharingBoardDTO;
 import termproject.studyroom.repos.LectureListRepository;
 import termproject.studyroom.repos.SharingBoardRepository;
@@ -49,6 +49,11 @@ public class SharingBoardService {
         return sharingBoardRepository.findById(sharingId)
                 .map(sharingBoard -> mapToDTO(sharingBoard, new SharingBoardDTO()))
                 .orElseThrow(NotFoundException::new);
+    }
+
+    public Page<SharingBoard> getList(int page) {
+        Pageable pageable = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "sharingId"));
+        return this.sharingBoardRepository.findAll(pageable);
     }
 
     public Integer create(final SharingBoardDTO sharingBoardDTO) {

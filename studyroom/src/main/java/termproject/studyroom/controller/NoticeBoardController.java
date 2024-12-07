@@ -30,8 +30,8 @@ public class NoticeBoardController {
     private final LectureListRepository lectureListRepository;
 
     public NoticeBoardController(final NoticeBoardService noticeBoardService,
-            final UserRepository userRepository,
-            final LectureListRepository lectureListRepository) {
+                                 final UserRepository userRepository,
+                                 final LectureListRepository lectureListRepository) {
         this.noticeBoardService = noticeBoardService;
         this.userRepository = userRepository;
         this.lectureListRepository = lectureListRepository;
@@ -60,7 +60,7 @@ public class NoticeBoardController {
 
     @PostMapping("/add")
     public String add(@ModelAttribute("noticeBoard") @Valid final NoticeBoardDTO noticeBoardDTO,
-            final BindingResult bindingResult, final RedirectAttributes redirectAttributes) {
+                      final BindingResult bindingResult, final RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             return "noticeBoard/add";
         }
@@ -77,8 +77,8 @@ public class NoticeBoardController {
 
     @PostMapping("/edit/{noticeId}")
     public String edit(@PathVariable(name = "noticeId") final Integer noticeId,
-            @ModelAttribute("noticeBoard") @Valid final NoticeBoardDTO noticeBoardDTO,
-            final BindingResult bindingResult, final RedirectAttributes redirectAttributes) {
+                       @ModelAttribute("noticeBoard") @Valid final NoticeBoardDTO noticeBoardDTO,
+                       final BindingResult bindingResult, final RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             return "noticeBoard/edit";
         }
@@ -89,7 +89,7 @@ public class NoticeBoardController {
 
     @PostMapping("/delete/{noticeId}")
     public String delete(@PathVariable(name = "noticeId") final Integer noticeId,
-            final RedirectAttributes redirectAttributes) {
+                         final RedirectAttributes redirectAttributes) {
         noticeBoardService.delete(noticeId);
         redirectAttributes.addFlashAttribute(WebUtils.MSG_INFO, WebUtils.getMessage("noticeBoard.delete.success"));
         return "redirect:/noticeBoards";

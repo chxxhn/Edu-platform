@@ -1,17 +1,16 @@
 package termproject.studyroom.controller;
 
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import termproject.studyroom.domain.CommunicationBoard;
 import termproject.studyroom.domain.LectureList;
+import termproject.studyroom.domain.SharingBoard;
 import termproject.studyroom.domain.User;
 import termproject.studyroom.model.QuestionBoardDTO;
 import termproject.studyroom.model.QuestionCommentDTO;
@@ -57,7 +56,9 @@ public class SharingBoardController {
     }
 
     @GetMapping
-    public String list(final Model model) {
+    public String list(final Model model, @RequestParam(value="page", defaultValue="0") int page) {
+        Page<SharingBoard> paging = this.sharingBoardService.getList(page);
+        model.addAttribute("paging", paging);
         model.addAttribute("sharingBoards", sharingBoardService.findAll());
         return "sharingBoard/list";
     }

@@ -26,7 +26,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr th:each="sharingBoard : ${sharingBoards}"
+                        <tr th:each="sharingBoard : ${paging.content}"
                             th:onclick="|window.location='@{/sharingBoards/detail/{sharingId}(sharingId=${sharingBoard.sharingId})}'|"
                             style="cursor: pointer;">
                             <td>[[${sharingBoard.sharingId}]]</td>
@@ -52,14 +52,25 @@
                 <!-- Pagination -->
                 <nav class="pagination-container">
                     <ul class="pagination mb-0">
-                        <li class="page-item">
-                            <a class="page-link" th:href="@{/sharingBoards?page=1}">1</a>
+                        <!-- Previous Page -->
+                        <li th:classappend="${paging.first} ? 'disabled' : ''" class="page-item">
+                            <a class="page-link" th:href="@{/sharingBoards(page=${paging.number - 1})}" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
                         </li>
-                        <li class="page-item">
-                            <a class="page-link" th:href="@{/sharingBoards?page=2}">2</a>
+
+                        <!-- Page Numbers -->
+                        <li th:each="i : ${#numbers.sequence(0, paging.totalPages - 1)}"
+                            th:classappend="${i == paging.number} ? 'active' : ''"
+                            class="page-item">
+                            <a class="page-link" th:href="@{/sharingBoards(page=${i})}" th:text="${i + 1}">1</a>
                         </li>
-                        <li class="page-item">
-                            <a class="page-link" th:href="@{/sharingBoards?page=3}">3</a>
+
+                        <!-- Next Page -->
+                        <li th:classappend="${paging.last} ? 'disabled' : ''" class="page-item">
+                            <a class="page-link" th:href="@{/sharingBoards(page=${paging.number + 1})}" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
                         </li>
                     </ul>
                 </nav>

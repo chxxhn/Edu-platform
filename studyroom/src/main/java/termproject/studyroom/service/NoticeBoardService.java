@@ -21,8 +21,8 @@ public class NoticeBoardService {
     private final LectureListRepository lectureListRepository;
 
     public NoticeBoardService(final NoticeBoardRepository noticeBoardRepository,
-            final UserRepository userRepository,
-            final LectureListRepository lectureListRepository) {
+                              final UserRepository userRepository,
+                              final LectureListRepository lectureListRepository) {
         this.noticeBoardRepository = noticeBoardRepository;
         this.userRepository = userRepository;
         this.lectureListRepository = lectureListRepository;
@@ -59,7 +59,7 @@ public class NoticeBoardService {
     }
 
     private NoticeBoardDTO mapToDTO(final NoticeBoard noticeBoard,
-            final NoticeBoardDTO noticeBoardDTO) {
+                                    final NoticeBoardDTO noticeBoardDTO) {
         noticeBoardDTO.setNoticeId(noticeBoard.getNoticeId());
         noticeBoardDTO.setTitle(noticeBoard.getTitle());
         noticeBoardDTO.setContent(noticeBoard.getContent());
@@ -70,7 +70,7 @@ public class NoticeBoardService {
     }
 
     private NoticeBoard mapToEntity(final NoticeBoardDTO noticeBoardDTO,
-            final NoticeBoard noticeBoard) {
+                                    final NoticeBoard noticeBoard) {
         noticeBoard.setTitle(noticeBoardDTO.getTitle());
         noticeBoard.setContent(noticeBoardDTO.getContent());
         final User author = noticeBoardDTO.getAuthor() == null ? null : userRepository.findById(noticeBoardDTO.getAuthor().getStdId())
