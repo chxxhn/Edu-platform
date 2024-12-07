@@ -48,6 +48,22 @@
                     </tbody>
                 </table>
             </div>
+            <div class="d-flex justify-content-center mt-3">
+                <!-- Pagination -->
+                <nav class="pagination-container">
+                    <ul class="pagination mb-0">
+                        <li class="page-item">
+                            <a class="page-link" th:href="@{/sharingBoards?page=1}">1</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" th:href="@{/sharingBoards?page=2}">2</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" th:href="@{/sharingBoards?page=3}">3</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
         </div>
     </body>
 </html>
