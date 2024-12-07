@@ -1,6 +1,10 @@
 package termproject.studyroom.service;
 
 import java.util.List;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import termproject.studyroom.domain.LectureList;
@@ -44,6 +48,11 @@ public class QuestionBoardService {
         return questionBoardRepository.findById(questionId)
                 .map(questionBoard -> mapToDTO(questionBoard, new QuestionBoardDTO()))
                 .orElseThrow(NotFoundException::new);
+    }
+
+    public Page<QuestionBoard> getList(int page) {
+        Pageable pageable = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "questionId"));
+        return this.questionBoardRepository.findAll(pageable);
     }
 
     public Integer create(final QuestionBoardDTO questionBoardDTO) {

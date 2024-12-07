@@ -14,6 +14,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import termproject.studyroom.domain.LectureList;
 import termproject.studyroom.domain.User;
 import termproject.studyroom.model.CommunicationBoardDTO;
+import termproject.studyroom.model.NoticeBoardDTO;
 import termproject.studyroom.repos.LectureListRepository;
 import termproject.studyroom.repos.UserRepository;
 import termproject.studyroom.service.CommunicationBoardService;
@@ -95,6 +96,13 @@ public class CommunicationBoardController {
         communicationBoardService.delete(comnId);
         redirectAttributes.addFlashAttribute(WebUtils.MSG_INFO, WebUtils.getMessage("communicationBoard.delete.success"));
         return "redirect:/communicationBoards";
+    }
+
+    @GetMapping(value = "/detail/{comnId}")
+    public String detail(@PathVariable(name = "comnId") final Integer comnId, final Model model) {
+        CommunicationBoardDTO communication = communicationBoardService.get(comnId);
+        model.addAttribute("communicationBoard", communication);
+        return "communicationBoard/detail";
     }
 
 }

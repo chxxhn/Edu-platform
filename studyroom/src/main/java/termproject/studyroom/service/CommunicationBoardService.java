@@ -65,8 +65,8 @@ public class CommunicationBoardService {
         communicationBoardDTO.setContent(communicationBoard.getContent());
         communicationBoardDTO.setMaxnum(communicationBoard.getMaxnum());
         communicationBoardDTO.setValid(communicationBoard.getValid());
-        communicationBoardDTO.setAuthor(communicationBoard.getAuthor() == null ? null : communicationBoard.getAuthor().getStdId());
-        communicationBoardDTO.setLectureId(communicationBoard.getLectureId() == null ? null : communicationBoard.getLectureId().getLectureId());
+        communicationBoardDTO.setAuthor(communicationBoard.getAuthor() == null ? null : communicationBoard.getAuthor());
+        communicationBoardDTO.setLectureId(communicationBoard.getLectureId() == null ? null : communicationBoard.getLectureId());
         return communicationBoardDTO;
     }
 
@@ -75,10 +75,10 @@ public class CommunicationBoardService {
         communicationBoard.setContent(communicationBoardDTO.getContent());
         communicationBoard.setMaxnum(communicationBoardDTO.getMaxnum());
         communicationBoard.setValid(communicationBoardDTO.getValid());
-        final User author = communicationBoardDTO.getAuthor() == null ? null : userRepository.findById(communicationBoardDTO.getAuthor())
+        final User author = communicationBoardDTO.getAuthor() == null ? null : userRepository.findById(communicationBoardDTO.getAuthor().getStdId())
                 .orElseThrow(() -> new NotFoundException("author not found"));
         communicationBoard.setAuthor(author);
-        final LectureList lectureId = communicationBoardDTO.getLectureId() == null ? null : lectureListRepository.findById(communicationBoardDTO.getLectureId())
+        final LectureList lectureId = communicationBoardDTO.getLectureId() == null ? null : lectureListRepository.findById(communicationBoardDTO.getLectureId().getLectureId())
                 .orElseThrow(() -> new NotFoundException("lectureId not found"));
         communicationBoard.setLectureId(lectureId);
         return communicationBoard;

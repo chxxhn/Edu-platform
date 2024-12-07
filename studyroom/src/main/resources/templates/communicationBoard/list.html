@@ -7,7 +7,7 @@
     <body>
         <div layout:fragment="content">
             <div class="d-flex flex-wrap mb-4">
-                <h1 class="flex-grow-1">[[#{communicationBoard.list.headline}]]</h1>
+                <h1 class="flex-grow-1">만남 게시판</h1>
                 <div>
                     <a th:href="@{/communicationBoards/add}" class="btn btn-primary ms-2">[[#{communicationBoard.list.createNew}]]</a>
                 </div>
@@ -17,26 +17,31 @@
                 <table class="table table-striped table-hover align-middle">
                     <thead>
                         <tr>
-                            <th scope="col">[[#{communicationBoard.comnId.label}]]</th>
+                            <th scope="col">Id</th>
+                            <th scope="col">content</th>
+                            <th scope="col">[[#{communicationBoard.author.label}]]</th>
+                            <th scope="col">Lecture</th>
                             <th scope="col">[[#{communicationBoard.maxnum.label}]]</th>
                             <th scope="col">[[#{communicationBoard.valid.label}]]</th>
-                            <th scope="col">[[#{communicationBoard.author.label}]]</th>
-                            <th scope="col">[[#{communicationBoard.lectureId.label}]]</th>
                             <th><!-- --></th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr th:each="communicationBoard : ${communicationBoards}">
+                        <tr th:each="communicationBoard : ${communicationBoards}"
+                            th:onclick="|window.location='@{/communicationBoards/detail/{comnId}(comnId=${communicationBoard.comnId})}'|"
+                            style="cursor: pointer;">
                             <td>[[${communicationBoard.comnId}]]</td>
+                            <td>[[${communicationBoard.content}]]</td>
+                            <td>[[${communicationBoard.author.nickname + '(' + communicationBoard.author.grade + ')'}]]</td>
+                            <td>[[${communicationBoard.lectureId.name}]]</td>
                             <td>[[${communicationBoard.maxnum}]]</td>
                             <td>[[${communicationBoard.valid}]]</td>
-                            <td>[[${communicationBoard.author}]]</td>
-                            <td>[[${communicationBoard.lectureId}]]</td>
                             <td>
                                 <div class="float-end text-nowrap">
-                                    <a th:href="@{/communicationBoards/edit/{comnId}(comnId=${communicationBoard.comnId})}" class="btn btn-sm btn-secondary">[[#{communicationBoard.list.edit}]]</a>
+                                    <a th:href="@{/communicationBoards/edit/{comnId}(comnId=${communicationBoard.comnId})}" class="btn btn-sm btn-secondary"
+                                       onclick="event.stopPropagation();">[[#{communicationBoard.list.edit}]]</a>
                                     <form th:action="@{/communicationBoards/delete/{comnId}(comnId=${communicationBoard.comnId})}"
-                                            th:hx-confirm="#{delete.confirm}" method="post" class="d-inline">
+                                            th:hx-confirm="#{delete.confirm}" method="post" class="d-inline" onclick="event.stopPropagation();">
                                         <button type="submit" class="btn btn-sm btn-secondary">[[#{communicationBoard.list.delete}]]</button>
                                     </form>
                                 </div>

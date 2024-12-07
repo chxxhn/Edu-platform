@@ -27,26 +27,26 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr th:each="questionBoard : ${questionBoards}"
-                            th:onclick="|window.location='@{/questionBoards/detail/{questionId}(questionId=${questionBoard.questionId})}'|"
-                            style="cursor: pointer;">
-                            <td>[[${questionBoard.questionId}]]</td>
-                            <td>[[${questionBoard.title}]]</td>
-                            <td>[[${questionBoard.author.nickname + '(' + questionBoard.author.grade + ')'}]]</td>
-                            <td>[[${questionBoard.lectureId.name}]]</td>
-                            <td>[[${questionBoard.warnCount}]]</td>
-                            <td>[[${questionBoard.likeCount}]]</td>
-                            <td>
-                                <div class="float-end text-nowrap">
-                                    <a th:href="@{/questionBoards/edit/{questionId}(questionId=${questionBoard.questionId})}" class="btn btn-sm btn-secondary"
-                                       onclick="event.stopPropagation();">[[#{questionBoard.list.edit}]]</a>
-                                    <form th:action="@{/questionBoards/delete/{questionId}(questionId=${questionBoard.questionId})}"
-                                            th:hx-confirm="#{delete.confirm}" method="post" class="d-inline" onclick="event.stopPropagation();">
-                                        <button type="submit" class="btn btn-sm btn-secondary">[[#{questionBoard.list.delete}]]</button>
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
+                    <tr th:each="questionBoard : ${paging.content}"
+                        th:onclick="|window.location='@{/questionBoards/detail/{questionId}(questionId=${questionBoard.questionId})}'|"
+                        style="cursor: pointer;">
+                        <td>[[${questionBoard.questionId}]]</td>
+                        <td>[[${questionBoard.title}]]</td>
+                        <td>[[${questionBoard.author.nickname + '(' + questionBoard.author.grade + ')'}]]</td>
+                        <td>[[${questionBoard.lectureId.name}]]</td>
+                        <td>[[${questionBoard.warnCount}]]</td>
+                        <td>[[${questionBoard.likeCount}]]</td>
+                        <td>
+                            <div class="float-end text-nowrap">
+                                <a th:href="@{/questionBoards/edit/{questionId}(questionId=${questionBoard.questionId})}" class="btn btn-sm btn-secondary"
+                                   onclick="event.stopPropagation();">[[#{questionBoard.list.edit}]]</a>
+                                <form th:action="@{/questionBoards/delete/{questionId}(questionId=${questionBoard.questionId})}"
+                                      th:hx-confirm="#{delete.confirm}" method="post" class="d-inline" onclick="event.stopPropagation();">
+                                    <button type="submit" class="btn btn-sm btn-secondary">[[#{questionBoard.list.delete}]]</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
                     </tbody>
                 </table>
             </div>
@@ -54,19 +54,29 @@
                 <!-- Pagination -->
                 <nav class="pagination-container">
                     <ul class="pagination mb-0">
-                        <li class="page-item">
-                            <a class="page-link" th:href="@{/questionBoards?page=1}">1</a>
+                        <!-- Previous Page -->
+                        <li th:classappend="${paging.first} ? 'disabled' : ''" class="page-item">
+                            <a class="page-link" th:href="@{/questionBoards(page=${paging.number - 1})}" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
                         </li>
-                        <li class="page-item">
-                            <a class="page-link" th:href="@{/questionBoards?page=2}">2</a>
+
+                        <!-- Page Numbers -->
+                        <li th:each="i : ${#numbers.sequence(0, paging.totalPages - 1)}"
+                            th:classappend="${i == paging.number} ? 'active' : ''"
+                            class="page-item">
+                            <a class="page-link" th:href="@{/questionBoards(page=${i})}" th:text="${i + 1}">1</a>
                         </li>
-                        <li class="page-item">
-                            <a class="page-link" th:href="@{/questionBoards?page=3}">3</a>
+
+                        <!-- Next Page -->
+                        <li th:classappend="${paging.last} ? 'disabled' : ''" class="page-item">
+                            <a class="page-link" th:href="@{/questionBoards(page=${paging.number + 1})}" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
                         </li>
                     </ul>
                 </nav>
             </div>
-
         </div>
     </body>
 </html>
