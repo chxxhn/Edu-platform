@@ -16,16 +16,6 @@
     margin-top: 0; /* 기본 위치 유지 */
 }
 
-/*.ta-grade {*/
-/*    color: #f0ad4e !important; !* Minty warning color *!*/
-/*}*/
-/*.prof-grade {*/
-/*    color: #d9534f !important; !* Danger color *!*/
-/*}*/
-/*.std-grade {*/
-/*    color: #5bc0de !important; !* Info color *!*/
-/*}*/
-
 .centralize-container {
     display: flex;
     flex-direction: column; /* 요소들을 세로 정렬 */

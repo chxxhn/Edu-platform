@@ -32,7 +32,11 @@
                         style="cursor: pointer;">
                         <td>[[${questionBoard.questionId}]]</td>
                         <td>[[${questionBoard.title}]]</td>
-                        <td>[[${questionBoard.author.nickname + '(' + questionBoard.author.grade + ')'}]]</td>
+                        <td>
+                            <span th:class="${questionBoard.author.grade.name() == 'TA'} ? 'fw-bold text-primary'
+                                   : (${questionBoard.author.grade.name() == 'PROF'} ? 'fw-bold text-info' : 'text-dark')"
+                                  th:text="${questionBoard.author.nickname + ' (' + questionBoard.author.grade + ')'}"></span>
+                        </td>
                         <td>[[${questionBoard.lectureId.name}]]</td>
                         <td>[[${questionBoard.warnCount}]]</td>
                         <td>[[${questionBoard.likeCount}]]</td>

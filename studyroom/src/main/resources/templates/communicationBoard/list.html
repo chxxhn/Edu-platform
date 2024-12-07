@@ -32,7 +32,11 @@
                             style="cursor: pointer;">
                             <td>[[${communicationBoard.comnId}]]</td>
                             <td>[[${communicationBoard.content}]]</td>
-                            <td>[[${communicationBoard.author.nickname + '(' + communicationBoard.author.grade + ')'}]]</td>
+                            <td>
+                                <span th:class="${communicationBoard.author.grade.name() == 'TA'} ? 'fw-bold text-primary'
+                                   : (${communicationBoard.author.grade.name() == 'PROF'} ? 'fw-bold text-info' : 'text-dark')"
+                                      th:text="${communicationBoard.author.nickname + ' (' + communicationBoard.author.grade + ')'}"></span>
+                            </td>
                             <td>[[${communicationBoard.lectureId.name}]]</td>
                             <td>[[${communicationBoard.maxnum}]]</td>
                             <td>[[${communicationBoard.valid}]]</td>

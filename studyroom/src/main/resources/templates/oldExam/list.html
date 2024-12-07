@@ -30,7 +30,11 @@
                             style="cursor: pointer;">
                             <td>[[${oldExam.oeId}]]</td>
                             <td>[[${oldExam.title}]]</td>
-                            <td>[[${oldExam.author.name + '(' + oldExam.author.grade + ')'}]]</td>
+                            <td>
+                                <span th:class="${oldExam.author.grade.name() == 'TA'} ? 'fw-bold text-primary'
+                                   : (${oldExam.author.grade.name() == 'PROF'} ? 'fw-bold text-info' : 'text-dark')"
+                                      th:text="${oldExam.author.nickname + ' (' + oldExam.author.grade + ')'}"></span>
+                            </td>
                             <td>[[${oldExam.lectureId.name}]]</td>
                             <td>
                                 <div class="float-end text-nowrap">

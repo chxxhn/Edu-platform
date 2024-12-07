@@ -31,7 +31,11 @@
                             style="cursor: pointer;">
                             <td>[[${sharingBoard.sharingId}]]</td>
                             <td>[[${sharingBoard.title}]]</td>
-                            <td>[[${sharingBoard.userId.nickname+ '(' + sharingBoard.userId.grade + ')'}]]</td>
+                            <td>
+                                <span th:class="${sharingBoard.userId.grade.name() == 'TA'} ? 'fw-bold text-primary'
+                                   : (${sharingBoard.userId.grade.name() == 'PROF'} ? 'fw-bold text-info' : 'text-dark')"
+                                      th:text="${sharingBoard.userId.nickname + ' (' + sharingBoard.userId.grade + ')'}"></span>
+                            </td>
                             <td>[[${sharingBoard.lectureId.name}]]</td>
                             <td>[[${sharingBoard.warnCount}]]</td>
                             <td>

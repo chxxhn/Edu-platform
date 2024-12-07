@@ -22,7 +22,11 @@
       <div class="d-flex justify-content-end">
         <div class="text-muted">
           <span>Author:</span>
-          <span class="fw-bold text-dark" th:text="${communicationBoard.author.name + ' (' + communicationBoard.author.grade + ')'}"></span>
+          <span class="fw-bold ms-2"
+                th:class="${communicationBoard.author.grade.name() == 'TA'} ? 'fw-bold ms-2 text-primary'
+                           : (${communicationBoard.author.grade.name() == 'PROF'} ? 'fw-bold ms-2 text-info' : 'fw-bold ms-2 text-dark')"
+                th:text="${communicationBoard.author.nickname + ' (' + communicationBoard.author.grade + ')'}">
+                    </span>
           <span class="text-muted ms-3">Lecture:</span>
           <span class="fw-bold text-dark" th:text="${communicationBoard.lectureId.name}"></span>
           <!-- <span class="fw-bold text-dark">Created At:</span> -->

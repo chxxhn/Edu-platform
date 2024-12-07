@@ -28,7 +28,11 @@
                 </div>
                 <div class="d-flex align-items-center text-muted">
                     <span>Author:</span>
-                    <span class="fw-bold text-dark ms-2" th:text="${sharingBoard.userId.nickname + ' (' + sharingBoard.userId.grade + ')'}"></span>
+                    <span class="fw-bold ms-2"
+                          th:class="${sharingBoard.userId.grade.name() == 'TA'} ? 'fw-bold ms-2 text-primary'
+                           : (${sharingBoard.userId.grade.name() == 'PROF'} ? 'fw-bold ms-2 text-info' : 'fw-bold ms-2 text-dark')"
+                          th:text="${sharingBoard.userId.nickname + ' (' + sharingBoard.userId.grade + ')'}">
+                    </span>
                     <span class="text-muted ms-4">Lecture:</span>
                     <span class="fw-bold text-dark ms-2" th:text="${sharingBoard.lectureId.name}"></span>
                 </div>
@@ -42,7 +46,9 @@
             <li class="list-group-item d-flex justify-content-between align-items-start" th:each="comment : ${sharingComment}">
                 <div class="ms-2 me-auto">
                     <!-- 댓글 내용 -->
-                    <div class="fw-bold text-dark"
+                    <div class="fw-bold"
+                         th:classappend="${comment.author.grade.name() == 'TA'} ? 'text-primary'
+                    : (${comment.author.grade.name() == 'PROF'} ? 'text-danger' : 'text-dark')"
                          th:text="${comment.author.nickname + ' ( ' + comment.author.grade + ' ) '}">
                         작성자 이름 - 등급
                     </div>
