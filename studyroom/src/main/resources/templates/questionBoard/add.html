@@ -16,8 +16,6 @@
             <form th:action="${requestUri}" method="post">
                 <div th:replace="~{fragments/forms::inputRow(object='questionBoard', field='title', required=true)}" />
                 <div th:replace="~{fragments/forms::inputRow(object='questionBoard', field='content', required=true, type='textarea')}" />
-                <div th:replace="~{fragments/forms::inputRow(object='questionBoard', field='warnCount', required=true, type='number')}" />
-                <div th:replace="~{fragments/forms::inputRow(object='questionBoard', field='likeCount', required=true, type='number')}" />
                 <div th:replace="~{fragments/forms::inputRow(object='questionBoard', field='author', required=true, type='select')}" />
                 <div th:replace="~{fragments/forms::inputRow(object='questionBoard', field='lectureId', required=true, type='select')}" />
                 <input type="submit" th:value="#{questionBoard.add.headline}" class="btn btn-primary mt-4" />

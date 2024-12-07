@@ -21,11 +21,9 @@ public class QuestionBoardDTO {
     @NotNull
     private String content;
 
-    @NotNull
-    private Integer warnCount;
+    private Integer warnCount = 0;
 
-    @NotNull
-    private Integer likeCount;
+    private Integer likeCount = 0;
 
     @NotNull
     private User author;

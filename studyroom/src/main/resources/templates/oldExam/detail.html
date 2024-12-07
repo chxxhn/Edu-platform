@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Old Exam detail</title>
+</head>
+<body>
+<div layout:fragment="content" class="container mt-3">
+    <!-- Title -->
+    <div class="mb-4">
+        <h1 class="fw-bold text-primary" th:text="${oldExam.title}"></h1>
+    </div>
+
+    <!-- Old Exam Card -->
+    <div class="card">
+        <div class="card-body">
+            <!-- Content -->
+            <p class="card-text fs-5" th:text="${oldExam.content}"></p>
+
+            <!-- Metadata -->
+            <hr>
+            <div class="d-flex justify-content-end">
+                <div class="text-muted">
+                    <span>Author:</span>
+                    <span class="fw-bold text-dark" th:text="${oldExam.author.name + ' (' + oldExam.author.grade + ')'}"></span>
+                    <span class="text-muted ms-3">Lecture:</span>
+                    <span class="fw-bold text-dark" th:text="${oldExam.lectureId.name}"></span>
+                    <!-- <span class="fw-bold text-dark">Created At:</span> -->
+                    <!-- <span class="fw-bold text-dark" th:text="${#dates.format(noticeBoard.dateCreated, 'yyyy-MM-dd HH:mm')}"></span> -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="d-flex justify-content-end mt-4">
+        <!-- Back Button -->
+        <a th:href="@{/oldExams}" class="btn btn-outline-primary">
+            Back to Old Exam
+        </a>
+    </div>
+</div>
+</body>
+</html>

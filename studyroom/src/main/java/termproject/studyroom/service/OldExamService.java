@@ -67,18 +67,18 @@ public class OldExamService {
         oldExamDTO.setOeId(oldExam.getOeId());
         oldExamDTO.setTitle(oldExam.getTitle());
         oldExamDTO.setContent(oldExam.getContent());
-        oldExamDTO.setAuthor(oldExam.getAuthor() == null ? null : oldExam.getAuthor().getStdId());
-        oldExamDTO.setLectureId(oldExam.getLectureId() == null ? null : oldExam.getLectureId().getLectureId());
+        oldExamDTO.setAuthor(oldExam.getAuthor() == null ? null : oldExam.getAuthor());
+        oldExamDTO.setLectureId(oldExam.getLectureId() == null ? null : oldExam.getLectureId());
         return oldExamDTO;
     }
 
     private OldExam mapToEntity(final OldExamDTO oldExamDTO, final OldExam oldExam) {
         oldExam.setTitle(oldExamDTO.getTitle());
         oldExam.setContent(oldExamDTO.getContent());
-        final User author = oldExamDTO.getAuthor() == null ? null : userRepository.findById(oldExamDTO.getAuthor())
+        final User author = oldExamDTO.getAuthor() == null ? null : userRepository.findById(oldExamDTO.getAuthor().getStdId())
                 .orElseThrow(() -> new NotFoundException("author not found"));
         oldExam.setAuthor(author);
-        final LectureList lectureId = oldExamDTO.getLectureId() == null ? null : lectureListRepository.findById(oldExamDTO.getLectureId())
+        final LectureList lectureId = oldExamDTO.getLectureId() == null ? null : lectureListRepository.findById(oldExamDTO.getLectureId().getLectureId())
                 .orElseThrow(() -> new NotFoundException("lectureId not found"));
         oldExam.setLectureId(lectureId);
         return oldExam;
