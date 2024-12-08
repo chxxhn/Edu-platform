@@ -3,10 +3,9 @@ package termproject.studyroom.repos;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import termproject.studyroom.domain.CommunicationBoard;
-import termproject.studyroom.domain.LectureList;
-import termproject.studyroom.domain.SharingBoard;
-import termproject.studyroom.domain.User;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import termproject.studyroom.domain.*;
 
 
 public interface SharingBoardRepository extends JpaRepository<SharingBoard, Integer> {
@@ -17,4 +16,6 @@ public interface SharingBoardRepository extends JpaRepository<SharingBoard, Inte
 
     Page<SharingBoard> findAll(Pageable pageable);
 
-}
+    @Query("SELECT s FROM SharingBoard s WHERE s.lectureId = :lectureId")
+    Page<SharingBoard> findByLectureIdWithPaging(@Param("lectureId") LectureList lectureId, Pageable pageable);}
+

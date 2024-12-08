@@ -9,7 +9,7 @@
             <div class="d-flex flex-wrap mb-4">
                 <h1 class="flex-grow-1">수업필기 공유 게시판</h1>
                 <div>
-                    <a th:href="@{/sharingBoards/add}" class="btn btn-primary ms-2">[[#{sharingBoard.list.createNew}]]</a>
+                    <a th:href="@{/sharingBoards/add/{lectureId}(lectureId=${selectedLecture.lectureId})}" class="btn btn-primary ms-2">[[#{sharingBoard.list.createNew}]]</a>
                 </div>
             </div>
             <div th:if="${sharingBoards.empty}">[[#{sharingBoard.list.empty}]]</div>
@@ -27,7 +27,7 @@
                     </thead>
                     <tbody>
                         <tr th:each="sharingBoard : ${paging.content}"
-                            th:onclick="|window.location='@{/sharingBoards/detail/{sharingId}(sharingId=${sharingBoard.sharingId})}'|"
+                            th:onclick="|window.location='/sharingBoards/detail/'+ ${selectedLecture.lectureId} + '/' + ${sharingBoard.sharingId}|"
                             style="cursor: pointer;">
                             <td>[[${sharingBoard.sharingId}]]</td>
                             <td>[[${sharingBoard.title}]]</td>

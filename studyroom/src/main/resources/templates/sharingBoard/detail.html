@@ -71,6 +71,7 @@
                 <form th:action="@{/sharingComments/add/{sharingId}(sharingId=${sharingBoard.sharingId})}" method="post" class="d-flex flex-column">
                     <label for="exampleTextarea" class="form-label fw-bold">내용</label>
                     <textarea class="form-control mb-3" id="exampleTextarea" name="content" rows="3" placeholder="댓글을 입력하세요..."></textarea>
+                    <input type="hidden" th:name="lectureId" th:value="${selectedLecture.lectureId}" />
                     <button type="submit" class="btn btn-secondary align-self-start">댓글 등록</button>
                 </form>
             </li>

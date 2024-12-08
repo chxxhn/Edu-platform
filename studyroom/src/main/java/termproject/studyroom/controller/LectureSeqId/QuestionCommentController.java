@@ -72,7 +72,6 @@ public class QuestionCommentController {
                       final RedirectAttributes redirectAttributes) {
         QuestionCommentDTO questionCommentDTO = new QuestionCommentDTO();
 
-        // 테스트용 user 설정, 나중에 로그인 완성하면 고쳐야함
         User loginuser = user.getUser();
         // 강의 이름으로 강의를 검색
         Optional<LectureList> selectedLecture = lectureListRepository.findByLectureId(lectureId);
