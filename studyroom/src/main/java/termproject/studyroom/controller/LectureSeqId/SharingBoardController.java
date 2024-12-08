@@ -122,28 +122,39 @@ public class SharingBoardController {
         return "redirect:/sharingBoards/" + lectureId;
     }
 
-    @GetMapping("/edit/{sharingId}")
-    public String edit(@PathVariable(name = "sharingId") final Integer sharingId,
-            final Model model) {
+    @GetMapping("/edit/{lectureId}/{sharingId}")
+    public String edit(@PathVariable(name = "lectureId") Integer lectureId,
+            @PathVariable(name = "sharingId") final Integer sharingId,
+            final Model model, @AuthenticationPrincipal CustomUserDetails user) {
+        LectureList lecture = lectureListRepository.findById(lectureId)
+                .orElseThrow(() -> new IllegalArgumentException("Lecture not found"));
+        model.addAttribute("selectedLecture", lecture);
         model.addAttribute("sharingBoard", sharingBoardService.get(sharingId));
+        model.addAttribute("user", user != null ? user.getUser() : "Anonymous User");
         return "sharingBoard/edit";
     }
 
-    @PostMapping("/edit/{sharingId}")
-    public String edit(@PathVariable(name = "sharingId") final Integer sharingId,
-            @ModelAttribute("sharingBoard") @Valid final SharingBoardDTO sharingBoardDTO,
-            final BindingResult bindingResult, final RedirectAttributes redirectAttributes) {
-        if (bindingResult.hasErrors()) {
-            return "sharingBoard/edit";
-        }
+    @PostMapping("/edit/{lectureId}/{sharingId}")
+    public String edit(@PathVariable(name = "lectureId") Integer lectureId,
+            @PathVariable(name = "sharingId") final Integer sharingId,
+            @ModelAttribute("sharingBoard") final SharingBoardDTO sharingBoardDTO,
+            final BindingResult bindingResult, final RedirectAttributes redirectAttributes,
+                       @AuthenticationPrincipal CustomUserDetails user, final Model model) {
+        // 세션 유저 정보를 조회
+        User author = userRepository.findByEmail(user.getUsername())
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        // DTO에 강의 및 작성자 설정
+        sharingBoardDTO.setUserId(author);
         sharingBoardService.update(sharingId, sharingBoardDTO);
         redirectAttributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("sharingBoard.update.success"));
-        return "redirect:/sharingBoards";
+        return "redirect:/sharingBoards/" + lectureId;
     }
 
-    @PostMapping("/delete/{sharingId}")
-    public String delete(@PathVariable(name = "sharingId") final Integer sharingId,
-            final RedirectAttributes redirectAttributes) {
+    @PostMapping("/delete/{lectureId}/{sharingId}")
+    public String delete(@PathVariable(name = "lectureId") Integer lectureId,
+            @PathVariable(name = "sharingId") final Integer sharingId,
+            final RedirectAttributes redirectAttributes,
+                         @AuthenticationPrincipal CustomUserDetails user) {
         final ReferencedWarning referencedWarning = sharingBoardService.getReferencedWarning(sharingId);
         if (referencedWarning != null) {
             redirectAttributes.addFlashAttribute(WebUtils.MSG_ERROR,
@@ -152,7 +163,7 @@ public class SharingBoardController {
             sharingBoardService.delete(sharingId);
             redirectAttributes.addFlashAttribute(WebUtils.MSG_INFO, WebUtils.getMessage("sharingBoard.delete.success"));
         }
-        return "redirect:/sharingBoards";
+        return "redirect:/sharingBoards/" + lectureId;
     }
 
     @GetMapping(value = "/detail/{lectureId}/{sharingId}")

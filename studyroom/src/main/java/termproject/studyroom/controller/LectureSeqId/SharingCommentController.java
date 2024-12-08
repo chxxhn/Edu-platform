@@ -86,34 +86,47 @@ public class SharingCommentController {
         return "redirect:/sharingBoards/detail/" + lectureId+ "/" + sharingId;
     }
 
-    @GetMapping("/edit/{shcomId}")
-    public String edit(@PathVariable(name = "shcomId") final Integer shcomId, final Model model) {
+    @GetMapping("/edit/{lectureId}/{shcomId}")
+    public String edit(@PathVariable(name = "lectureId") Integer lectureId,
+            @PathVariable(name = "shcomId") final Integer shcomId, final Model model,
+                       @AuthenticationPrincipal CustomUserDetails user) {
+        LectureList lecture = lectureListRepository.findById(lectureId)
+                .orElseThrow(() -> new IllegalArgumentException("Lecture not found"));
+        model.addAttribute("selectedLecture", lecture);
         model.addAttribute("sharingComment", sharingCommentService.get(shcomId));
+        model.addAttribute("user", user != null ? user.getUser() : "Anonymous User");
         return "sharingComment/edit";
     }
 
-    @PostMapping("/edit/{shcomId}")
-    public String edit(@PathVariable(name = "shcomId") final Integer shcomId,
-            @ModelAttribute("sharingComment") @Valid final SharingCommentDTO sharingCommentDTO,
-            final BindingResult bindingResult, final RedirectAttributes redirectAttributes) {
-        if (bindingResult.hasErrors()) {
-            return "sharingComment/edit";
-        }
+    @PostMapping("/edit/{lectureId}/{shcomId}")
+    public String edit(@PathVariable(name = "lectureId") Integer lectureId,
+            @PathVariable(name = "shcomId") final Integer shcomId,
+            @ModelAttribute("sharingComment") final SharingCommentDTO sharingCommentDTO,
+            final BindingResult bindingResult, final RedirectAttributes redirectAttributes,
+                       @AuthenticationPrincipal CustomUserDetails user, Model model) {
+        // 세션 유저 정보를 조회
+        User author = userRepository.findByEmail(user.getUsername())
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        // DTO에 강의 및 작성자 설정
+        sharingCommentDTO.setAuthor(author);
         SharingCommentDTO comment = sharingCommentService.get(shcomId);
         Integer sharingId = comment.getShId();
+        System.out.println(sharingId);
         sharingCommentService.update(shcomId, sharingCommentDTO);
         redirectAttributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("sharingComment.update.success"));
-        return "redirect:/sharingBoards/detail/" + sharingId;
+        return "redirect:/sharingBoards/detail/" + lectureId + "/" + sharingId;
     }
 
-    @PostMapping("/delete/{shcomId}")
-    public String delete(@PathVariable(name = "shcomId") final Integer shcomId,
-            final RedirectAttributes redirectAttributes) {
+    @PostMapping("/delete/{lectureId}/{shcomId}")
+    public String delete(@PathVariable(name = "lectureId") Integer lectureId,
+            @PathVariable(name = "shcomId") final Integer shcomId,
+            final RedirectAttributes redirectAttributes,
+                         @AuthenticationPrincipal CustomUserDetails user) {
         SharingCommentDTO comment = sharingCommentService.get(shcomId);
         Integer sharingId = comment.getShId();
         sharingCommentService.delete(shcomId);
         redirectAttributes.addFlashAttribute(WebUtils.MSG_INFO, WebUtils.getMessage("sharingComment.delete.success"));
-        return "redirect:/sharingBoards/detail/" + sharingId;
+        return "redirect:/sharingBoards/detail/" + lectureId + "/" + sharingId;
     }
 
 }
