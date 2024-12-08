@@ -111,6 +111,7 @@ public class SharingCommentController {
         sharingCommentDTO.setAuthor(author);
         SharingCommentDTO comment = sharingCommentService.get(shcomId);
         Integer sharingId = comment.getShId();
+        sharingCommentDTO.setShId(sharingId);
         System.out.println(sharingId);
         sharingCommentService.update(shcomId, sharingCommentDTO);
         redirectAttributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("sharingComment.update.success"));

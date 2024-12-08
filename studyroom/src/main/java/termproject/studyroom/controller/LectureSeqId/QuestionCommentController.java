@@ -115,6 +115,7 @@ public class QuestionCommentController {
         questionCommentDTO.setAuthor(author);
         QuestionCommentDTO comment = questionCommentService.get(qcomId);
         Integer questionId = comment.getQId();
+        questionCommentDTO.setQId(questionId);
         questionCommentService.update(qcomId, questionCommentDTO);
         redirectAttributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("questionComment.update.success"));
         return "redirect:/questionBoards/detail/" + lectureId + "/" + questionId;

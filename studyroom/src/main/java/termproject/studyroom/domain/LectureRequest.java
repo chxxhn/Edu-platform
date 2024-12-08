@@ -50,7 +50,11 @@ public class LectureRequest {
     private Integer numberDesired = 0;
 
     @Column(nullable = false)
-    private Boolean lectureValid;
+    private Boolean lectureValid = false;
+
+//    @ManyToOne(fetch = FetchType.EAGER)
+//    @JoinColumn(name = "author_id", nullable = false)
+//    private User author;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "lecture_id_id", nullable = false)
