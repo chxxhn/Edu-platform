@@ -1,9 +1,14 @@
 package termproject.studyroom.service;
 
 import java.util.List;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import termproject.studyroom.domain.LectureList;
+import termproject.studyroom.domain.LectureRequest;
 import termproject.studyroom.domain.NoticeBoard;
 import termproject.studyroom.domain.User;
 import termproject.studyroom.model.NoticeBoardDTO;
@@ -41,6 +46,11 @@ public class NoticeBoardService {
                 .orElseThrow(NotFoundException::new);
     }
 
+    public Page<NoticeBoard> getList(int page) {
+        Pageable pageable = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "noticeId"));
+        return this.noticeBoardRepository.findAll(pageable);
+    }
+
     public Integer create(final NoticeBoardDTO noticeBoardDTO) {
         final NoticeBoard noticeBoard = new NoticeBoard();
         mapToEntity(noticeBoardDTO, noticeBoard);
@@ -65,7 +75,7 @@ public class NoticeBoardService {
         noticeBoardDTO.setContent(noticeBoard.getContent());
         noticeBoardDTO.setAuthor(noticeBoard.getAuthor() == null ? null : noticeBoard.getAuthor());
         noticeBoardDTO.setLectureId(noticeBoard.getLectureId() == null ? null : noticeBoard.getLectureId());
-        noticeBoardDTO.setDateCreated(noticeBoard.getDateCreated().toLocalDateTime());
+//        noticeBoardDTO.setDateCreated(noticeBoard.getDateCreated().toLocalDateTime());
         return noticeBoardDTO;
     }
 
