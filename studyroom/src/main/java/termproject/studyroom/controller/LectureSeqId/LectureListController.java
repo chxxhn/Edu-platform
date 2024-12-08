@@ -11,6 +11,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import termproject.studyroom.config.auto.CustomUserDetails;
 import termproject.studyroom.domain.LectureList;
 import termproject.studyroom.domain.User;
+import termproject.studyroom.model.Grade;
 import termproject.studyroom.model.LectureListDTO;
 import termproject.studyroom.repos.LectureListRepository;
 import termproject.studyroom.repos.LectureUserRepository;
@@ -68,9 +69,12 @@ public class LectureListController {
     @GetMapping
     public String list(Model model, @ModelAttribute("user") CustomUserDetails user) {
         User loginUser = user.getUser();
+        String role = loginUser.getGrade() == Grade.PROF ? "admin" : "consumer";
+
         List<LectureList> myLectures = lectureUserRepository.findLectureListsByUserId(loginUser.getStdId());
         model.addAttribute("lectureLists", lectureListService.findAll());
         model.addAttribute("myLectures", myLectures);
+        model.addAttribute("role",role);
         return "mainhome";
     }
 
@@ -112,11 +116,12 @@ public class LectureListController {
     }
 
     @PostMapping("/add")
-    public String add(@ModelAttribute("lectureList") @Valid final LectureListDTO lectureListDTO,
-            final BindingResult bindingResult, final RedirectAttributes redirectAttributes) {
-        if (bindingResult.hasErrors()) {
-            return "lectureList/add";
-        }
+    public String add(@RequestParam("name") String lectureName,
+            final RedirectAttributes redirectAttributes,@ModelAttribute("user") CustomUserDetails user) {
+
+        LectureListDTO lectureListDTO = new LectureListDTO();
+        lectureListDTO.setName(lectureName);
+        lectureListDTO.setStdId(user.getUser().getStdId());
         lectureListService.create(lectureListDTO);
         redirectAttributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("lectureList.create.success"));
         return "redirect:/lectureLists";
