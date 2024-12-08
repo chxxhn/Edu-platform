@@ -1,6 +1,10 @@
 package termproject.studyroom.service;
 
 import java.util.List;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import termproject.studyroom.domain.LectureList;
@@ -46,6 +50,11 @@ public class QuestionBoardService {
                 .orElseThrow(NotFoundException::new);
     }
 
+    public Page<QuestionBoard> getList(int page) {
+        Pageable pageable = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "questionId"));
+        return this.questionBoardRepository.findAll(pageable);
+    }
+
     public Integer create(final QuestionBoardDTO questionBoardDTO) {
         final QuestionBoard questionBoard = new QuestionBoard();
         mapToEntity(questionBoardDTO, questionBoard);
@@ -63,6 +72,18 @@ public class QuestionBoardService {
         questionBoardRepository.deleteById(questionId);
     }
 
+    public void incrementWarnCount(Integer questionId) {
+        // Fetch the QuestionBoard entity by questionId
+        QuestionBoard questionBoard = questionBoardRepository.findById(questionId)
+                .orElseThrow(() -> new NotFoundException("Question board not found"));
+
+        // Increment the warnCount
+        questionBoard.setWarnCount(questionBoard.getWarnCount() + 1);
+
+        // Save the updated QuestionBoard entity
+        questionBoardRepository.save(questionBoard);
+    }
+
     private QuestionBoardDTO mapToDTO(final QuestionBoard questionBoard,
             final QuestionBoardDTO questionBoardDTO) {
         questionBoardDTO.setQuestionId(questionBoard.getQuestionId());
@@ -70,8 +91,8 @@ public class QuestionBoardService {
         questionBoardDTO.setContent(questionBoard.getContent());
         questionBoardDTO.setWarnCount(questionBoard.getWarnCount());
         questionBoardDTO.setLikeCount(questionBoard.getLikeCount());
-        questionBoardDTO.setAuthor(questionBoard.getAuthor() == null ? null : questionBoard.getAuthor().getStdId());
-        questionBoardDTO.setLectureId(questionBoard.getLectureId() == null ? null : questionBoard.getLectureId().getLectureId());
+        questionBoardDTO.setAuthor(questionBoard.getAuthor() == null ? null : questionBoard.getAuthor());
+        questionBoardDTO.setLectureId(questionBoard.getLectureId() == null ? null : questionBoard.getLectureId());
         return questionBoardDTO;
     }
 
@@ -81,10 +102,10 @@ public class QuestionBoardService {
         questionBoard.setContent(questionBoardDTO.getContent());
         questionBoard.setWarnCount(questionBoardDTO.getWarnCount());
         questionBoard.setLikeCount(questionBoardDTO.getLikeCount());
-        final User author = questionBoardDTO.getAuthor() == null ? null : userRepository.findById(questionBoardDTO.getAuthor())
+        final User author = questionBoardDTO.getAuthor() == null ? null : userRepository.findById(questionBoardDTO.getAuthor().getStdId())
                 .orElseThrow(() -> new NotFoundException("author not found"));
         questionBoard.setAuthor(author);
-        final LectureList lectureId = questionBoardDTO.getLectureId() == null ? null : lectureListRepository.findById(questionBoardDTO.getLectureId())
+        final LectureList lectureId = questionBoardDTO.getLectureId() == null ? null : lectureListRepository.findById(questionBoardDTO.getLectureId().getLectureId())
                 .orElseThrow(() -> new NotFoundException("lectureId not found"));
         questionBoard.setLectureId(lectureId);
         return questionBoard;

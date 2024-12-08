@@ -4,6 +4,12 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
+import termproject.studyroom.domain.LectureList;
+import termproject.studyroom.domain.User;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 
 @Getter
@@ -20,9 +26,12 @@ public class NoticeBoardDTO {
     private String content;
 
     @NotNull
-    private Integer author;
+    private User author;
 
     @NotNull
-    private Integer lectureId;
+    private LectureList lectureId;
+
+    @NotNull
+    private LocalDateTime dateCreated;
 
 }

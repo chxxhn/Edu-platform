@@ -1,13 +1,13 @@
 package termproject.studyroom.service;
 
 import java.util.List;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import termproject.studyroom.domain.LectureList;
-import termproject.studyroom.domain.SharingBoard;
-import termproject.studyroom.domain.SharingComment;
-import termproject.studyroom.domain.SharingFile;
-import termproject.studyroom.domain.User;
+import termproject.studyroom.domain.*;
 import termproject.studyroom.model.SharingBoardDTO;
 import termproject.studyroom.repos.LectureListRepository;
 import termproject.studyroom.repos.SharingBoardRepository;
@@ -51,6 +51,11 @@ public class SharingBoardService {
                 .orElseThrow(NotFoundException::new);
     }
 
+    public Page<SharingBoard> getList(int page) {
+        Pageable pageable = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "sharingId"));
+        return this.sharingBoardRepository.findAll(pageable);
+    }
+
     public Integer create(final SharingBoardDTO sharingBoardDTO) {
         final SharingBoard sharingBoard = new SharingBoard();
         mapToEntity(sharingBoardDTO, sharingBoard);
@@ -74,8 +79,8 @@ public class SharingBoardService {
         sharingBoardDTO.setTitle(sharingBoard.getTitle());
         sharingBoardDTO.setContent(sharingBoard.getContent());
         sharingBoardDTO.setWarnCount(sharingBoard.getWarnCount());
-        sharingBoardDTO.setUserId(sharingBoard.getUserId() == null ? null : sharingBoard.getUserId().getStdId());
-        sharingBoardDTO.setLectureId(sharingBoard.getLectureId() == null ? null : sharingBoard.getLectureId().getLectureId());
+        sharingBoardDTO.setUserId(sharingBoard.getUserId() == null ? null : sharingBoard.getUserId());
+        sharingBoardDTO.setLectureId(sharingBoard.getLectureId() == null ? null : sharingBoard.getLectureId());
         return sharingBoardDTO;
     }
 
@@ -84,10 +89,10 @@ public class SharingBoardService {
         sharingBoard.setTitle(sharingBoardDTO.getTitle());
         sharingBoard.setContent(sharingBoardDTO.getContent());
         sharingBoard.setWarnCount(sharingBoardDTO.getWarnCount());
-        final User userId = sharingBoardDTO.getUserId() == null ? null : userRepository.findById(sharingBoardDTO.getUserId())
+        final User userId = sharingBoardDTO.getUserId() == null ? null : userRepository.findById(sharingBoardDTO.getUserId().getStdId())
                 .orElseThrow(() -> new NotFoundException("userId not found"));
         sharingBoard.setUserId(userId);
-        final LectureList lectureId = sharingBoardDTO.getLectureId() == null ? null : lectureListRepository.findById(sharingBoardDTO.getLectureId())
+        final LectureList lectureId = sharingBoardDTO.getLectureId() == null ? null : lectureListRepository.findById(sharingBoardDTO.getLectureId().getLectureId())
                 .orElseThrow(() -> new NotFoundException("lectureId not found"));
         sharingBoard.setLectureId(lectureId);
         return sharingBoard;

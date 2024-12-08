@@ -15,3 +15,14 @@
     display: block; /* 마우스를 올리면 드롭다운 표시 */
     margin-top: 0; /* 기본 위치 유지 */
 }
+
+.centralize-container {
+    display: flex;
+    flex-direction: column; /* 요소들을 세로 정렬 */
+    justify-content: center; /* 수직 중앙 정렬 */
+    align-items: center; /* 수평 중앙 정렬 */
+    height: 70vh; /* 화면 전체 높이 */
+    text-align: center; /* 텍스트 중앙 정렬 */
+    margin: 0;
+}
+

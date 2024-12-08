@@ -4,6 +4,8 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
+import termproject.studyroom.domain.LectureList;
+import termproject.studyroom.domain.User;
 
 
 @Getter
@@ -26,6 +28,6 @@ public class LectureRequestDTO {
     private Boolean lectureValid;
 
     @NotNull
-    private Integer lectureId;
+    private LectureList lectureId;
 
 }

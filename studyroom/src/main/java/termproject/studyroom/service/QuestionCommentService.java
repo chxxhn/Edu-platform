@@ -1,6 +1,8 @@
 package termproject.studyroom.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import termproject.studyroom.domain.QuestionBoard;
@@ -41,6 +43,13 @@ public class QuestionCommentService {
                 .orElseThrow(NotFoundException::new);
     }
 
+    public List<QuestionCommentDTO> findByQuestionId(Integer questionId) {
+        List<QuestionComment> questionComments = questionCommentRepository.findByqIdQuestionId(questionId);
+        return questionComments.stream()
+                .map(questionComment -> mapToDTO(questionComment, new QuestionCommentDTO()))
+                .toList();
+    }
+
     public Integer create(final QuestionCommentDTO questionCommentDTO) {
         final QuestionComment questionComment = new QuestionComment();
         mapToEntity(questionCommentDTO, questionComment);
@@ -62,7 +71,7 @@ public class QuestionCommentService {
             final QuestionCommentDTO questionCommentDTO) {
         questionCommentDTO.setQcomId(questionComment.getQcomId());
         questionCommentDTO.setContent(questionComment.getContent());
-        questionCommentDTO.setAuthor(questionComment.getAuthor() == null ? null : questionComment.getAuthor().getStdId());
+        questionCommentDTO.setAuthor(questionComment.getAuthor() == null ? null : questionComment.getAuthor());
         questionCommentDTO.setQId(questionComment.getQId() == null ? null : questionComment.getQId().getQuestionId());
         return questionCommentDTO;
     }
@@ -70,7 +79,7 @@ public class QuestionCommentService {
     private QuestionComment mapToEntity(final QuestionCommentDTO questionCommentDTO,
             final QuestionComment questionComment) {
         questionComment.setContent(questionCommentDTO.getContent());
-        final User author = questionCommentDTO.getAuthor() == null ? null : userRepository.findById(questionCommentDTO.getAuthor())
+        final User author = questionCommentDTO.getAuthor() == null ? null : userRepository.findById(questionCommentDTO.getAuthor().getStdId())
                 .orElseThrow(() -> new NotFoundException("author not found"));
         questionComment.setAuthor(author);
         final QuestionBoard qId = questionCommentDTO.getQId() == null ? null : questionBoardRepository.findById(questionCommentDTO.getQId())

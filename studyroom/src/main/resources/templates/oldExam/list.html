@@ -7,7 +7,7 @@
     <body>
         <div layout:fragment="content">
             <div class="d-flex flex-wrap mb-4">
-                <h1 class="flex-grow-1">[[#{oldExam.list.headline}]]</h1>
+                <h1 class="flex-grow-1">족보게시판</h1>
                 <div>
                     <a th:href="@{/oldExams/add}" class="btn btn-primary ms-2">[[#{oldExam.list.createNew}]]</a>
                 </div>
@@ -17,24 +17,31 @@
                 <table class="table table-striped table-hover align-middle">
                     <thead>
                         <tr>
-                            <th scope="col">[[#{oldExam.oeId.label}]]</th>
+                            <th scope="col">Id</th>
                             <th scope="col">[[#{oldExam.title.label}]]</th>
                             <th scope="col">[[#{oldExam.author.label}]]</th>
-                            <th scope="col">[[#{oldExam.lectureId.label}]]</th>
+                            <th scope="col">Lecture</th>
                             <th><!-- --></th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr th:each="oldExam : ${oldExams}">
+                        <tr th:each="oldExam : ${paging.content}"
+                            th:onclick="|window.location='@{/oldExams/detail/{oeId}(oeId=${oldExam.oeId})}'|"
+                            style="cursor: pointer;">
                             <td>[[${oldExam.oeId}]]</td>
                             <td>[[${oldExam.title}]]</td>
-                            <td>[[${oldExam.author}]]</td>
-                            <td>[[${oldExam.lectureId}]]</td>
+                            <td>
+                                <span th:class="${oldExam.author.grade.name() == 'TA'} ? 'fw-bold text-primary'
+                                   : (${oldExam.author.grade.name() == 'PROF'} ? 'fw-bold text-info' : 'text-dark')"
+                                      th:text="${oldExam.author.nickname + ' (' + oldExam.author.grade + ')'}"></span>
+                            </td>
+                            <td>[[${oldExam.lectureId.name}]]</td>
                             <td>
                                 <div class="float-end text-nowrap">
-                                    <a th:href="@{/oldExams/edit/{oeId}(oeId=${oldExam.oeId})}" class="btn btn-sm btn-secondary">[[#{oldExam.list.edit}]]</a>
+                                    <a th:href="@{/oldExams/edit/{oeId}(oeId=${oldExam.oeId})}" class="btn btn-sm btn-secondary"
+                                      onclick="event.stopPropagation();">[[#{oldExam.list.edit}]]</a>
                                     <form th:action="@{/oldExams/delete/{oeId}(oeId=${oldExam.oeId})}"
-                                            th:hx-confirm="#{delete.confirm}" method="post" class="d-inline">
+                                            th:hx-confirm="#{delete.confirm}" method="post" class="d-inline" onclick="event.stopPropagation();">
                                         <button type="submit" class="btn btn-sm btn-secondary">[[#{oldExam.list.delete}]]</button>
                                     </form>
                                 </div>
@@ -42,6 +49,33 @@
                         </tr>
                     </tbody>
                 </table>
+            </div>
+            <div class="d-flex justify-content-center mt-3">
+                <!-- Pagination -->
+                <nav class="pagination-container">
+                    <ul class="pagination mb-0">
+                        <!-- Previous Page -->
+                        <li th:classappend="${paging.first} ? 'disabled' : ''" class="page-item">
+                            <a class="page-link" th:href="@{/oldExams(page=${paging.number - 1})}" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+
+                        <!-- Page Numbers -->
+                        <li th:each="i : ${#numbers.sequence(0, paging.totalPages - 1)}"
+                            th:classappend="${i == paging.number} ? 'active' : ''"
+                            class="page-item">
+                            <a class="page-link" th:href="@{/oldExams(page=${i})}" th:text="${i + 1}">1</a>
+                        </li>
+
+                        <!-- Next Page -->
+                        <li th:classappend="${paging.last} ? 'disabled' : ''" class="page-item">
+                            <a class="page-link" th:href="@{/oldExams(page=${paging.number + 1})}" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
             </div>
         </div>
     </body>

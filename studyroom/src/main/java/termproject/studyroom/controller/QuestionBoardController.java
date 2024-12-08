@@ -1,25 +1,31 @@
 package termproject.studyroom.controller;
 
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import termproject.studyroom.domain.LectureList;
+import termproject.studyroom.domain.QuestionBoard;
 import termproject.studyroom.domain.User;
+import termproject.studyroom.model.NoticeBoardDTO;
 import termproject.studyroom.model.QuestionBoardDTO;
+import termproject.studyroom.model.QuestionCommentDTO;
 import termproject.studyroom.repos.LectureListRepository;
 import termproject.studyroom.repos.UserRepository;
 import termproject.studyroom.service.QuestionBoardService;
+import termproject.studyroom.service.QuestionCommentService;
 import termproject.studyroom.util.CustomCollectors;
 import termproject.studyroom.util.ReferencedWarning;
 import termproject.studyroom.util.WebUtils;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 @Controller
@@ -29,13 +35,16 @@ public class QuestionBoardController {
     private final QuestionBoardService questionBoardService;
     private final UserRepository userRepository;
     private final LectureListRepository lectureListRepository;
+    private final QuestionCommentService questionCommentService;
+
 
     public QuestionBoardController(final QuestionBoardService questionBoardService,
-            final UserRepository userRepository,
-            final LectureListRepository lectureListRepository) {
+                                   final UserRepository userRepository,
+                                   final LectureListRepository lectureListRepository, QuestionCommentService questionCommentService) {
         this.questionBoardService = questionBoardService;
         this.userRepository = userRepository;
         this.lectureListRepository = lectureListRepository;
+        this.questionCommentService = questionCommentService;
     }
 
     @ModelAttribute
@@ -49,8 +58,11 @@ public class QuestionBoardController {
     }
 
     @GetMapping
-    public String list(final Model model) {
-        model.addAttribute("questionBoards", questionBoardService.findAll());
+    public String list(final Model model, @RequestParam(value="page", defaultValue="0") int page) {
+        List<QuestionBoardDTO> questionBoards = questionBoardService.findAll();
+        Page<QuestionBoard> paging = this.questionBoardService.getList(page);
+        model.addAttribute("paging", paging);
+        model.addAttribute("questionBoards", questionBoards);
         return "questionBoard/list";
     }
 
@@ -104,4 +116,25 @@ public class QuestionBoardController {
         return "redirect:/questionBoards";
     }
 
+    @GetMapping(value = "/detail/{questionId}")
+    public String detail(@PathVariable(name = "questionId") final Integer questionId, final Model model) {
+        QuestionBoardDTO question = questionBoardService.get(questionId);
+        List<QuestionCommentDTO> comments = questionCommentService.findByQuestionId(questionId);
+        model.addAttribute("questionBoard", question);
+        model.addAttribute("questionComment", comments);
+        return "questionBoard/detail";
+    }
+
+    @PostMapping("/dislike/{questionId}")
+    public ResponseEntity<Map<String, Integer>> dislike(@PathVariable(name = "questionId") Integer questionId) {
+        // Call the service to increment warn count
+        questionBoardService.incrementWarnCount(questionId);
+
+        // Fetch the updated QuestionBoard to return the latest warnCount
+        QuestionBoardDTO questionBoard = questionBoardService.get(questionId);
+
+        Map<String, Integer> response = new HashMap<>();
+        response.put("warnCount", questionBoard.getWarnCount());
+        return ResponseEntity.ok(response);
+    }
 }
