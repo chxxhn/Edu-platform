@@ -53,6 +53,7 @@
                 <!-- 알람 버튼 -->
                 <div th:if="${user != null}">
                     <span th:text="${user.getName()}">User</span>
+                    (<span th:text="${user.getGrade()}">Grade</span>)
                     <a th:href="@{/logout}" class="btn btn-primary px-4">Logout</a>
                 </div>
             </div>

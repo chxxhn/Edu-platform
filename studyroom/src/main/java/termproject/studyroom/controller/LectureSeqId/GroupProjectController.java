@@ -31,6 +31,7 @@ public class GroupProjectController {
     private final UserRepository userRepository;
     private final LectureListRepository lectureListRepository;
     private final GroupProjectRepository groupProjectRepository;
+    private final LectureUserRepository lectureUserRepository;
     private final GroupUserService groupUserService;
 
     public GroupProjectController(final GroupProjectService groupProjectService,
@@ -80,6 +81,8 @@ public class GroupProjectController {
             User loginuser = user.getUser();
             String role = loginuser.getGrade() == Grade.PROF || loginuser.getGrade() == Grade.TA ? "admin" : "consumer";
             model.addAttribute("role", role);
+            String prof = loginuser.getGrade() == Grade.PROF ? "prof" : "";
+            model.addAttribute("prof",prof);
             model.addAttribute("user", loginuser);
 
             Page<GroupProject> paging;
@@ -107,10 +110,14 @@ public class GroupProjectController {
         LectureList lecture = lectureListRepository.findById(lectureId)
                 .orElseThrow(() -> new IllegalArgumentException("Lecture not found"));
         model.addAttribute("selectedLecture", lecture);
-        model.addAttribute("user", user.getUser());
+        User loginuser= user.getUser();
+        model.addAttribute("user", loginuser);
 
-        // 팀원 목록 조회 (수강생 목록)
-        List<LectureUser> lectureUsers = lectureUserRepository.findByLectureId(lectureId);
+        List<LectureUser> lectureUsers = null; // 기본값을 null로 설정
+        if (loginuser.getGrade() != Grade.TA) {
+            lectureUsers = lectureUserRepository.findAvailableLectureUsers(lectureId);
+//
+        }
         model.addAttribute("lectureUsers", lectureUsers);
 
         return "groupProject/add";
@@ -156,27 +163,86 @@ public class GroupProjectController {
     }
 
 
-    @GetMapping("/edit/{gpId}")
-    public String edit(@PathVariable(name = "gpId") final Integer gpId, final Model model) {
+
+    @GetMapping("/edit/{lectureId}/{gpId}")
+    public String edit(@PathVariable(name = "lectureId") Integer lectureId, @PathVariable(name = "gpId") final Integer gpId,  final Model model,
+                       @AuthenticationPrincipal CustomUserDetails user ,
+                       final RedirectAttributes redirectAttributes
+                       ) {
+        User currentUser = user.getUser();
+
+        LectureList lecture = lectureListRepository.findById(lectureId)
+                .orElseThrow(() -> new IllegalArgumentException("Lecture not found"));
+        model.addAttribute("selectedLecture", lecture);
         model.addAttribute("groupProject", groupProjectService.get(gpId));
+        model.addAttribute("user", currentUser != null ? currentUser : "Anonymous User");
+        // 게시물 정보 확인
+        GroupProjectDTO groupProject = groupProjectService.get(gpId);
+        // TA의 경우 승인 여부 화면으로 이동
+        if (currentUser.getGrade() == Grade.TA) {
+            model.addAttribute("isTA", true);
+            return "groupProject/approve";
+        }
+        if (groupProject == null || !groupProject.getCreatedUserId().equals(currentUser.getStdId())) {
+            // 게시물을 쓴 사람과 현재 사용자가 다를 경우 목록으로 리다이렉트
+            redirectAttributes.addFlashAttribute(WebUtils.MSG_ERROR, WebUtils.getMessage("작성자만수정가능합니다."));
+            return "redirect:/groupProjects/" + lectureId;
+        }
         return "groupProject/edit";
     }
 
-    @PostMapping("/edit/{gpId}")
-    public String edit(@PathVariable(name = "gpId") final Integer gpId,
-            @ModelAttribute("groupProject") @Valid final GroupProjectDTO groupProjectDTO,
-            final BindingResult bindingResult, final RedirectAttributes redirectAttributes) {
-        if (bindingResult.hasErrors()) {
-            return "groupProject/edit";
+    @PostMapping("/approve/{lectureId}/{gpId}")
+    public String approveGroupProject(
+            @PathVariable(name = "lectureId") final Integer lectureId,
+            @PathVariable(name = "gpId") final Integer gpId,
+                                      @AuthenticationPrincipal CustomUserDetails user,
+                                      final RedirectAttributes redirectAttributes) {
+        User currentUser = user.getUser();
+
+        if (currentUser == null || currentUser.getGrade() != Grade.TA) {
+            redirectAttributes.addFlashAttribute(WebUtils.MSG_ERROR, WebUtils.getMessage("권한이 없습니다."));
+            return "redirect:/groupProjects/"+lectureId;
         }
-        groupProjectService.update(gpId, groupProjectDTO);
-        redirectAttributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("groupProject.update.success"));
-        return "redirect:/groupProjects";
+
+        // groupValid 값 변경
+        GroupProjectDTO groupProject = groupProjectService.get(gpId);
+        if (groupProject != null) {
+            groupProject.setGroupValid(true);
+            groupProjectService.update(gpId, groupProject);
+            redirectAttributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("승인이 완료되었습니다."));
+        } else {
+            redirectAttributes.addFlashAttribute(WebUtils.MSG_ERROR, WebUtils.getMessage("해당 그룹 프로젝트를 찾을 수 없습니다."));
+        }
+
+        return "redirect:/groupProjects/" +lectureId;
     }
 
-    @PostMapping("/delete/{gpId}")
-    public String delete(@PathVariable(name = "gpId") final Integer gpId,
-            final RedirectAttributes redirectAttributes) {
+
+        @PostMapping("/edit/{lectureId}/{gpId}")
+    public String edit(@PathVariable(name = "lectureId") Integer lectureId,
+        @PathVariable(name = "gpId") final Integer gpId,
+            @ModelAttribute("groupProject") final GroupProjectDTO groupProjectDTO,
+            final BindingResult bindingResult,
+        final RedirectAttributes redirectAttributes, @AuthenticationPrincipal CustomUserDetails user) {
+            LectureList lecture = lectureListRepository.findById(lectureId)
+                    .orElseThrow(() -> new IllegalArgumentException("Lecture not found"));
+
+            // 세션 유저 정보를 조회
+            User author = userRepository.findByEmail(user.getUsername())
+                    .orElseThrow(() -> new IllegalArgumentException("User not found"));
+            // DTO에 강의 및 작성자 설정
+
+        groupProjectService.update(gpId, groupProjectDTO);
+        redirectAttributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("groupProject.update.success"));
+        return "redirect:/groupProjects/" + lectureId;
+    }
+
+    @PostMapping("/delete/{lectureId}/{gpId}")
+    public String delete(
+            @PathVariable(name = "lectureId") Integer lectureId
+            , @PathVariable(name = "gpId") final Integer gpId,
+            final RedirectAttributes redirectAttributes,
+            @AuthenticationPrincipal CustomUserDetails user) {
         final ReferencedWarning referencedWarning = groupProjectService.getReferencedWarning(gpId);
         if (referencedWarning != null) {
             redirectAttributes.addFlashAttribute(WebUtils.MSG_ERROR,
@@ -185,8 +251,6 @@ public class GroupProjectController {
             groupProjectService.delete(gpId);
             redirectAttributes.addFlashAttribute(WebUtils.MSG_INFO, WebUtils.getMessage("groupProject.delete.success"));
         }
-        return "redirect:/groupProjects";
+        return "redirect:/groupProjects/" +lectureId;
     }
-
-    private final LectureUserRepository lectureUserRepository;
 }
