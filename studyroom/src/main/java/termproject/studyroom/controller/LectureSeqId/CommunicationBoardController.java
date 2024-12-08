@@ -97,30 +97,41 @@ public class CommunicationBoardController {
         return "redirect:/communicationBoards/" + lectureId;
     }
 
-    @GetMapping("/edit/{comnId}")
-    public String edit(@PathVariable(name = "comnId") final Integer comnId, final Model model) {
+    @GetMapping("/edit/{lectureId}/{comnId}")
+    public String edit(@PathVariable(name = "lectureId") Integer lectureId,
+            @PathVariable(name = "comnId") final Integer comnId, final Model model,
+                       @AuthenticationPrincipal CustomUserDetails user) {
+        LectureList lecture = lectureListRepository.findById(lectureId)
+                .orElseThrow(() -> new IllegalArgumentException("Lecture not found"));
+        model.addAttribute("selectedLecture", lecture);
         model.addAttribute("communicationBoard", communicationBoardService.get(comnId));
+        model.addAttribute("user", user != null ? user.getUser() : "Anonymous User");
         return "communicationBoard/edit";
     }
 
-    @PostMapping("/edit/{comnId}")
-    public String edit(@PathVariable(name = "comnId") final Integer comnId,
+    @PostMapping("/edit/{lectureId}/{comnId}")
+    public String edit(@PathVariable(name = "lectureId") Integer lectureId,
+            @PathVariable(name = "comnId") final Integer comnId,
             @ModelAttribute("communicationBoard") @Valid final CommunicationBoardDTO communicationBoardDTO,
-            final BindingResult bindingResult, final RedirectAttributes redirectAttributes) {
-        if (bindingResult.hasErrors()) {
-            return "communicationBoard/edit";
-        }
+            final BindingResult bindingResult, final RedirectAttributes redirectAttributes,
+                       @AuthenticationPrincipal CustomUserDetails user, final Model model) {
+        // 세션 유저 정보를 조회
+        User author = userRepository.findByEmail(user.getUsername())
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        // DTO에 강의 및 작성자 설정
+        communicationBoardDTO.setAuthor(author);
         communicationBoardService.update(comnId, communicationBoardDTO);
         redirectAttributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("communicationBoard.update.success"));
-        return "redirect:/communicationBoards";
+        return "redirect:/communicationBoards/" + lectureId;
     }
 
-    @PostMapping("/delete/{comnId}")
-    public String delete(@PathVariable(name = "comnId") final Integer comnId,
-            final RedirectAttributes redirectAttributes) {
+    @PostMapping("/delete/{lectureId}/{comnId}")
+    public String delete(@PathVariable(name = "lectureId") Integer lectureId,
+            @PathVariable(name = "comnId") final Integer comnId,
+            final RedirectAttributes redirectAttributes, @AuthenticationPrincipal CustomUserDetails user) {
         communicationBoardService.delete(comnId);
         redirectAttributes.addFlashAttribute(WebUtils.MSG_INFO, WebUtils.getMessage("communicationBoard.delete.success"));
-        return "redirect:/communicationBoards";
+        return "redirect:/communicationBoards/" + lectureId;
     }
 
     @GetMapping(value = "/detail/{lectureId}/{comnId}")

@@ -96,30 +96,41 @@ public class LectureRequestController {
         return "redirect:/lectureRequests/" + lectureId;
     }
 
-    @GetMapping("/edit/{rqId}")
-    public String edit(@PathVariable(name = "rqId") final Integer rqId, final Model model) {
+    @GetMapping("/edit/{lectureId}/{rqId}")
+    public String edit(@PathVariable(name = "lectureId") Integer lectureId,
+            @PathVariable(name = "rqId") final Integer rqId, final Model model,
+                       @AuthenticationPrincipal CustomUserDetails user) {
+        LectureList lecture = lectureListRepository.findById(lectureId)
+                .orElseThrow(() -> new IllegalArgumentException("Lecture not found"));
+        model.addAttribute("selectedLecture", lecture);
         model.addAttribute("lectureRequest", lectureRequestService.get(rqId));
+        model.addAttribute("user", user != null ? user.getUser() : "Anonymous User");
         return "lectureRequest/edit";
     }
 
-    @PostMapping("/edit/{rqId}")
-    public String edit(@PathVariable(name = "rqId") final Integer rqId,
-            @ModelAttribute("lectureRequest") @Valid final LectureRequestDTO lectureRequestDTO,
-            final BindingResult bindingResult, final RedirectAttributes redirectAttributes) {
-        if (bindingResult.hasErrors()) {
-            return "lectureRequest/edit";
-        }
+    @PostMapping("/edit/{lectureId}/{rqId}")
+    public String edit(@PathVariable(name = "lectureId") Integer lectureId,
+            @PathVariable(name = "rqId") final Integer rqId,
+            @ModelAttribute("lectureRequest") final LectureRequestDTO lectureRequestDTO,
+            final BindingResult bindingResult, final RedirectAttributes redirectAttributes,
+                       @AuthenticationPrincipal CustomUserDetails user) {
+        // 세션 유저 정보를 조회
+//        User author = userRepository.findByEmail(user.getUsername())
+//                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+//        // DTO에 강의 및 작성자 설정
+//        lectureRequestDTO.setAuthor(author);
         lectureRequestService.update(rqId, lectureRequestDTO);
         redirectAttributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("lectureRequest.update.success"));
-        return "redirect:/lectureRequests";
+        return "redirect:/lectureRequests/" + lectureId;
     }
 
-    @PostMapping("/delete/{rqId}")
-    public String delete(@PathVariable(name = "rqId") final Integer rqId,
-            final RedirectAttributes redirectAttributes) {
+    @PostMapping("/delete/{lectureId}/{rqId}")
+    public String delete(@PathVariable(name = "lectureId") Integer lectureId,
+                         @PathVariable(name = "rqId") final Integer rqId,
+            final RedirectAttributes redirectAttributes, @AuthenticationPrincipal CustomUserDetails user) {
         lectureRequestService.delete(rqId);
         redirectAttributes.addFlashAttribute(WebUtils.MSG_INFO, WebUtils.getMessage("lectureRequest.delete.success"));
-        return "redirect:/lectureRequests";
+        return "redirect:/lectureRequests/" + lectureId;
     }
 
     @GetMapping(value = "/detail/{lectureId}/{rqId}")

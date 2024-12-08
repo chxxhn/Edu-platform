@@ -9,16 +9,16 @@
             <div class="d-flex flex-wrap mb-4">
                 <h1 class="flex-grow-1">[[#{oldExam.edit.headline}]]</h1>
                 <div>
-                    <a th:href="@{/oldExams}" class="btn btn-secondary">[[#{oldExam.edit.back}]]</a>
+                    <a th:href="@{/oldExams/{lectureId}(lectureId=${selectedLecture.lectureId})}" class="btn btn-secondary">[[#{oldExam.edit.back}]]</a>
                 </div>
             </div>
             <div th:replace="~{fragments/forms::globalErrors('oldExam')}" />
-            <form th:action="${requestUri}" method="post">
-                <div th:replace="~{fragments/forms::inputRow(object='oldExam', field='oeId', disabled=true, type='number')}" />
+            <form th:action="@{/oldExams/edit/{lectureId}/{oeId}(lectureId=${selectedLecture.lectureId}, oeId=${oldExam.oeId})}" method="post"
+                    th:object="${oldExam}">
                 <div th:replace="~{fragments/forms::inputRow(object='oldExam', field='title', required=true)}" />
-                <div th:replace="~{fragments/forms::inputRow(object='oldExam', field='content', required=true, type='textarea')}" />
-                <div th:replace="~{fragments/forms::inputRow(object='oldExam', field='author', required=true, type='select')}" />
-                <div th:replace="~{fragments/forms::inputRow(object='oldExam', field='lectureId', required=true, type='select')}" />
+                <div th:replace="~{fragments/forms::inputRow(object='oldExam', field='content', required=true)}" />
+                <input type="hidden" th:name="authorId" th:value="${user}"/>
+                <input type="hidden" th:name="lectureId" th:value="${selectedLecture.lectureId}" />
                 <input type="submit" th:value="#{oldExam.edit.headline}" class="btn btn-primary mt-4" />
             </form>
         </div>

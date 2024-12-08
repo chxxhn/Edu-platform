@@ -38,9 +38,9 @@
                             <td>[[${oldExam.lectureId.name}]]</td>
                             <td>
                                 <div class="float-end text-nowrap">
-                                    <a th:href="@{/oldExams/edit/{oeId}(oeId=${oldExam.oeId})}" class="btn btn-sm btn-secondary"
+                                    <a th:href="@{/oldExams/edit/{lectureId}/{oeId}(lectureId=${selectedLecture.lectureId}, oeId=${oldExam.oeId})}" class="btn btn-sm btn-secondary"
                                       onclick="event.stopPropagation();">[[#{oldExam.list.edit}]]</a>
-                                    <form th:action="@{/oldExams/delete/{oeId}(oeId=${oldExam.oeId})}"
+                                    <form th:action="@{/oldExams/delete/{lectureId}/{oeId}(lectureId=${selectedLecture.lectureId}, oeId=${oldExam.oeId})}"
                                             th:hx-confirm="#{delete.confirm}" method="post" class="d-inline" onclick="event.stopPropagation();">
                                         <button type="submit" class="btn btn-sm btn-secondary">[[#{oldExam.list.delete}]]</button>
                                     </form>

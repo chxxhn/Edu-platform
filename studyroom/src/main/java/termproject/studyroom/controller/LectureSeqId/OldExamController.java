@@ -115,27 +115,38 @@ public class OldExamController {
         return "redirect:/oldExams/" + lectureId;
     }
 
-    @GetMapping("/edit/{oeId}")
-    public String edit(@PathVariable(name = "oeId") final Integer oeId, final Model model) {
+    @GetMapping("/edit/{lectureId}/{oeId}")
+    public String edit(@PathVariable(name = "lectureId") Integer lectureId,
+            @PathVariable(name = "oeId") final Integer oeId, final Model model,
+                       @AuthenticationPrincipal CustomUserDetails user) {
+        LectureList lecture = lectureListRepository.findById(lectureId)
+                .orElseThrow(() -> new IllegalArgumentException("Lecture not found"));
+        model.addAttribute("selectedLecture", lecture);
         model.addAttribute("oldExam", oldExamService.get(oeId));
+        model.addAttribute("user", user != null ? user.getUser() : "Anonymous User");
         return "oldExam/edit";
     }
 
-    @PostMapping("/edit/{oeId}")
-    public String edit(@PathVariable(name = "oeId") final Integer oeId,
+    @PostMapping("/edit/{lectureId}/{oeId}")
+    public String edit(@PathVariable(name = "lectureId") Integer lectureId,
+            @PathVariable(name = "oeId") final Integer oeId,
             @ModelAttribute("oldExam") @Valid final OldExamDTO oldExamDTO,
-            final BindingResult bindingResult, final RedirectAttributes redirectAttributes) {
-        if (bindingResult.hasErrors()) {
-            return "oldExam/edit";
-        }
+            final BindingResult bindingResult, final RedirectAttributes redirectAttributes,
+                       @AuthenticationPrincipal CustomUserDetails user, final Model model) {
+        // 세션 유저 정보를 조회
+        User author = userRepository.findByEmail(user.getUsername())
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        // DTO에 강의 및 작성자 설정
+        oldExamDTO.setAuthor(author);
         oldExamService.update(oeId, oldExamDTO);
         redirectAttributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("oldExam.update.success"));
-        return "redirect:/oldExams";
+        return "redirect:/oldExams/" + lectureId;
     }
 
-    @PostMapping("/delete/{oeId}")
-    public String delete(@PathVariable(name = "oeId") final Integer oeId,
-            final RedirectAttributes redirectAttributes) {
+    @PostMapping("/delete/{lectureId}/{oeId}")
+    public String delete(@PathVariable(name = "lectureId") Integer lectureId,
+            @PathVariable(name = "oeId") final Integer oeId,
+            final RedirectAttributes redirectAttributes, @AuthenticationPrincipal CustomUserDetails user) {
         final ReferencedWarning referencedWarning = oldExamService.getReferencedWarning(oeId);
         if (referencedWarning != null) {
             redirectAttributes.addFlashAttribute(WebUtils.MSG_ERROR,
@@ -144,7 +155,7 @@ public class OldExamController {
             oldExamService.delete(oeId);
             redirectAttributes.addFlashAttribute(WebUtils.MSG_INFO, WebUtils.getMessage("oldExam.delete.success"));
         }
-        return "redirect:/oldExams";
+        return "redirect:/oldExams/" + lectureId;
     }
 
     @GetMapping(value = "/detail/{lectureId}/{oeId}")
