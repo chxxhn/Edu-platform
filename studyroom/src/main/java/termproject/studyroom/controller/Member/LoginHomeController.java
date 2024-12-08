@@ -62,6 +62,7 @@ public class LoginHomeController {
             model.addAttribute("error", "Lecture not found.");
         }
         model.addAttribute("username", user != null ? user.getUsername() : "Anonymous User");
+        model.addAttribute("user", user != null ? user.getUser() : "Anonymous User");
         return "home/index";
     }
 

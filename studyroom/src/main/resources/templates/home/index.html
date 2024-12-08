@@ -16,6 +16,13 @@
         <p th:if="${selectedLecture}" th:text="'현재 선택된 강의: ' + ${selectedLecture.name}"></p>
         <p th:if="${error}" th:text="${error}"></p>
 
+        <!-- 폼 추가 -->
+        <form th:action="@{/redirectToOtherController}" method="post">
+            <input type="hidden" name="lectureId" th:value="${selectedLecture.lectureId}" />
+            <input type="hidden" name="lectureName" th:value="${selectedLecture.name}" />
+            <button type="submit" class="btn btn-primary">다른 컨트롤러로 이동</button>
+        </form>
+
         <p>오늘은 어디로 가시겠어요?</p>
         <div class="d-flex justify-content-center mt-2">
             <a th:href="@{/groupProjects}" class="btn btn-outline-warning me-2">👨‍👩‍👧‍👦 팀플 시작</a>

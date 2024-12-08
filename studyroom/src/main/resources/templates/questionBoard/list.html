@@ -9,7 +9,7 @@
             <div class="d-flex flex-wrap mb-4">
                 <h1 class="flex-grow-1">질문게시판</h1>
                 <div>
-                    <a th:href="@{/questionBoards/add}" class="btn btn-primary ms-2">[[#{questionBoard.list.createNew}]]</a>
+                    <a th:href="@{/questionBoards/add/{lectureId}(lectureId=${selectedLecture.lectureId})}" class="btn btn-primary ms-2">[[#{questionBoard.list.createNew}]]</a>
                 </div>
             </div>
             <div th:if="${questionBoards.empty}">[[#{questionBoard.list.empty}]]</div>
@@ -28,7 +28,7 @@
                     </thead>
                     <tbody>
                     <tr th:each="questionBoard : ${paging.content}"
-                        th:onclick="|window.location='@{/questionBoards/detail/{questionId}(questionId=${questionBoard.questionId})}'|"
+                        th:onclick="|window.location='/questionBoards/detail/' + ${selectedLecture.lectureId} + '/' + ${questionBoard.questionId}|"
                         style="cursor: pointer;">
                         <td>[[${questionBoard.questionId}]]</td>
                         <td>[[${questionBoard.title}]]</td>
