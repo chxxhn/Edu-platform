@@ -9,7 +9,7 @@
             <div class="d-flex flex-wrap mb-4">
                 <h1 class="flex-grow-1">만남 게시판</h1>
                 <div>
-                    <a th:href="@{/communicationBoards/add}" class="btn btn-primary ms-2">[[#{communicationBoard.list.createNew}]]</a>
+                    <a th:href="@{/communicationBoards/add/{lectureId}(lectureId=${selectedLecture.lectureId})}" class="btn btn-primary ms-2">[[#{communicationBoard.list.createNew}]]</a>
                 </div>
             </div>
             <div th:if="${communicationBoards.empty}">[[#{communicationBoard.list.empty}]]</div>
@@ -28,7 +28,7 @@
                     </thead>
                     <tbody>
                         <tr th:each="communicationBoard : ${paging.content}"
-                            th:onclick="|window.location='@{/communicationBoards/detail/{comnId}(comnId=${communicationBoard.comnId})}'|"
+                            th:onclick="|window.location='/communicationBoards/detail/' + ${selectedLecture.lectureId} + '/' + ${communicationBoard.comnId}|"
                             style="cursor: pointer;">
                             <td>[[${communicationBoard.comnId}]]</td>
                             <td>[[${communicationBoard.content}]]</td>

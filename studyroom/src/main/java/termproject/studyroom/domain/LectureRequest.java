@@ -47,7 +47,7 @@ public class LectureRequest {
     private String content;
 
     @Column(nullable = false)
-    private Integer numberDesired;
+    private Integer numberDesired = 0;
 
     @Column(nullable = false)
     private Boolean lectureValid;

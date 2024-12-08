@@ -9,7 +9,7 @@
             <div class="d-flex flex-wrap mb-4">
                 <h1 class="flex-grow-1">강의요청 게시판</h1>
                 <div>
-                    <a th:href="@{/lectureRequests/add}" class="btn btn-primary ms-2">[[#{lectureRequest.list.createNew}]]</a>
+                    <a th:href="@{/lectureRequests/add/{lectureId}(lectureId=${selectedLecture.lectureId})}" class="btn btn-primary ms-2">[[#{lectureRequest.list.createNew}]]</a>
                 </div>
             </div>
             <div th:if="${lectureRequests.empty}">[[#{lectureRequest.list.empty}]]</div>
@@ -27,7 +27,7 @@
                     </thead>
                     <tbody>
                         <tr th:each="lectureRequest : ${paging.content}"
-                            th:onclick="|window.location='@{/lectureRequests/detail/{rqId}(rqId=${lectureRequest.rqId})}'|"
+                            th:onclick="|window.location='/lectureRequests/detail/' + ${selectedLecture.lectureId} + '/' + ${lectureRequest.rqId}|"
                             style="cursor: pointer;">
                             <td>[[${lectureRequest.rqId}]]</td>
                             <td>[[${lectureRequest.title}]]</td>
