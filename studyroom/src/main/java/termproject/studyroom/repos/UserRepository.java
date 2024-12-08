@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import termproject.studyroom.domain.User;
 import termproject.studyroom.model.Grade;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -24,4 +25,6 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     Optional<User> findByEmail(String email);
 
     Page<User> findByGrade(Grade grade, Pageable pageable);
+
+    Optional<User> findByStdId(Integer stdId);
 }

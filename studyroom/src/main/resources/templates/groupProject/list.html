@@ -7,9 +7,10 @@
     <body>
         <div layout:fragment="content">
             <div class="d-flex flex-wrap mb-4">
+                <h1 class="flex-grow-1">팀플게시판</h1>
                 <h1 class="flex-grow-1">[[#{groupProject.list.headline}]]</h1>
                 <div>
-                    <a th:href="@{/groupProjects/add}" class="btn btn-primary ms-2">[[#{groupProject.list.createNew}]]</a>
+                    <a th:href="@{/groupProjects/add/{lectureId}(lectureId=${selectedLecture.lectureId})}" class="btn btn-primary ms-2">[[#{groupProject.list.createNew}]]</a>
                 </div>
             </div>
             <div th:if="${groupProjects.empty}">[[#{groupProject.list.empty}]]</div>
@@ -26,12 +27,14 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr th:each="groupProject : ${groupProjects}">
+                        <tr th:each="groupProject : ${paging.content}"
+                            th:onclick="|window.location='/groupProjects/detail/' + ${selectedLecture.lectureId} + '/' + ${groupProject.gpId}|"
+                            style="cursor: pointer;">
                             <td>[[${groupProject.gpId}]]</td>
                             <td>[[${groupProject.groupValid}]]</td>
                             <td>[[${groupProject.groupName}]]</td>
-                            <td>[[${groupProject.createdUserId}]]</td>
-                            <td>[[${groupProject.lectureId}]]</td>
+                            <td>[[${groupProject.createdUserId.name}]]</td>
+                            <td>[[${groupProject.lectureId.name}]]</td>
                             <td>
                                 <div class="float-end text-nowrap">
                                     <a th:href="@{/groupProjects/edit/{gpId}(gpId=${groupProject.gpId})}" class="btn btn-sm btn-secondary">[[#{groupProject.list.edit}]]</a>

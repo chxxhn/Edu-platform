@@ -27,7 +27,6 @@ public class GroupUser {
     private LectureList lectureList;
 
     @ManyToOne
-    @MapsId("groupId") // 복합 키의 groupId 필드를 매핑
     @JoinColumn(name = "group_id", nullable = false)
     private GroupProject groupProject;
 

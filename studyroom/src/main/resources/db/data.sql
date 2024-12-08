@@ -41,3 +41,9 @@ VALUES
 UPDATE Users
 SET grade = 'PROF'
 WHERE std_id = 0;
+
+-- GroupUser 테이블 내용 삭제
+DELETE FROM group_user;
+
+-- GroupProject 테이블 내용 삭제
+DELETE FROM group_projects;

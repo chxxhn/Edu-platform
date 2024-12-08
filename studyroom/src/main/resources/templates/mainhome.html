@@ -42,6 +42,12 @@
     </style>
 </head>
 <body>
+<div th:if="${MSG_ERROR}" class="alert alert-danger">
+    <p th:text="${MSG_ERROR}"></p>
+</div>
+<div th:if="${MSG_SUCCESS}" class="alert alert-success">
+    <p th:text="${MSG_SUCCESS}"></p>
+</div>
 <div class="container">
     <h1>Lecture List</h1>
 
@@ -83,9 +89,14 @@
         </div>
         <form th:action="@{/lectureLists/add}" method="post">
             <label for="name">Lecture Name:</label><br>
-            <input type="text" id="name" name="name" required><br><br>
-              <input type="submit" value="Add Lecture" class="btn btn-primary mt-4" />
+            <input type="text" id="name" name="lectureName" required><br><br>
+
+            <label for="lectureNumber">Lecture Id:</label><br>
+            <input type="text" id="lectureNumber" name="lectureNumber" required><br><br>
+
+            <input type="submit" value="Add Lecture" class="btn btn-primary mt-4" />
         </form>
+
     </div>
 </div>
 </body>

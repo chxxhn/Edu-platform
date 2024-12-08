@@ -116,14 +116,19 @@ public class LectureListController {
     }
 
     @PostMapping("/add")
-    public String add(@RequestParam("name") String lectureName,
+    public String add(@RequestParam("lectureName") String lectureName, @RequestParam("lectureNumber") Integer lecturenumber,
             final RedirectAttributes redirectAttributes,@ModelAttribute("user") CustomUserDetails user) {
 
-        LectureListDTO lectureListDTO = new LectureListDTO();
-        lectureListDTO.setName(lectureName);
-        lectureListDTO.setStdId(user.getUser().getStdId());
-        lectureListService.create(lectureListDTO);
-        redirectAttributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("lectureList.create.success"));
+        try {
+            LectureListDTO lectureListDTO = new LectureListDTO();
+            lectureListDTO.setLectureId(lecturenumber);
+            lectureListDTO.setName(lectureName);
+            lectureListDTO.setStdId(user.getUser().getStdId());
+            lectureListService.create(lectureListDTO);
+            redirectAttributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("lectureList.create.success")); }
+        catch (Exception e) {
+            redirectAttributes.addFlashAttribute(WebUtils.MSG_ERROR, WebUtils.getMessage("lecture 생성 실패", e.getMessage()));
+        }
         return "redirect:/lectureLists";
     }
 

@@ -22,6 +22,7 @@
             <div th:replace="~{fragments/forms::globalErrors('lectureList')}" />
             <form th:action="${requestUri}" method="post">
                 <div th:replace="~{fragments/forms::inputRow(object='lectureList', field='name', required=true)}" />
+                <div th:replace="~{fragments/forms::inputRow(object='lectureList', field='lectureId', required=true)}" />
                 <div>
                     <label for="stdId" class="form-label fw-bold">Professor (stdId)</label>
                     <input type="text" id="stdId" name="stdId" class="form-control" th:value="${user.stdId}" readonly />

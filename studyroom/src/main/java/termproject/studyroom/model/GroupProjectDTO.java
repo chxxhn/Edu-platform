@@ -12,8 +12,7 @@ public class GroupProjectDTO {
 
     private Integer gpId;
 
-    @NotNull
-    private Boolean groupValid;
+    private Boolean groupValid = false; // 기본값 설정
 
     @NotNull
     @Size(max = 10)
@@ -27,5 +26,7 @@ public class GroupProjectDTO {
 
     @NotNull
     private Integer lectureId;
+
+
 
 }

@@ -41,7 +41,7 @@ public class GroupProject {
     private Integer gpId;
 
     @Column(nullable = false)
-    private Boolean groupValid;
+    private Boolean groupValid = false; // 기본값 설정
 
     @Column(nullable = false, unique = true, length = 10)
     private String groupName;
@@ -49,11 +49,11 @@ public class GroupProject {
     @Column(columnDefinition = "text")
     private String groupDetail;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "created_user_id_id", nullable = false)
     private User createdUserId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "lecture_id_id", nullable = false)
     private LectureList lectureId;
 
