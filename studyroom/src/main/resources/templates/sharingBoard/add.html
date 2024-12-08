@@ -9,16 +9,18 @@
             <div class="d-flex flex-wrap mb-4">
                 <h1 class="flex-grow-1">[[#{sharingBoard.add.headline}]]</h1>
                 <div>
-                    <a th:href="@{/sharingBoards}" class="btn btn-secondary">[[#{sharingBoard.add.back}]]</a>
+                    <a th:href="@{/sharingBoards/{lectureId}(lectureId=${selectedLecture.lectureId})}" class="btn btn-secondary">[[#{sharingBoard.add.back}]]</a>
                 </div>
             </div>
             <div th:replace="~{fragments/forms::globalErrors('sharingBoard')}" />
-            <form th:action="${requestUri}" method="post">
+            <form th:action="@{/sharingBoards/add/{lectureId}(lectureId=${selectedLecture.lectureId})}" method="post"
+                  th:object="${sharingBoard}">
                 <div th:replace="~{fragments/forms::inputRow(object='sharingBoard', field='title', required=true)}" />
                 <div th:replace="~{fragments/forms::inputRow(object='sharingBoard', field='content', required=true, type='textarea')}" />
                 <div th:replace="~{fragments/forms::inputRow(object='sharingBoard', field='warnCount', required=true, type='number')}" />
-                <div th:replace="~{fragments/forms::inputRow(object='sharingBoard', field='userId', required=true, type='select')}" />
-                <div th:replace="~{fragments/forms::inputRow(object='sharingBoard', field='lectureId', required=true, type='select')}" />
+                <!-- 사용자와 강의 정보를 히든 필드로 포함 -->
+                <input type="hidden" th:name="userId" th:value="${user}"/>
+                <input type="hidden" th:name="lectureId" th:value="${selectedLecture.lectureId}" />
                 <input type="submit" th:value="#{sharingBoard.add.headline}" class="btn btn-primary mt-4" />
             </form>
         </div>

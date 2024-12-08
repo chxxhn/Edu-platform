@@ -23,6 +23,7 @@ import termproject.studyroom.repos.UserRepository;
 import termproject.studyroom.service.QuestionBoardService;
 import termproject.studyroom.service.QuestionCommentService;
 import termproject.studyroom.util.CustomCollectors;
+import termproject.studyroom.util.ReferencedWarning;
 import termproject.studyroom.util.WebUtils;
 
 import java.util.List;
@@ -165,5 +166,51 @@ public class QuestionBoardController {
         return "questionBoard/detail";
     }
 
+    @GetMapping("/edit/{lectureId}/{questionId}")
+    public String edit(@PathVariable(name = "lectureId") Integer lectureId, @PathVariable(name = "questionId") final Integer questionId,
+                       final Model model, @AuthenticationPrincipal CustomUserDetails user) {
+        LectureList lecture = lectureListRepository.findById(lectureId)
+                .orElseThrow(() -> new IllegalArgumentException("Lecture not found"));
+        model.addAttribute("selectedLecture", lecture);
+        model.addAttribute("questionBoard", questionBoardService.get(questionId));
+        model.addAttribute("user", user != null ? user.getUser() : "Anonymous User");
+        return "questionBoard/edit";
+    }
+
+    @PostMapping("/edit/{lectureId}/{questionId}")
+    public String edit(@PathVariable(name = "lectureId") Integer lectureId,
+                        @PathVariable(name = "questionId") final Integer questionId,
+                       @ModelAttribute("questionBoard") final QuestionBoardDTO questionBoardDTO,
+                       final BindingResult bindingResult, final RedirectAttributes redirectAttributes,
+                       @AuthenticationPrincipal CustomUserDetails user) {
+        LectureList lecture = lectureListRepository.findById(lectureId)
+                .orElseThrow(() -> new IllegalArgumentException("Lecture not found"));
+
+        // 세션 유저 정보를 조회
+        User author = userRepository.findByEmail(user.getUsername())
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        // DTO에 강의 및 작성자 설정
+        questionBoardDTO.setAuthor(author);
+        questionBoardService.update(questionId, questionBoardDTO);
+        redirectAttributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("questionBoard.update.success"));
+        return "redirect:/questionBoards/" + lectureId;
+    }
+
+    @PostMapping("/delete/{lectureId}/{questionId}")
+    public String delete(@PathVariable(name = "lectureId") Integer lectureId,
+                        @PathVariable(name = "questionId") final Integer questionId,
+                         final RedirectAttributes redirectAttributes,
+                         @AuthenticationPrincipal CustomUserDetails user) {
+        final ReferencedWarning referencedWarning = questionBoardService.getReferencedWarning(questionId);
+        if (referencedWarning != null) {
+            redirectAttributes.addFlashAttribute(WebUtils.MSG_ERROR,
+                    WebUtils.getMessage(referencedWarning.getKey(), referencedWarning.getParams().toArray()));
+        } else {
+            // 세션 유저 정보를 조회
+            questionBoardService.delete(questionId);
+            redirectAttributes.addFlashAttribute(WebUtils.MSG_INFO, WebUtils.getMessage("questionBoard.delete.success"));
+        }
+        return "redirect:/questionBoards/" + lectureId;
+    }
 
 }

@@ -78,7 +78,7 @@ public class SharingBoardService {
         sharingBoardDTO.setSharingId(sharingBoard.getSharingId());
         sharingBoardDTO.setTitle(sharingBoard.getTitle());
         sharingBoardDTO.setContent(sharingBoard.getContent());
-        sharingBoardDTO.setWarnCount(sharingBoard.getWarnCount());
+//        sharingBoardDTO.setWarnCount(sharingBoard.getWarnCount());
         sharingBoardDTO.setUserId(sharingBoard.getUserId() == null ? null : sharingBoard.getUserId());
         sharingBoardDTO.setLectureId(sharingBoard.getLectureId() == null ? null : sharingBoard.getLectureId());
         return sharingBoardDTO;
@@ -88,7 +88,7 @@ public class SharingBoardService {
             final SharingBoard sharingBoard) {
         sharingBoard.setTitle(sharingBoardDTO.getTitle());
         sharingBoard.setContent(sharingBoardDTO.getContent());
-        sharingBoard.setWarnCount(sharingBoardDTO.getWarnCount());
+//        sharingBoard.setWarnCount(sharingBoardDTO.getWarnCount());
         final User userId = sharingBoardDTO.getUserId() == null ? null : userRepository.findById(sharingBoardDTO.getUserId().getStdId())
                 .orElseThrow(() -> new NotFoundException("userId not found"));
         sharingBoard.setUserId(userId);

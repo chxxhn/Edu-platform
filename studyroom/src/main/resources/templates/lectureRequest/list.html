@@ -9,7 +9,7 @@
             <div class="d-flex flex-wrap mb-4">
                 <h1 class="flex-grow-1">강의요청 게시판</h1>
                 <div>
-                    <a th:href="@{/lectureRequests/add}" class="btn btn-primary ms-2">[[#{lectureRequest.list.createNew}]]</a>
+                    <a th:href="@{/lectureRequests/add/{lectureId}(lectureId=${selectedLecture.lectureId})}" class="btn btn-primary ms-2">[[#{lectureRequest.list.createNew}]]</a>
                 </div>
             </div>
             <div th:if="${lectureRequests.empty}">[[#{lectureRequest.list.empty}]]</div>
@@ -19,7 +19,6 @@
                         <tr>
                             <th scope="col">Id</th>
                             <th scope="col">[[#{lectureRequest.title.label}]]</th>
-                            <th scope="col">[[#{lectureRequest.numberDesired.label}]]</th>
                             <th scope="col">Approval</th>
                             <th scope="col">Lecture</th>
                             <th><!-- --></th>
@@ -27,18 +26,17 @@
                     </thead>
                     <tbody>
                         <tr th:each="lectureRequest : ${paging.content}"
-                            th:onclick="|window.location='@{/lectureRequests/detail/{rqId}(rqId=${lectureRequest.rqId})}'|"
+                            th:onclick="|window.location='/lectureRequests/detail/' + ${selectedLecture.lectureId} + '/' + ${lectureRequest.rqId}|"
                             style="cursor: pointer;">
                             <td>[[${lectureRequest.rqId}]]</td>
                             <td>[[${lectureRequest.title}]]</td>
-                            <td>[[${lectureRequest.numberDesired}]]</td>
                             <td>[[${lectureRequest.lectureValid}]]</td>
                             <td>[[${lectureRequest.lectureId.name}]]</td>
                             <td>
                                 <div class="float-end text-nowrap">
-                                    <a th:href="@{/lectureRequests/edit/{rqId}(rqId=${lectureRequest.rqId})}" class="btn btn-sm btn-secondary"
+                                    <a th:href="@{/lectureRequests/edit/{lectureId}/{rqId}(lectureId=${selectedLecture.lectureId}, rqId=${lectureRequest.rqId})}" class="btn btn-sm btn-secondary"
                                        onclick="event.stopPropagation();">[[#{lectureRequest.list.edit}]]</a>
-                                    <form th:action="@{/lectureRequests/delete/{rqId}(rqId=${lectureRequest.rqId})}"
+                                    <form th:action="@{/lectureRequests/delete/{lectureId}/{rqId}(lectureId=${selectedLecture.lectureId}, rqId=${lectureRequest.rqId})}"
                                             th:hx-confirm="#{delete.confirm}" method="post" class="d-inline" onclick="event.stopPropagation();">
                                         <button type="submit" class="btn btn-sm btn-secondary">[[#{lectureRequest.list.delete}]]</button>
                                     </form>

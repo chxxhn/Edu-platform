@@ -42,9 +42,9 @@
                         <td>[[${questionBoard.likeCount}]]</td>
                         <td>
                             <div class="float-end text-nowrap">
-                                <a th:href="@{/questionBoards/edit/{questionId}(questionId=${questionBoard.questionId})}" class="btn btn-sm btn-secondary"
+                                <a th:href="@{/questionBoards/edit/{lectureId}/{questionId}(lectureId=${selectedLecture.lectureId}, questionId=${questionBoard.questionId})}" class="btn btn-sm btn-secondary"
                                    onclick="event.stopPropagation();">[[#{questionBoard.list.edit}]]</a>
-                                <form th:action="@{/questionBoards/delete/{questionId}(questionId=${questionBoard.questionId})}"
+                                <form th:action="@{/questionBoards/delete/{lectureId}/{questionId}(lectureId=${selectedLecture.lectureId}, questionId=${questionBoard.questionId})}"
                                       th:hx-confirm="#{delete.confirm}" method="post" class="d-inline" onclick="event.stopPropagation();">
                                     <button type="submit" class="btn btn-sm btn-secondary">[[#{questionBoard.list.delete}]]</button>
                                 </form>

@@ -22,9 +22,6 @@ public class SharingBoardDTO {
     private String content;
 
     @NotNull
-    private Integer warnCount;
-
-    @NotNull
     private User userId;
 
     @NotNull

@@ -9,7 +9,7 @@
             <div class="d-flex flex-wrap mb-4">
                 <h1 class="flex-grow-1">수업필기 공유 게시판</h1>
                 <div>
-                    <a th:href="@{/sharingBoards/add}" class="btn btn-primary ms-2">[[#{sharingBoard.list.createNew}]]</a>
+                    <a th:href="@{/sharingBoards/add/{lectureId}(lectureId=${selectedLecture.lectureId})}" class="btn btn-primary ms-2">[[#{sharingBoard.list.createNew}]]</a>
                 </div>
             </div>
             <div th:if="${sharingBoards.empty}">[[#{sharingBoard.list.empty}]]</div>
@@ -27,7 +27,7 @@
                     </thead>
                     <tbody>
                         <tr th:each="sharingBoard : ${paging.content}"
-                            th:onclick="|window.location='@{/sharingBoards/detail/{sharingId}(sharingId=${sharingBoard.sharingId})}'|"
+                            th:onclick="|window.location='/sharingBoards/detail/'+ ${selectedLecture.lectureId} + '/' + ${sharingBoard.sharingId}|"
                             style="cursor: pointer;">
                             <td>[[${sharingBoard.sharingId}]]</td>
                             <td>[[${sharingBoard.title}]]</td>
@@ -40,9 +40,9 @@
                             <td>[[${sharingBoard.warnCount}]]</td>
                             <td>
                                 <div class="float-end text-nowrap">
-                                    <a th:href="@{/sharingBoards/edit/{sharingId}(sharingId=${sharingBoard.sharingId})}" class="btn btn-sm btn-secondary"
+                                    <a th:href="@{/sharingBoards/edit/{lectureId}/{sharingId}(lectureId=${selectedLecture.lectureId}, sharingId=${sharingBoard.sharingId})}" class="btn btn-sm btn-secondary"
                                        onclick="event.stopPropagation();">[[#{sharingBoard.list.edit}]]</a>
-                                    <form th:action="@{/sharingBoards/delete/{sharingId}(sharingId=${sharingBoard.sharingId})}"
+                                    <form th:action="@{/sharingBoards/delete/{lectureId}/{sharingId}(lectureId=${selectedLecture.lectureId}, sharingId=${sharingBoard.sharingId})}"
                                             th:hx-confirm="#{delete.confirm}" method="post" class="d-inline" onclick="event.stopPropagation();">
                                         <button type="submit" class="btn btn-sm btn-secondary">[[#{sharingBoard.list.delete}]]</button>
                                     </form>

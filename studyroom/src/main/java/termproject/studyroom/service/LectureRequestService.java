@@ -72,7 +72,7 @@ public class LectureRequestService {
         lectureRequestDTO.setRqId(lectureRequest.getRqId());
         lectureRequestDTO.setTitle(lectureRequest.getTitle());
         lectureRequestDTO.setContent(lectureRequest.getContent());
-        lectureRequestDTO.setNumberDesired(lectureRequest.getNumberDesired());
+//        lectureRequestDTO.setNumberDesired(lectureRequest.getNumberDesired());
         lectureRequestDTO.setLectureValid(lectureRequest.getLectureValid());
         lectureRequestDTO.setLectureId(lectureRequest.getLectureId() == null ? null : lectureRequest.getLectureId());
         return lectureRequestDTO;
@@ -82,7 +82,7 @@ public class LectureRequestService {
             final LectureRequest lectureRequest) {
         lectureRequest.setTitle(lectureRequestDTO.getTitle());
         lectureRequest.setContent(lectureRequestDTO.getContent());
-        lectureRequest.setNumberDesired(lectureRequestDTO.getNumberDesired());
+//        lectureRequest.setNumberDesired(lectureRequestDTO.getNumberDesired());
         lectureRequest.setLectureValid(lectureRequestDTO.getLectureValid());
         final LectureList lectureId = lectureRequestDTO.getLectureId() == null ? null : lectureListRepository.findById(lectureRequestDTO.getLectureId().getLectureId())
                 .orElseThrow(() -> new NotFoundException("lectureId not found"));
