@@ -66,9 +66,13 @@
 
     <h2>My Registered Lectures</h2>
     <ul th:if="${not #lists.isEmpty(myLectures)}">
-        <li th:each="lecture : ${myLectures}">
-            <span th:text="${lecture.name}"></span>
-        </li>
+        <form th:action="@{/lecture/select}" method="post">
+            <select name="lectureId" required>
+                <option th:each="lecture : ${myLectures}" th:value="${lecture.lectureId}" th:text="${lecture.name
+                }"></option>
+            </select>
+            <button type="submit">Go to Lecture</button>
+        </form>
     </ul>
     <p th:if="${#lists.isEmpty(myLectures)}">No registered lectures found.</p>
 </div>

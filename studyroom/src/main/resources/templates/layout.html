@@ -28,22 +28,22 @@
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">수업게시판</a>
                         <div class="dropdown-menu" aria-labelledby="resourcesDropdown">
-                            <a class="dropdown-item" th:href="@{/sharingBoards}">수업필기공유</a>
-                            <a class="dropdown-item" th:href="@{/oldExams}">족보</a>
-                            <a class="dropdown-item" th:href="@{/lectureRequests}">강의요청</a>
+                            <a class="dropdown-item" th:href="@{/sharingBoards/{lectureId}(lectureId=${selectedLecture.lectureId})}">수업필기공유</a>
+                            <a class="dropdown-item" th:href="@{/oldExams/{lectureId}(lectureId=${selectedLecture.lectureId})}">족보</a>
+                            <a class="dropdown-item" th:href="@{/lectureRequests/{lectureId}(lectureId=${selectedLecture.lectureId})}">강의요청</a>
                         </div>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" th:href="@{/groupProjects}">팀플게시판</a>
+                        <a class="nav-link" th:href="@{/groupProjects/{lectureId}(lectureId=${selectedLecture.lectureId})}">팀플게시판</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" th:href="@{/communicationBoards}">만남게시판</a>
+                        <a class="nav-link" th:href="@{/communicationBoards/{lectureId}(lectureId=${selectedLecture.lectureId})}">만남게시판</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" th:href="@{/noticeBoards}">공지게시판</a>
+                        <a class="nav-link" th:href="@{/noticeBoards/{lectureId}(lectureId=${selectedLecture.lectureId})}">공지게시판</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" th:href="@{/questionBoards}">질문게시판</a>
+                        <a class="nav-link" th:href="@{/questionBoards/{lectureId}(lectureId=${selectedLecture.lectureId})}">질문게시판</a>
                     </li>
                 </ul>
             </div>
@@ -51,9 +51,10 @@
             <!-- 알림 및 로그인 정보 -->
             <div class="d-flex align-items-center">
                 <!-- 알람 버튼 -->
-                <a th:href="@{/alarms}" class="btn btn-outline-light me-2">알람</a>
-                <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/user/login}">로그인</a>
-                <a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/user/logout}">로그아웃</a>
+                <div th:if="${user != null}">
+                    <span th:text="${user.getName()}">User</span>
+                    <a th:href="@{/logout}" class="btn btn-primary px-4">Logout</a>
+                </div>
             </div>
         </div>
     </nav>

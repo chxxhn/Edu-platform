@@ -21,11 +21,20 @@
             <hr>
             <div class="d-flex justify-content-between">
                 <div class="d-flex align-items-center">
-                    <button class="btn btn-outline-danger btn-sm me-3" onclick="incrementWarnCount([[${questionBoard.questionId}]])">
-                        warn <span class="badge bg-danger" id="warnCount" th:text="${questionBoard.warnCount}">0</span>
+                    <!--                    <button class="btn btn-outline-danger btn-sm me-3" onclick="incrementWarnCount([[${questionBoard.questionId}]])">-->
+                    <!--                        warn <span class="badge bg-danger" id="warnCount" th:text="${questionBoard.warnCount}">0</span>-->
+                    <!--                    </button>-->
+                    <!-- 좋아요 버튼 -->
+                    <button
+                            class="btn btn-outline-warning btn-sm me-3"
+                            th:data-post-id="${questionBoard.questionId}"
+                            th:data-user-id=0
+                            th:data-board-type="QUESTION_BOARD"
+                            onclick="handleLikeButtonClick(this)">
+                        👍 Like <span class="badge bg-warning like-count" th:text="${questionBoard.likeCount}"></span>
                     </button>
-                    <span class="text-muted">Like:</span>
-                    <span class="fw-bold text-dark ms-2" th:text="${questionBoard.likeCount}"></span>
+                    <span class="text-muted">Warn:</span>
+                    <span class="fw-bold text-dark ms-2" th:text="${questionBoard.warnCount}"></span>
                 </div>
                 <div class="d-flex align-items-center text-muted">
                     <span>Author:</span>
@@ -72,6 +81,7 @@
                 <form th:action="@{/questionComments/add/{questionId}(questionId=${questionBoard.questionId})}" method="post" class="d-flex flex-column">
                     <label for="exampleTextarea" class="form-label fw-bold">내용</label>
                     <textarea class="form-control mb-3" id="exampleTextarea" name="content" rows="3" placeholder="댓글을 입력하세요..."></textarea>
+                    <input type="hidden" th:name="lectureId" th:value="${selectedLecture.lectureId}" />
                     <button type="submit" class="btn btn-secondary align-self-start">댓글 등록</button>
                 </form>
             </li>
@@ -84,29 +94,53 @@
             Back to question Board
         </a>
     </div>
+    <script>
+        function handleLikeButtonClick(button) {
+            const postId = button.getAttribute("data-post-id");
+            const userId = button.getAttribute("data-user-id");
+            const boardType = button.getAttribute("data-board-type"); // boardType 추가됨
+
+            fetch('/likes/add', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    postId: postId,
+                    boardType: boardType, // 서버에 전달
+                    author: {
+                        stdId: userId
+                    }
+                })
+            })
+                .then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    } else {
+                        throw new Error("Failed to add like");
+                    }
+                })
+                .then(data => {
+                    const likeCountElement = button.querySelector(".like-count");
+                    likeCountElement.textContent = data.likeCount;
+
+                    // 버튼 상태 업데이트
+                    if (data.status === -1) {
+                        button.classList.remove("btn-outline-warning");
+                        button.classList.add("btn-outline-secondary");
+                        button.textContent = "👍 Like Removed";
+                    } else {
+                        button.classList.remove("btn-outline-secondary");
+                        button.classList.add("btn-outline-warning");
+                        button.textContent = "👍 Like Added";
+                    }
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                });
+        }
+    </script>
 </div>
-<script>
-    function incrementWarnCount(questionId) {
-        fetch(`/questionBoards/dislike/${questionId}`, {
-            method: 'POST'
-        })
-            .then(response => {
-                if (response.ok) {
-                    return response.json();
-                } else {
-                    throw new Error('Failed to update dislike count');
-                }
-            })
-            .then(data => {
-                // 서버에서 반환된 warnCount 값으로 업데이트
-                const warnCountSpan = document.getElementById('warnCount');
-                warnCountSpan.textContent = data.warnCount;
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-    }
-</script>
 </body>
 </html>
 
