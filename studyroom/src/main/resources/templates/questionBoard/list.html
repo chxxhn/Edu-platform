@@ -7,7 +7,7 @@
     <body>
         <div layout:fragment="content">
             <div class="d-flex flex-wrap mb-4">
-                <h1 class="flex-grow-1">[[#{questionBoard.list.headline}]]</h1>
+                <h1 class="flex-grow-1">질문게시판</h1>
                 <div>
                     <a th:href="@{/questionBoards/add}" class="btn btn-primary ms-2">[[#{questionBoard.list.createNew}]]</a>
                 </div>
@@ -17,35 +17,69 @@
                 <table class="table table-striped table-hover align-middle">
                     <thead>
                         <tr>
-                            <th scope="col">[[#{questionBoard.questionId.label}]]</th>
+                            <th scope="col">Id</th>
                             <th scope="col">[[#{questionBoard.title.label}]]</th>
-                            <th scope="col">[[#{questionBoard.warnCount.label}]]</th>
-                            <th scope="col">[[#{questionBoard.likeCount.label}]]</th>
                             <th scope="col">[[#{questionBoard.author.label}]]</th>
-                            <th scope="col">[[#{questionBoard.lectureId.label}]]</th>
+                            <th scope="col">Lecture</th>
+                            <th scope="col">warn</th>
+                            <th scope="col">like</th>
                             <th><!-- --></th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr th:each="questionBoard : ${questionBoards}">
-                            <td>[[${questionBoard.questionId}]]</td>
-                            <td>[[${questionBoard.title}]]</td>
-                            <td>[[${questionBoard.warnCount}]]</td>
-                            <td>[[${questionBoard.likeCount}]]</td>
-                            <td>[[${questionBoard.author}]]</td>
-                            <td>[[${questionBoard.lectureId}]]</td>
-                            <td>
-                                <div class="float-end text-nowrap">
-                                    <a th:href="@{/questionBoards/edit/{questionId}(questionId=${questionBoard.questionId})}" class="btn btn-sm btn-secondary">[[#{questionBoard.list.edit}]]</a>
-                                    <form th:action="@{/questionBoards/delete/{questionId}(questionId=${questionBoard.questionId})}"
-                                            th:hx-confirm="#{delete.confirm}" method="post" class="d-inline">
-                                        <button type="submit" class="btn btn-sm btn-secondary">[[#{questionBoard.list.delete}]]</button>
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
+                    <tr th:each="questionBoard : ${paging.content}"
+                        th:onclick="|window.location='@{/questionBoards/detail/{questionId}(questionId=${questionBoard.questionId})}'|"
+                        style="cursor: pointer;">
+                        <td>[[${questionBoard.questionId}]]</td>
+                        <td>[[${questionBoard.title}]]</td>
+                        <td>
+                            <span th:class="${questionBoard.author.grade.name() == 'TA'} ? 'fw-bold text-primary'
+                                   : (${questionBoard.author.grade.name() == 'PROF'} ? 'fw-bold text-info' : 'text-dark')"
+                                  th:text="${questionBoard.author.nickname + ' (' + questionBoard.author.grade + ')'}"></span>
+                        </td>
+                        <td>[[${questionBoard.lectureId.name}]]</td>
+                        <td>[[${questionBoard.warnCount}]]</td>
+                        <td>[[${questionBoard.likeCount}]]</td>
+                        <td>
+                            <div class="float-end text-nowrap">
+                                <a th:href="@{/questionBoards/edit/{questionId}(questionId=${questionBoard.questionId})}" class="btn btn-sm btn-secondary"
+                                   onclick="event.stopPropagation();">[[#{questionBoard.list.edit}]]</a>
+                                <form th:action="@{/questionBoards/delete/{questionId}(questionId=${questionBoard.questionId})}"
+                                      th:hx-confirm="#{delete.confirm}" method="post" class="d-inline" onclick="event.stopPropagation();">
+                                    <button type="submit" class="btn btn-sm btn-secondary">[[#{questionBoard.list.delete}]]</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
                     </tbody>
                 </table>
+            </div>
+            <div class="d-flex justify-content-center mt-3">
+                <!-- Pagination -->
+                <nav class="pagination-container">
+                    <ul class="pagination mb-0">
+                        <!-- Previous Page -->
+                        <li th:classappend="${paging.first} ? 'disabled' : ''" class="page-item">
+                            <a class="page-link" th:href="@{/questionBoards(page=${paging.number - 1})}" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+
+                        <!-- Page Numbers -->
+                        <li th:each="i : ${#numbers.sequence(0, paging.totalPages - 1)}"
+                            th:classappend="${i == paging.number} ? 'active' : ''"
+                            class="page-item">
+                            <a class="page-link" th:href="@{/questionBoards(page=${i})}" th:text="${i + 1}">1</a>
+                        </li>
+
+                        <!-- Next Page -->
+                        <li th:classappend="${paging.last} ? 'disabled' : ''" class="page-item">
+                            <a class="page-link" th:href="@{/questionBoards(page=${paging.number + 1})}" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
             </div>
         </div>
     </body>

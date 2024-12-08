@@ -4,6 +4,8 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
+import termproject.studyroom.domain.LectureList;
+import termproject.studyroom.domain.User;
 
 
 @Getter
@@ -19,16 +21,14 @@ public class QuestionBoardDTO {
     @NotNull
     private String content;
 
-    @NotNull
-    private Integer warnCount;
+    private Integer warnCount = 0;
+
+    private Integer likeCount = 0;
 
     @NotNull
-    private Integer likeCount;
+    private User author;
 
     @NotNull
-    private Integer author;
-
-    @NotNull
-    private Integer lectureId;
+    private LectureList lectureId;
 
 }

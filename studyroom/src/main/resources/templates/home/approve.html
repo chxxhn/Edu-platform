@@ -1,0 +1,58 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Lecture List</title>
+    <style>
+        body {
+            background-color: #78c2ad;
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        .container {
+            margin-top: 5%;
+        }
+        .lecture-item {
+            margin: 15px;
+        }
+        .btn {
+            margin-top: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: white;
+            background-color: #28a745;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .btn:hover {
+            background-color: #218838;
+        }
+        .message {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+        .error {
+            color: #ff6666;
+        }
+        .success {
+            color: #66ff66;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Lecture List</h1>
+    <p>과목 코드를 등록하시오:</p>
+    <form th:action="@{/lectureLists/submitLectureCode}" method="post">
+        <input type="number" name="lectureCode" placeholder="과목 코드 입력" required>
+        <button type="submit" class="btn">제출</button>
+    </form>
+
+<!--    &lt;!&ndash; 메시지 표시 &ndash;&gt;-->
+<!--    <div class="message" th:if="${error}!= null" th:text="${error}" class="error"></div>-->
+<!--    <div class="message" th:if="${success} != null" th:text="${success}" class="success"></div>-->
+</div>
+</body>
+</html>

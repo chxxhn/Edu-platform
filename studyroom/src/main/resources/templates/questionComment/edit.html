@@ -8,9 +8,6 @@
         <div layout:fragment="content">
             <div class="d-flex flex-wrap mb-4">
                 <h1 class="flex-grow-1">[[#{questionComment.edit.headline}]]</h1>
-                <div>
-                    <a th:href="@{/questionComments}" class="btn btn-secondary">[[#{questionComment.edit.back}]]</a>
-                </div>
             </div>
             <div th:replace="~{fragments/forms::globalErrors('questionComment')}" />
             <form th:action="${requestUri}" method="post">

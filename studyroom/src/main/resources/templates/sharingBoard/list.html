@@ -7,7 +7,7 @@
     <body>
         <div layout:fragment="content">
             <div class="d-flex flex-wrap mb-4">
-                <h1 class="flex-grow-1">[[#{sharingBoard.list.headline}]]</h1>
+                <h1 class="flex-grow-1">수업필기 공유 게시판</h1>
                 <div>
                     <a th:href="@{/sharingBoards/add}" class="btn btn-primary ms-2">[[#{sharingBoard.list.createNew}]]</a>
                 </div>
@@ -17,26 +17,33 @@
                 <table class="table table-striped table-hover align-middle">
                     <thead>
                         <tr>
-                            <th scope="col">[[#{sharingBoard.sharingId.label}]]</th>
+                            <th scope="col">Id</th>
                             <th scope="col">[[#{sharingBoard.title.label}]]</th>
-                            <th scope="col">[[#{sharingBoard.warnCount.label}]]</th>
-                            <th scope="col">[[#{sharingBoard.userId.label}]]</th>
-                            <th scope="col">[[#{sharingBoard.lectureId.label}]]</th>
+                            <th scope="col">Author</th>
+                            <th scope="col">Lecture</th>
+                            <th scope="col">Warn</th>
                             <th><!-- --></th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr th:each="sharingBoard : ${sharingBoards}">
+                        <tr th:each="sharingBoard : ${paging.content}"
+                            th:onclick="|window.location='@{/sharingBoards/detail/{sharingId}(sharingId=${sharingBoard.sharingId})}'|"
+                            style="cursor: pointer;">
                             <td>[[${sharingBoard.sharingId}]]</td>
                             <td>[[${sharingBoard.title}]]</td>
+                            <td>
+                                <span th:class="${sharingBoard.userId.grade.name() == 'TA'} ? 'fw-bold text-primary'
+                                   : (${sharingBoard.userId.grade.name() == 'PROF'} ? 'fw-bold text-info' : 'text-dark')"
+                                      th:text="${sharingBoard.userId.nickname + ' (' + sharingBoard.userId.grade + ')'}"></span>
+                            </td>
+                            <td>[[${sharingBoard.lectureId.name}]]</td>
                             <td>[[${sharingBoard.warnCount}]]</td>
-                            <td>[[${sharingBoard.userId}]]</td>
-                            <td>[[${sharingBoard.lectureId}]]</td>
                             <td>
                                 <div class="float-end text-nowrap">
-                                    <a th:href="@{/sharingBoards/edit/{sharingId}(sharingId=${sharingBoard.sharingId})}" class="btn btn-sm btn-secondary">[[#{sharingBoard.list.edit}]]</a>
+                                    <a th:href="@{/sharingBoards/edit/{sharingId}(sharingId=${sharingBoard.sharingId})}" class="btn btn-sm btn-secondary"
+                                       onclick="event.stopPropagation();">[[#{sharingBoard.list.edit}]]</a>
                                     <form th:action="@{/sharingBoards/delete/{sharingId}(sharingId=${sharingBoard.sharingId})}"
-                                            th:hx-confirm="#{delete.confirm}" method="post" class="d-inline">
+                                            th:hx-confirm="#{delete.confirm}" method="post" class="d-inline" onclick="event.stopPropagation();">
                                         <button type="submit" class="btn btn-sm btn-secondary">[[#{sharingBoard.list.delete}]]</button>
                                     </form>
                                 </div>
@@ -44,6 +51,33 @@
                         </tr>
                     </tbody>
                 </table>
+            </div>
+            <div class="d-flex justify-content-center mt-3">
+                <!-- Pagination -->
+                <nav class="pagination-container">
+                    <ul class="pagination mb-0">
+                        <!-- Previous Page -->
+                        <li th:classappend="${paging.first} ? 'disabled' : ''" class="page-item">
+                            <a class="page-link" th:href="@{/sharingBoards(page=${paging.number - 1})}" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+
+                        <!-- Page Numbers -->
+                        <li th:each="i : ${#numbers.sequence(0, paging.totalPages - 1)}"
+                            th:classappend="${i == paging.number} ? 'active' : ''"
+                            class="page-item">
+                            <a class="page-link" th:href="@{/sharingBoards(page=${i})}" th:text="${i + 1}">1</a>
+                        </li>
+
+                        <!-- Next Page -->
+                        <li th:classappend="${paging.last} ? 'disabled' : ''" class="page-item">
+                            <a class="page-link" th:href="@{/sharingBoards(page=${paging.number + 1})}" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
             </div>
         </div>
     </body>

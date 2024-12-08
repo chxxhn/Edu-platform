@@ -1,0 +1,76 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Lecture List</title>
+    <style>
+        body {
+            background-color: #78c2ad;
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        .container {
+            margin-top: 5%;
+        }
+        .lecture-item {
+            margin: 15px;
+        }
+        .btn {
+            margin-top: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: white;
+            background-color: #28a745;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .btn:hover {
+            background-color: #218838;
+        }
+        .message {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+        .error {
+            color: #ff6666;
+        }
+        .success {
+            color: #66ff66;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Lecture List</h1>
+
+    <form th:action="@{/lectureLists/submitLectureCode}" method="post">
+        <input type="number" name="lectureCode" placeholder="Enter Lecture Code" required>
+        <button type="submit">Submit</button>
+    </form>
+
+    <div th:if="${success}">
+        <p th:text="${success}"></p>
+    </div>
+    <div th:if="${error}">
+        <p th:text="${error}"></p>
+    </div>
+
+    <h2>Available Lectures</h2>
+    <ul>
+        <li th:each="lecture : ${lectureLists}">
+            <span th:text="${lecture.name}"></span>
+        </li>
+    </ul>
+
+    <h2>My Registered Lectures</h2>
+    <ul th:if="${not #lists.isEmpty(myLectures)}">
+        <li th:each="lecture : ${myLectures}">
+            <span th:text="${lecture.name}"></span>
+        </li>
+    </ul>
+    <p th:if="${#lists.isEmpty(myLectures)}">No registered lectures found.</p>
+</div>
+</body>
+</html>

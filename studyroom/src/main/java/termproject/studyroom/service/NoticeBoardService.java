@@ -21,8 +21,8 @@ public class NoticeBoardService {
     private final LectureListRepository lectureListRepository;
 
     public NoticeBoardService(final NoticeBoardRepository noticeBoardRepository,
-            final UserRepository userRepository,
-            final LectureListRepository lectureListRepository) {
+                              final UserRepository userRepository,
+                              final LectureListRepository lectureListRepository) {
         this.noticeBoardRepository = noticeBoardRepository;
         this.userRepository = userRepository;
         this.lectureListRepository = lectureListRepository;
@@ -59,23 +59,24 @@ public class NoticeBoardService {
     }
 
     private NoticeBoardDTO mapToDTO(final NoticeBoard noticeBoard,
-            final NoticeBoardDTO noticeBoardDTO) {
+                                    final NoticeBoardDTO noticeBoardDTO) {
         noticeBoardDTO.setNoticeId(noticeBoard.getNoticeId());
         noticeBoardDTO.setTitle(noticeBoard.getTitle());
         noticeBoardDTO.setContent(noticeBoard.getContent());
-        noticeBoardDTO.setAuthor(noticeBoard.getAuthor() == null ? null : noticeBoard.getAuthor().getStdId());
-        noticeBoardDTO.setLectureId(noticeBoard.getLectureId() == null ? null : noticeBoard.getLectureId().getLectureId());
+        noticeBoardDTO.setAuthor(noticeBoard.getAuthor() == null ? null : noticeBoard.getAuthor());
+        noticeBoardDTO.setLectureId(noticeBoard.getLectureId() == null ? null : noticeBoard.getLectureId());
+        noticeBoardDTO.setDateCreated(noticeBoard.getDateCreated().toLocalDateTime());
         return noticeBoardDTO;
     }
 
     private NoticeBoard mapToEntity(final NoticeBoardDTO noticeBoardDTO,
-            final NoticeBoard noticeBoard) {
+                                    final NoticeBoard noticeBoard) {
         noticeBoard.setTitle(noticeBoardDTO.getTitle());
         noticeBoard.setContent(noticeBoardDTO.getContent());
-        final User author = noticeBoardDTO.getAuthor() == null ? null : userRepository.findById(noticeBoardDTO.getAuthor())
+        final User author = noticeBoardDTO.getAuthor() == null ? null : userRepository.findById(noticeBoardDTO.getAuthor().getStdId())
                 .orElseThrow(() -> new NotFoundException("author not found"));
         noticeBoard.setAuthor(author);
-        final LectureList lectureId = noticeBoardDTO.getLectureId() == null ? null : lectureListRepository.findById(noticeBoardDTO.getLectureId())
+        final LectureList lectureId = noticeBoardDTO.getLectureId() == null ? null : lectureListRepository.findById(noticeBoardDTO.getLectureId().getLectureId())
                 .orElseThrow(() -> new NotFoundException("lectureId not found"));
         noticeBoard.setLectureId(lectureId);
         return noticeBoard;

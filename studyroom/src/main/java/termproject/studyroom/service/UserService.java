@@ -1,7 +1,11 @@
 package termproject.studyroom.service;
 
 import java.util.List;
+
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import termproject.studyroom.domain.Alarm;
 import termproject.studyroom.domain.CommunicationBoard;
@@ -37,6 +41,9 @@ import termproject.studyroom.util.ReferencedWarning;
 @Service
 public class UserService {
 
+    @PersistenceContext
+    private EntityManager entityManager;
+    private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final LectureListRepository lectureListRepository;
     private final GroupProjectRepository groupProjectRepository;
@@ -51,19 +58,20 @@ public class UserService {
     private final CommunicationBoardRepository communicationBoardRepository;
     private final AlarmRepository alarmRepository;
 
-    public UserService(final UserRepository userRepository,
-            final LectureListRepository lectureListRepository,
-            final GroupProjectRepository groupProjectRepository,
-            final GroupBoardRepository groupBoardRepository,
-            final GroupBoardCommentRepository groupBoardCommentRepository,
-            final NoticeBoardRepository noticeBoardRepository,
-            final QuestionBoardRepository questionBoardRepository,
-            final QuestionCommentRepository questionCommentRepository,
-            final SharingBoardRepository sharingBoardRepository,
-            final SharingCommentRepository sharingCommentRepository,
-            final OldExamRepository oldExamRepository,
-            final CommunicationBoardRepository communicationBoardRepository,
-            final AlarmRepository alarmRepository) {
+    public UserService(PasswordEncoder passwordEncoder, final UserRepository userRepository,
+                       final LectureListRepository lectureListRepository,
+                       final GroupProjectRepository groupProjectRepository,
+                       final GroupBoardRepository groupBoardRepository,
+                       final GroupBoardCommentRepository groupBoardCommentRepository,
+                       final NoticeBoardRepository noticeBoardRepository,
+                       final QuestionBoardRepository questionBoardRepository,
+                       final QuestionCommentRepository questionCommentRepository,
+                       final SharingBoardRepository sharingBoardRepository,
+                       final SharingCommentRepository sharingCommentRepository,
+                       final OldExamRepository oldExamRepository,
+                       final CommunicationBoardRepository communicationBoardRepository,
+                       final AlarmRepository alarmRepository) {
+        this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
         this.lectureListRepository = lectureListRepository;
         this.groupProjectRepository = groupProjectRepository;
@@ -77,6 +85,28 @@ public class UserService {
         this.oldExamRepository = oldExamRepository;
         this.communicationBoardRepository = communicationBoardRepository;
         this.alarmRepository = alarmRepository;
+    }
+
+    public boolean validateUser(Integer stdId, String password) {
+        return userRepository.findById(stdId)
+                .map(user -> user.getPassword().equals(password))
+                .orElse(false);
+    }
+
+
+
+    public void setCurrentUserSession(Integer userId, String userGrade) {
+        // 기본 세션 값 설정
+        if (userGrade == null || userId == null) {
+            throw new IllegalArgumentException("User ID와 User Grade는 반드시 설정되어야 합니다.");
+        }
+
+        entityManager.createNativeQuery("SET app.current_user_id = :userId")
+                .setParameter("userId", userId)
+                .executeUpdate();
+        entityManager.createNativeQuery("SET app.current_user_grade = :userGrade")
+                .setParameter("userGrade", userGrade)
+                .executeUpdate();
     }
 
     public List<UserDTO> findAll() {
@@ -123,7 +153,7 @@ public class UserService {
         user.setStdId(userDTO.getStdId());
         user.setName(userDTO.getName());
         user.setNickname(userDTO.getNickname());
-        user.setPassword(userDTO.getPassword());
+        user.setPassword(passwordEncoder.encode(userDTO.getPassword())); // Encoding password
         user.setEmail(userDTO.getEmail());
         user.setGrade(userDTO.getGrade());
         return user;

@@ -1,12 +1,13 @@
 package termproject.studyroom.service;
 
 import java.util.List;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import termproject.studyroom.domain.LectureList;
-import termproject.studyroom.domain.OldExam;
-import termproject.studyroom.domain.OldExamFile;
-import termproject.studyroom.domain.User;
+import termproject.studyroom.domain.*;
 import termproject.studyroom.model.OldExamDTO;
 import termproject.studyroom.repos.LectureListRepository;
 import termproject.studyroom.repos.OldExamFileRepository;
@@ -46,6 +47,11 @@ public class OldExamService {
                 .orElseThrow(NotFoundException::new);
     }
 
+    public Page<OldExam> getList(int page) {
+        Pageable pageable = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "oeId"));
+        return this.oldExamRepository.findAll(pageable);
+    }
+
     public Integer create(final OldExamDTO oldExamDTO) {
         final OldExam oldExam = new OldExam();
         mapToEntity(oldExamDTO, oldExam);
@@ -67,18 +73,18 @@ public class OldExamService {
         oldExamDTO.setOeId(oldExam.getOeId());
         oldExamDTO.setTitle(oldExam.getTitle());
         oldExamDTO.setContent(oldExam.getContent());
-        oldExamDTO.setAuthor(oldExam.getAuthor() == null ? null : oldExam.getAuthor().getStdId());
-        oldExamDTO.setLectureId(oldExam.getLectureId() == null ? null : oldExam.getLectureId().getLectureId());
+        oldExamDTO.setAuthor(oldExam.getAuthor() == null ? null : oldExam.getAuthor());
+        oldExamDTO.setLectureId(oldExam.getLectureId() == null ? null : oldExam.getLectureId());
         return oldExamDTO;
     }
 
     private OldExam mapToEntity(final OldExamDTO oldExamDTO, final OldExam oldExam) {
         oldExam.setTitle(oldExamDTO.getTitle());
         oldExam.setContent(oldExamDTO.getContent());
-        final User author = oldExamDTO.getAuthor() == null ? null : userRepository.findById(oldExamDTO.getAuthor())
+        final User author = oldExamDTO.getAuthor() == null ? null : userRepository.findById(oldExamDTO.getAuthor().getStdId())
                 .orElseThrow(() -> new NotFoundException("author not found"));
         oldExam.setAuthor(author);
-        final LectureList lectureId = oldExamDTO.getLectureId() == null ? null : lectureListRepository.findById(oldExamDTO.getLectureId())
+        final LectureList lectureId = oldExamDTO.getLectureId() == null ? null : lectureListRepository.findById(oldExamDTO.getLectureId().getLectureId())
                 .orElseThrow(() -> new NotFoundException("lectureId not found"));
         oldExam.setLectureId(lectureId);
         return oldExam;

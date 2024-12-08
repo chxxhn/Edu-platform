@@ -5,11 +5,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import termproject.studyroom.domain.QuestionBoard;
 import termproject.studyroom.domain.User;
@@ -18,6 +14,7 @@ import termproject.studyroom.repos.QuestionBoardRepository;
 import termproject.studyroom.repos.UserRepository;
 import termproject.studyroom.service.QuestionCommentService;
 import termproject.studyroom.util.CustomCollectors;
+import termproject.studyroom.util.NotFoundException;
 import termproject.studyroom.util.WebUtils;
 
 
@@ -53,27 +50,27 @@ public class QuestionCommentController {
         return "questionComment/list";
     }
 
-    @GetMapping("/add")
-    public String add(
-            @ModelAttribute("questionComment") final QuestionCommentDTO questionCommentDTO) {
-        return "questionComment/add";
-    }
+    @PostMapping("/add/{questionId}")
+    public String add(@PathVariable(name = "questionId") final Integer questionId, @RequestParam(value="content") String content,
+                      final RedirectAttributes redirectAttributes) {
+        QuestionCommentDTO questionCommentDTO = new QuestionCommentDTO();
 
-    @PostMapping("/add")
-    public String add(
-            @ModelAttribute("questionComment") @Valid final QuestionCommentDTO questionCommentDTO,
-            final BindingResult bindingResult, final RedirectAttributes redirectAttributes) {
-        if (bindingResult.hasErrors()) {
-            return "questionComment/add";
-        }
+        // 테스트용 user 설정, 나중에 로그인 완성하면 고쳐야함
+        User user = userRepository.findById(0) // 1번 ID 사용
+                .orElseThrow(() -> new IllegalArgumentException("Test user not found"));
+
+        questionCommentDTO.setContent(content);
+        questionCommentDTO.setAuthor(user);
+        questionCommentDTO.setQId(questionId);
         questionCommentService.create(questionCommentDTO);
         redirectAttributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("questionComment.create.success"));
-        return "redirect:/questionComments";
+        return "redirect:/questionBoards/detail/" + questionId;
     }
 
     @GetMapping("/edit/{qcomId}")
     public String edit(@PathVariable(name = "qcomId") final Integer qcomId, final Model model) {
-        model.addAttribute("questionComment", questionCommentService.get(qcomId));
+        QuestionCommentDTO comment = questionCommentService.get(qcomId);
+        model.addAttribute("questionComment", comment);
         return "questionComment/edit";
     }
 
@@ -84,17 +81,21 @@ public class QuestionCommentController {
         if (bindingResult.hasErrors()) {
             return "questionComment/edit";
         }
+        QuestionCommentDTO comment = questionCommentService.get(qcomId);
+        Integer questionId = comment.getQId();
         questionCommentService.update(qcomId, questionCommentDTO);
         redirectAttributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("questionComment.update.success"));
-        return "redirect:/questionComments";
+        return "redirect:/questionBoards/detail/" + questionId;
     }
 
     @PostMapping("/delete/{qcomId}")
     public String delete(@PathVariable(name = "qcomId") final Integer qcomId,
             final RedirectAttributes redirectAttributes) {
+        QuestionCommentDTO comment = questionCommentService.get(qcomId);
+        Integer questionId = comment.getQId();
         questionCommentService.delete(qcomId);
         redirectAttributes.addFlashAttribute(WebUtils.MSG_INFO, WebUtils.getMessage("questionComment.delete.success"));
-        return "redirect:/questionComments";
+        return "redirect:/questionBoards/detail/" + questionId;
     }
 
 }

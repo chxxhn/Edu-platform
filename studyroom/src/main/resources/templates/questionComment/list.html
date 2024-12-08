@@ -28,7 +28,7 @@
                         <tr th:each="questionComment : ${questionComments}">
                             <td>[[${questionComment.qcomId}]]</td>
                             <td>[[${questionComment.content}]]</td>
-                            <td>[[${questionComment.author}]]</td>
+                            <td>[[${questionComment.author.name}]]</td>
                             <td>[[${questionComment.qId}]]</td>
                             <td>
                                 <div class="float-end text-nowrap">

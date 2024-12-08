@@ -5,14 +5,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import termproject.studyroom.domain.SharingBoard;
 import termproject.studyroom.domain.User;
+import termproject.studyroom.model.QuestionCommentDTO;
 import termproject.studyroom.model.SharingCommentDTO;
 import termproject.studyroom.repos.SharingBoardRepository;
 import termproject.studyroom.repos.UserRepository;
@@ -53,21 +50,22 @@ public class SharingCommentController {
         return "sharingComment/list";
     }
 
-    @GetMapping("/add")
-    public String add(@ModelAttribute("sharingComment") final SharingCommentDTO sharingCommentDTO) {
-        return "sharingComment/add";
-    }
-
-    @PostMapping("/add")
+    @PostMapping("/add/{sharingId}")
     public String add(
-            @ModelAttribute("sharingComment") @Valid final SharingCommentDTO sharingCommentDTO,
-            final BindingResult bindingResult, final RedirectAttributes redirectAttributes) {
-        if (bindingResult.hasErrors()) {
-            return "sharingComment/add";
-        }
+            @PathVariable(name = "sharingId") final Integer sharingId, @RequestParam(value="content") String content,
+            final RedirectAttributes redirectAttributes) {
+        SharingCommentDTO sharingCommentDTO = new SharingCommentDTO();
+
+        // 테스트용 user 설정, 나중에 로그인 완성하면 고쳐야함
+        User user = userRepository.findById(0) // 1번 ID 사용
+                .orElseThrow(() -> new IllegalArgumentException("Test user not found"));
+
+        sharingCommentDTO.setContent(content);
+        sharingCommentDTO.setAuthor(user);
+        sharingCommentDTO.setShId(sharingId);
         sharingCommentService.create(sharingCommentDTO);
         redirectAttributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("sharingComment.create.success"));
-        return "redirect:/sharingComments";
+        return "redirect:/sharingBoards/detail/" + sharingId;
     }
 
     @GetMapping("/edit/{shcomId}")
@@ -83,17 +81,21 @@ public class SharingCommentController {
         if (bindingResult.hasErrors()) {
             return "sharingComment/edit";
         }
+        SharingCommentDTO comment = sharingCommentService.get(shcomId);
+        Integer sharingId = comment.getShId();
         sharingCommentService.update(shcomId, sharingCommentDTO);
         redirectAttributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("sharingComment.update.success"));
-        return "redirect:/sharingComments";
+        return "redirect:/sharingBoards/detail/" + sharingId;
     }
 
     @PostMapping("/delete/{shcomId}")
     public String delete(@PathVariable(name = "shcomId") final Integer shcomId,
             final RedirectAttributes redirectAttributes) {
+        SharingCommentDTO comment = sharingCommentService.get(shcomId);
+        Integer sharingId = comment.getShId();
         sharingCommentService.delete(shcomId);
         redirectAttributes.addFlashAttribute(WebUtils.MSG_INFO, WebUtils.getMessage("sharingComment.delete.success"));
-        return "redirect:/sharingComments";
+        return "redirect:/sharingBoards/detail/" + sharingId;
     }
 
 }
