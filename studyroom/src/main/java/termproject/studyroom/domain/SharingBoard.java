@@ -47,7 +47,7 @@ public class SharingBoard {
     private String content;
 
     @Column(nullable = false)
-    private Integer warnCount;
+    private Integer warnCount = 0;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id_id", nullable = false)

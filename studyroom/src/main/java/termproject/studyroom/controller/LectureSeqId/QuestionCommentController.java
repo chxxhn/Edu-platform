@@ -72,7 +72,6 @@ public class QuestionCommentController {
                       final RedirectAttributes redirectAttributes) {
         QuestionCommentDTO questionCommentDTO = new QuestionCommentDTO();
 
-        // 테스트용 user 설정, 나중에 로그인 완성하면 고쳐야함
         User loginuser = user.getUser();
         // 강의 이름으로 강의를 검색
         Optional<LectureList> selectedLecture = lectureListRepository.findByLectureId(lectureId);
@@ -90,35 +89,47 @@ public class QuestionCommentController {
         return "redirect:/questionBoards/detail/" + lectureId+ "/" + questionId;
     }
 
-    @GetMapping("/edit/{qcomId}")
-    public String edit(@PathVariable(name = "qcomId") final Integer qcomId, final Model model) {
+    @GetMapping("/edit/{lectureId}/{qcomId}")
+    public String edit(@PathVariable(name = "lectureId") Integer lectureId,
+                       @PathVariable(name = "qcomId") final Integer qcomId, final Model model,
+                       @AuthenticationPrincipal CustomUserDetails user) {
+        LectureList lecture = lectureListRepository.findById(lectureId)
+                .orElseThrow(() -> new IllegalArgumentException("Lecture not found"));
+        model.addAttribute("selectedLecture", lecture);
         QuestionCommentDTO comment = questionCommentService.get(qcomId);
         model.addAttribute("questionComment", comment);
+        model.addAttribute("user", user != null ? user.getUser() : "Anonymous User");
         return "questionComment/edit";
     }
 
-    @PostMapping("/edit/{qcomId}")
-    public String edit(@PathVariable(name = "qcomId") final Integer qcomId,
-            @ModelAttribute("questionComment") @Valid final QuestionCommentDTO questionCommentDTO,
-            final BindingResult bindingResult, final RedirectAttributes redirectAttributes) {
-        if (bindingResult.hasErrors()) {
-            return "questionComment/edit";
-        }
+    @PostMapping("/edit/{lectureId}/{qcomId}")
+    public String edit(@PathVariable(name = "lectureId") Integer lectureId,
+            @PathVariable(name = "qcomId") final Integer qcomId,
+            @ModelAttribute("questionComment") final QuestionCommentDTO questionCommentDTO,
+            final BindingResult bindingResult, final RedirectAttributes redirectAttributes,
+                       @AuthenticationPrincipal CustomUserDetails user) {
+        // 세션 유저 정보를 조회
+        User author = userRepository.findByEmail(user.getUsername())
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        // DTO에 강의 및 작성자 설정
+        questionCommentDTO.setAuthor(author);
         QuestionCommentDTO comment = questionCommentService.get(qcomId);
         Integer questionId = comment.getQId();
+        questionCommentDTO.setQId(questionId);
         questionCommentService.update(qcomId, questionCommentDTO);
         redirectAttributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("questionComment.update.success"));
-        return "redirect:/questionBoards/detail/" + questionId;
+        return "redirect:/questionBoards/detail/" + lectureId + "/" + questionId;
     }
 
-    @PostMapping("/delete/{qcomId}")
-    public String delete(@PathVariable(name = "qcomId") final Integer qcomId,
-            final RedirectAttributes redirectAttributes) {
+    @PostMapping("/delete/{lectureId}/{qcomId}")
+    public String delete(@PathVariable(name = "lectureId") Integer lectureId,
+            @PathVariable(name = "qcomId") final Integer qcomId,
+            final RedirectAttributes redirectAttributes, @AuthenticationPrincipal CustomUserDetails user) {
         QuestionCommentDTO comment = questionCommentService.get(qcomId);
         Integer questionId = comment.getQId();
         questionCommentService.delete(qcomId);
         redirectAttributes.addFlashAttribute(WebUtils.MSG_INFO, WebUtils.getMessage("questionComment.delete.success"));
-        return "redirect:/questionBoards/detail/" + questionId;
+        return "redirect:/questionBoards/detail/" + lectureId + "/" + questionId;
     }
 
 }

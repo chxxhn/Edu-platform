@@ -9,7 +9,7 @@
             <div class="d-flex flex-wrap mb-4">
                 <h1 class="flex-grow-1">만남 게시판</h1>
                 <div>
-                    <a th:href="@{/communicationBoards/add}" class="btn btn-primary ms-2">[[#{communicationBoard.list.createNew}]]</a>
+                    <a th:href="@{/communicationBoards/add/{lectureId}(lectureId=${selectedLecture.lectureId})}" class="btn btn-primary ms-2">[[#{communicationBoard.list.createNew}]]</a>
                 </div>
             </div>
             <div th:if="${communicationBoards.empty}">[[#{communicationBoard.list.empty}]]</div>
@@ -28,7 +28,7 @@
                     </thead>
                     <tbody>
                         <tr th:each="communicationBoard : ${paging.content}"
-                            th:onclick="|window.location='@{/communicationBoards/detail/{comnId}(comnId=${communicationBoard.comnId})}'|"
+                            th:onclick="|window.location='/communicationBoards/detail/' + ${selectedLecture.lectureId} + '/' + ${communicationBoard.comnId}|"
                             style="cursor: pointer;">
                             <td>[[${communicationBoard.comnId}]]</td>
                             <td>[[${communicationBoard.content}]]</td>
@@ -42,9 +42,9 @@
                             <td>[[${communicationBoard.valid}]]</td>
                             <td>
                                 <div class="float-end text-nowrap">
-                                    <a th:href="@{/communicationBoards/edit/{comnId}(comnId=${communicationBoard.comnId})}" class="btn btn-sm btn-secondary"
+                                    <a th:href="@{/communicationBoards/edit/{lectureId}/{comnId}(lectureId=${selectedLecture.lectureId}, comnId=${communicationBoard.comnId})}" class="btn btn-sm btn-secondary"
                                        onclick="event.stopPropagation();">[[#{communicationBoard.list.edit}]]</a>
-                                    <form th:action="@{/communicationBoards/delete/{comnId}(comnId=${communicationBoard.comnId})}"
+                                    <form th:action="@{/communicationBoards/delete/{lectureId}/{comnId}(lectureId=${selectedLecture.lectureId}, comnId=${communicationBoard.comnId})}"
                                             th:hx-confirm="#{delete.confirm}" method="post" class="d-inline" onclick="event.stopPropagation();">
                                         <button type="submit" class="btn btn-sm btn-secondary">[[#{communicationBoard.list.delete}]]</button>
                                     </form>

@@ -9,7 +9,7 @@
             <div class="d-flex flex-wrap mb-4">
                 <h1 class="flex-grow-1">족보게시판</h1>
                 <div>
-                    <a th:href="@{/oldExams/add}" class="btn btn-primary ms-2">[[#{oldExam.list.createNew}]]</a>
+                    <a th:href="@{/oldExams/add/{lectureId}(lectureId=${selectedLecture.lectureId})}" class="btn btn-primary ms-2">[[#{oldExam.list.createNew}]]</a>
                 </div>
             </div>
             <div th:if="${oldExams.empty}">[[#{oldExam.list.empty}]]</div>
@@ -26,7 +26,7 @@
                     </thead>
                     <tbody>
                         <tr th:each="oldExam : ${paging.content}"
-                            th:onclick="|window.location='@{/oldExams/detail/{oeId}(oeId=${oldExam.oeId})}'|"
+                            th:onclick="|window.location='/oldExams/detail/' + ${selectedLecture.lectureId} + '/' + ${oldExam.oeId}|"
                             style="cursor: pointer;">
                             <td>[[${oldExam.oeId}]]</td>
                             <td>[[${oldExam.title}]]</td>
@@ -38,9 +38,9 @@
                             <td>[[${oldExam.lectureId.name}]]</td>
                             <td>
                                 <div class="float-end text-nowrap">
-                                    <a th:href="@{/oldExams/edit/{oeId}(oeId=${oldExam.oeId})}" class="btn btn-sm btn-secondary"
+                                    <a th:href="@{/oldExams/edit/{lectureId}/{oeId}(lectureId=${selectedLecture.lectureId}, oeId=${oldExam.oeId})}" class="btn btn-sm btn-secondary"
                                       onclick="event.stopPropagation();">[[#{oldExam.list.edit}]]</a>
-                                    <form th:action="@{/oldExams/delete/{oeId}(oeId=${oldExam.oeId})}"
+                                    <form th:action="@{/oldExams/delete/{lectureId}/{oeId}(lectureId=${selectedLecture.lectureId}, oeId=${oldExam.oeId})}"
                                             th:hx-confirm="#{delete.confirm}" method="post" class="d-inline" onclick="event.stopPropagation();">
                                         <button type="submit" class="btn btn-sm btn-secondary">[[#{oldExam.list.delete}]]</button>
                                     </form>

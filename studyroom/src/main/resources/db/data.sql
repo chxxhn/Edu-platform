@@ -12,6 +12,11 @@
 --     (333333333, 'lead', 'lead', 'lead', 'lead@pusan.ac.kr', 'LEAD', NOW(), NOW());
 --
 -- LectureList 테이블 초기 데이터 삽입
+
+INSERT INTO Users (std_id, name, nickname, password, email, grade, date_created, last_updated)
+VALUES
+    (0, 'prof', 'Prof', '1234', 'admin@pusan.ac.kr', 'PROF', NOW(), NOW());
+
 INSERT INTO lecture_lists (lecture_id, name, std_id_id, date_created, last_updated)
 VALUES
     (1, 'DataBase', 000000000, NOW(), NOW()),

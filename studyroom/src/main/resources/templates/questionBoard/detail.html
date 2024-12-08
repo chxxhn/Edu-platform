@@ -65,8 +65,8 @@
                     <span th:text="${comment.content}">댓글 내용</span>
                 </div>
                 <div>
-                    <a th:href="@{/questionComments/edit/{qcomId}(qcomId=${comment.qcomId})}" class="btn btn-sm btn-secondary">edit</a>
-                    <form th:action="@{/questionComments/delete/{qcomId}(qcomId=${comment.qcomId})}" method="post" class="d-inline">
+                    <a th:href="@{/questionComments/edit/{lectureId}/{qcomId}(lectureId=${selectedLecture.lectureId}, qcomId=${comment.qcomId})}" class="btn btn-sm btn-secondary">edit</a>
+                    <form th:action="@{/questionComments/delete/{lectureId}/{qcomId}(lectureId=${selectedLecture.lectureId}, qcomId=${comment.qcomId})}" method="post" class="d-inline">
                         <button type="submit" class="btn btn-sm btn-secondary">delete</button>
                     </form>
                 </div>
