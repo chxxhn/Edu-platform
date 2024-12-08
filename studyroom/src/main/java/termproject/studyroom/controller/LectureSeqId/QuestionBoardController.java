@@ -1,18 +1,19 @@
-package termproject.studyroom.controller;
+package termproject.studyroom.controller.LectureSeqId;
 
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import termproject.studyroom.config.auto.CustomUserDetails;
 import termproject.studyroom.domain.LectureList;
 import termproject.studyroom.domain.QuestionBoard;
 import termproject.studyroom.domain.User;
-import termproject.studyroom.model.NoticeBoardDTO;
 import termproject.studyroom.model.QuestionBoardDTO;
 import termproject.studyroom.model.QuestionCommentDTO;
 import termproject.studyroom.repos.LectureListRepository;
@@ -37,6 +38,10 @@ public class QuestionBoardController {
     private final LectureListRepository lectureListRepository;
     private final QuestionCommentService questionCommentService;
 
+    @ModelAttribute("user")
+    public CustomUserDetails getSessionUser(@AuthenticationPrincipal CustomUserDetails user) {
+        return user; // Security의 인증 객체에서 세션 정보를 가져옵니다.
+    }
 
     public QuestionBoardController(final QuestionBoardService questionBoardService,
                                    final UserRepository userRepository,

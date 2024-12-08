@@ -1,4 +1,4 @@
-package termproject.studyroom.controller;
+package termproject.studyroom.controller.LectureSeqId;
 
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Sort;
@@ -14,7 +14,6 @@ import termproject.studyroom.repos.QuestionBoardRepository;
 import termproject.studyroom.repos.UserRepository;
 import termproject.studyroom.service.QuestionCommentService;
 import termproject.studyroom.util.CustomCollectors;
-import termproject.studyroom.util.NotFoundException;
 import termproject.studyroom.util.WebUtils;
 
 

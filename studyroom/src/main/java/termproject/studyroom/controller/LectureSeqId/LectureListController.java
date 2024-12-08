@@ -1,21 +1,15 @@
-package termproject.studyroom.controller;
+package termproject.studyroom.controller.LectureSeqId;
 
-import java.security.Principal;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import termproject.studyroom.config.auto.CustomUserDetails;
-import termproject.studyroom.config.auto.LoginUser;
-import termproject.studyroom.config.auto.SessionUser;
 import termproject.studyroom.domain.LectureList;
-import termproject.studyroom.domain.LectureUser;
 import termproject.studyroom.domain.User;
 import termproject.studyroom.model.LectureListDTO;
 import termproject.studyroom.repos.LectureListRepository;

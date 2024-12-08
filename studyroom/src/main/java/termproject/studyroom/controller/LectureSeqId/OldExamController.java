@@ -1,4 +1,4 @@
-package termproject.studyroom.controller;
+package termproject.studyroom.controller.LectureSeqId;
 
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -10,20 +10,14 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import termproject.studyroom.domain.LectureList;
 import termproject.studyroom.domain.OldExam;
-import termproject.studyroom.domain.QuestionBoard;
 import termproject.studyroom.domain.User;
-import termproject.studyroom.model.NoticeBoardDTO;
 import termproject.studyroom.model.OldExamDTO;
-import termproject.studyroom.model.QuestionBoardDTO;
-import termproject.studyroom.model.QuestionCommentDTO;
 import termproject.studyroom.repos.LectureListRepository;
 import termproject.studyroom.repos.UserRepository;
 import termproject.studyroom.service.OldExamService;
 import termproject.studyroom.util.CustomCollectors;
 import termproject.studyroom.util.ReferencedWarning;
 import termproject.studyroom.util.WebUtils;
-
-import java.util.List;
 
 
 @Controller
