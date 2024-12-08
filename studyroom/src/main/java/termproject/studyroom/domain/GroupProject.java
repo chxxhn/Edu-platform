@@ -1,17 +1,11 @@
 package termproject.studyroom.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.SequenceGenerator;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
@@ -64,5 +58,13 @@ public class GroupProject {
     @LastModifiedDate
     @Column(nullable = false)
     private OffsetDateTime lastUpdated;
+
+    @OneToMany(
+            mappedBy = "groupProject", // GroupUser에서 groupProject와의 매핑 필드
+            cascade = CascadeType.ALL, // 부모가 삭제되면 자식도 삭제
+            orphanRemoval = true // 고아 엔티티(연결이 끊긴 자식 엔티티) 자동 삭제
+    )
+    private List<GroupUser> groupUsers = new ArrayList<>();
+
 
 }

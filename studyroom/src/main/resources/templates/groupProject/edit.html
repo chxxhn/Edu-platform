@@ -9,17 +9,17 @@
             <div class="d-flex flex-wrap mb-4">
                 <h1 class="flex-grow-1">[[#{groupProject.edit.headline}]]</h1>
                 <div>
-                    <a th:href="@{/groupProjects}" class="btn btn-secondary">[[#{groupProject.edit.back}]]</a>
+                    <a th:href="@{/groupProjects/{lectureId}(lectureId=${selectedLecture.lectureId})}" class="btn btn-secondary">[[#{groupProject.edit.back}]]</a>
                 </div>
             </div>
             <div th:replace="~{fragments/forms::globalErrors('groupProject')}" />
             <form th:action="${requestUri}" method="post">
-                <div th:replace="~{fragments/forms::inputRow(object='groupProject', field='gpId', disabled=true, type='number')}" />
-                <div th:replace="~{fragments/forms::inputRow(object='groupProject', field='groupValid', type='checkbox')}" />
                 <div th:replace="~{fragments/forms::inputRow(object='groupProject', field='groupName', required=true)}" />
                 <div th:replace="~{fragments/forms::inputRow(object='groupProject', field='groupDetail', type='textarea')}" />
-                <div th:replace="~{fragments/forms::inputRow(object='groupProject', field='createdUserId', required=true, type='select')}" />
-                <div th:replace="~{fragments/forms::inputRow(object='groupProject', field='lectureId', required=true, type='select')}" />
+                <input type="hidden" th:name="createdUserId" th:value="${groupProject.getCreatedUserId()}" />
+                <input type="hidden" th:name="gpId" th:value="${groupProject.gpId}" />
+                <input type="hidden" th:name="groupValid" th:value="${groupProject.getGroupValid()}" />
+                <input type="hidden" th:name="lectureId" th:value="${selectedLecture.lectureId}" />
                 <input type="submit" th:value="#{groupProject.edit.headline}" class="btn btn-primary mt-4" />
             </form>
         </div>

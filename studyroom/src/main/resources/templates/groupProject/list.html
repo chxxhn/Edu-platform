@@ -8,10 +8,10 @@
         <div layout:fragment="content">
             <div class="d-flex flex-wrap mb-4">
                 <h1 class="flex-grow-1">팀플게시판</h1>
-                <h1 class="flex-grow-1">[[#{groupProject.list.headline}]]</h1>
-                <div>
-                    <a th:href="@{/groupProjects/add/{lectureId}(lectureId=${selectedLecture.lectureId})}" class="btn btn-primary ms-2">[[#{groupProject.list.createNew}]]</a>
-                </div>
+                <div th:if="${prof != 'prof'}">
+                <a th:href="@{/groupProjects/add/{lectureId}(lectureId=${selectedLecture.lectureId})}"
+                   class="btn btn-primary ms-2">[[#{groupProject.list.createNew}]]</a>
+            </div>
             </div>
             <div th:if="${groupProjects.empty}">[[#{groupProject.list.empty}]]</div>
             <div th:if="${!groupProjects.empty}" class="table-responsive">
@@ -37,9 +37,11 @@
                             <td>[[${groupProject.lectureId.name}]]</td>
                             <td>
                                 <div class="float-end text-nowrap">
-                                    <a th:href="@{/groupProjects/edit/{gpId}(gpId=${groupProject.gpId})}" class="btn btn-sm btn-secondary">[[#{groupProject.list.edit}]]</a>
-                                    <form th:action="@{/groupProjects/delete/{gpId}(gpId=${groupProject.gpId})}"
-                                            th:hx-confirm="#{delete.confirm}" method="post" class="d-inline">
+                                    <a th:href="@{/groupProjects/edit/{lectureId}/{gpId}(lectureId=${selectedLecture.lectureId}, gpId=${groupProject.gpId})}" class="btn btn-sm btn-secondary"
+                                       onclick="event.stopPropagation();">
+                                    [[#{groupProject.list.edit}]]</a>
+                                    <form th:action="@{/groupProjects/delete/{lectureId}/{gpId}(lectureId=${selectedLecture.lectureId},gpId=${groupProject.gpId})}"
+                                          th:hx-confirm="#{delete.confirm}" method="post" class="d-inline" onclick="event.stopPropagation();">
                                         <button type="submit" class="btn btn-sm btn-secondary">[[#{groupProject.list.delete}]]</button>
                                     </form>
                                 </div>
