@@ -75,6 +75,7 @@ public class CommunicationBoardService {
         communicationBoardDTO.setContent(communicationBoard.getContent());
         communicationBoardDTO.setMaxnum(communicationBoard.getMaxnum());
         communicationBoardDTO.setValid(communicationBoard.getValid());
+        communicationBoardDTO.setTitle(communicationBoard.getTitle());
         communicationBoardDTO.setAuthor(communicationBoard.getAuthor() == null ? null : communicationBoard.getAuthor());
         communicationBoardDTO.setLectureId(communicationBoard.getLectureId() == null ? null : communicationBoard.getLectureId());
         return communicationBoardDTO;
@@ -82,6 +83,7 @@ public class CommunicationBoardService {
 
     private CommunicationBoard mapToEntity(final CommunicationBoardDTO communicationBoardDTO,
             final CommunicationBoard communicationBoard) {
+        communicationBoard.setTitle(communicationBoardDTO.getTitle());
         communicationBoard.setContent(communicationBoardDTO.getContent());
         communicationBoard.setMaxnum(communicationBoardDTO.getMaxnum());
         communicationBoard.setValid(communicationBoardDTO.getValid());

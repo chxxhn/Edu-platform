@@ -22,6 +22,7 @@ spring:
       mode: always
       continue-on-error: true
       schema-locations: classpath:db/schema.sql
+      data-locations: classpath:db/data.sql
 error:
   handling:
     http-status-in-json-response: true

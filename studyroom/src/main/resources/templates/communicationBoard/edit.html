@@ -14,6 +14,7 @@
             </div>
             <div th:replace="~{fragments/forms::globalErrors('communicationBoard')}" />
             <form th:action="@{/communicationBoards/edit/{lectureId}/{comnId}(lectureId=${selectedLecture.lectureId}, comnId=${communicationBoard.comnId})}" method="post">
+                <div th:replace="~{fragments/forms::inputRow(object='communicationBoard', field='title', required=true)}" />
                 <div th:replace="~{fragments/forms::inputRow(object='communicationBoard', field='content', required=true, type='textarea')}" />
                 <div th:replace="~{fragments/forms::inputRow(object='communicationBoard', field='maxnum', required=true, type='number')}" />
                 <div th:replace="~{fragments/forms::inputRow(object='communicationBoard', field='valid', type='checkbox')}" />
