@@ -1,8 +1,11 @@
 package termproject.studyroom.service;
 
 import java.util.List;
+
+import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import termproject.studyroom.domain.GroupBoard;
 import termproject.studyroom.domain.GroupProject;
 import termproject.studyroom.domain.LectureList;
@@ -14,8 +17,10 @@ import termproject.studyroom.repos.LectureListRepository;
 import termproject.studyroom.repos.UserRepository;
 import termproject.studyroom.util.NotFoundException;
 import termproject.studyroom.util.ReferencedWarning;
+import termproject.studyroom.util.WebUtils;
 
 
+@Transactional
 @Service
 public class GroupProjectService {
 
@@ -23,15 +28,20 @@ public class GroupProjectService {
     private final UserRepository userRepository;
     private final LectureListRepository lectureListRepository;
     private final GroupBoardRepository groupBoardRepository;
+    private final GroupUserService groupUserService;
 
     public GroupProjectService(final GroupProjectRepository groupProjectRepository,
             final UserRepository userRepository, final LectureListRepository lectureListRepository,
-            final GroupBoardRepository groupBoardRepository) {
+            final GroupBoardRepository groupBoardRepository,
+                               final  GroupUserService groupUserService) {
         this.groupProjectRepository = groupProjectRepository;
         this.userRepository = userRepository;
         this.lectureListRepository = lectureListRepository;
         this.groupBoardRepository = groupBoardRepository;
+        this.groupUserService = groupUserService;
     }
+
+
 
     public List<GroupProjectDTO> findAll() {
         final List<GroupProject> groupProjects = groupProjectRepository.findAll(Sort.by("gpId"));
@@ -50,6 +60,12 @@ public class GroupProjectService {
         final GroupProject groupProject = new GroupProject();
         mapToEntity(groupProjectDTO, groupProject);
         return groupProjectRepository.save(groupProject).getGpId();
+    }
+
+    public GroupProject saveCreate(final GroupProjectDTO groupProjectDTO) {
+        final GroupProject groupProject = new GroupProject();
+        mapToEntity(groupProjectDTO, groupProject);
+        return groupProjectRepository.save(groupProject);
     }
 
     public void update(final Integer gpId, final GroupProjectDTO groupProjectDTO) {
@@ -104,5 +120,16 @@ public class GroupProjectService {
         }
         return null;
     }
+
+    @Transactional
+    public void createGroupProjectWithMembers(GroupProjectDTO groupProjectDTO, LectureList lecture,
+                                              Integer teamLeaderId, List<Integer> teamMemberIds) {
+        // GroupProject 생성
+        GroupProject savedGroupProject = saveCreate(groupProjectDTO);
+
+        // Team Members 추가
+        groupUserService.addTeamMembers(savedGroupProject, lecture, teamLeaderId, teamMemberIds);
+    }
+
 
 }
