@@ -18,7 +18,7 @@ VALUES
     (2, 'DataStructures', 000000000, NOW(), NOW());
 
 INSERT INTO Users (std_id, name, nickname, password, email, grade)
-VALUES (1, 'John Doe', 'johnd', 'password123', 'john@example.com', NULL);
+VALUES (1, '조교', 'ta', '1234', 'john@example.com', NULL);
 
 SELECT * FROM Users WHERE std_id = 1;
 
