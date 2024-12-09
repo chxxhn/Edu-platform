@@ -21,9 +21,6 @@
             <hr>
             <div class="d-flex justify-content-between">
                 <div class="d-flex align-items-center">
-                    <!--                    <button class="btn btn-outline-danger btn-sm me-3" onclick="incrementWarnCount([[${questionBoard.questionId}]])">-->
-                    <!--                        warn <span class="badge bg-danger" id="warnCount" th:text="${questionBoard.warnCount}">0</span>-->
-                    <!--                    </button>-->
                     <!-- 좋아요 버튼 -->
                     <button
                             class="btn btn-outline-warning btn-sm me-3"
@@ -64,7 +61,10 @@
                     </div>
                     <span th:text="${comment.content}">댓글 내용</span>
                 </div>
-                <div>
+                <div th:if="${user.stdId == comment.author.stdId
+             or user.grade.name() == 'PROF'
+             or user.grade.name() == 'TA'
+             or user.grade.name() == 'LEAD'}">
                     <a th:href="@{/questionComments/edit/{lectureId}/{qcomId}(lectureId=${selectedLecture.lectureId}, qcomId=${comment.qcomId})}" class="btn btn-sm btn-secondary">edit</a>
                     <form th:action="@{/questionComments/delete/{lectureId}/{qcomId}(lectureId=${selectedLecture.lectureId}, qcomId=${comment.qcomId})}" method="post" class="d-inline">
                         <button type="submit" class="btn btn-sm btn-secondary">delete</button>
@@ -73,6 +73,7 @@
             </li>
         </ul>
     </div>
+
     <div>
         <!-- 댓글 작성 -->
         <h4 class="text-secondary mt-5">댓글 작성</h4>
@@ -80,7 +81,7 @@
             <li class="list-group-item">
                 <form th:action="@{/questionComments/add/{questionId}(questionId=${questionBoard.questionId})}" method="post" class="d-flex flex-column">
                     <label for="exampleTextarea" class="form-label fw-bold">
-                        <span th:text="${questionBoard.author.nickname} + ' (' + ${questionBoard.author.grade} + ')'"></span>
+                        <span th:text="${user.nickname} + ' (' + ${user.grade} + ')'"></span>
                     </label>
                     <textarea class="form-control mb-3" id="exampleTextarea" name="content" rows="3" placeholder="댓글을 입력하세요..."></textarea>
                     <input type="hidden" th:name="lectureId" th:value="${selectedLecture.lectureId}" />
@@ -93,34 +94,31 @@
     <div class="d-flex justify-content-end mt-4">
         <!-- Back Button -->
         <a th:href="@{/questionBoards/{lectureId}(lectureId=${selectedLecture.lectureId})}" class="btn btn-outline-primary">
-            Back to question Board
+            Back to Question Board
         </a>
     </div>
+
+    <!-- JavaScript -->
     <script>
         function handleLikeButtonClick(button) {
             const postId = button.getAttribute("data-post-id");
             const userId = button.getAttribute("data-user-id");
-            const boardType = button.getAttribute("data-board-type"); // boardType 추가됨
+            const boardType = button.getAttribute("data-board-type");
 
-            fetch('/likes/add', {
+            fetch(`/likes/add`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     postId: postId,
-                    boardType: boardType, // 서버에 전달
-                    author: {
-                        stdId: userId
-                    }
+                    boardType: boardType,
+                    author: { stdId: userId }
                 })
             })
                 .then(response => {
-                    if (response.ok) {
-                        return response.json();
-                    } else {
-                        throw new Error("Failed to add like");
+                    if (!response.ok) {
+                        return response.json().then(error => { throw new Error(error.message || "Error occurred") });
                     }
+                    return response.json();
                 })
                 .then(data => {
                     const likeCountElement = button.querySelector(".like-count");
@@ -129,23 +127,20 @@
                     // 버튼 상태 업데이트
                     if (data.status === -1) {
                         button.classList.remove("btn-outline-warning");
-                        button.classList.add("btn-outline-secondary");
-                        button.textContent = "👍 Like Removed";
-                    } else {
-                        button.classList.remove("btn-outline-secondary");
                         button.classList.add("btn-outline-warning");
-                        button.textContent = "👍 Like Added";
+                        button.innerHTML = "👍 Like <span class='badge bg-warning'>" + data.likeCount + "</span>";
+                    } else {
+                        button.classList.remove("btn-outline-warning");
+                        button.classList.add("btn-outline-warning");
+                        button.innerHTML = "👍 Like <span class='badge bg-warning'>" + data.likeCount + "</span>";
                     }
                 })
                 .catch(error => {
                     console.error("Error:", error);
+                    alert("좋아요 처리 중 오류가 발생했습니다.");
                 });
         }
     </script>
 </div>
 </body>
 </html>
-
-
-
-

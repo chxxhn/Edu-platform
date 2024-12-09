@@ -41,9 +41,19 @@
                         <td>[[${questionBoard.likeCount}]]</td>
                         <td>[[${questionBoard.warnCount}]]</td>
                         <td>
-                            <div class="float-end text-nowrap">
-                                <a th:href="@{/questionBoards/edit/{lectureId}/{questionId}(lectureId=${selectedLecture.lectureId}, questionId=${questionBoard.questionId})}" class="btn btn-sm btn-secondary"
-                                   onclick="event.stopPropagation();">[[#{questionBoard.list.edit}]]</a>
+                            <div class="float-end text-nowrap"
+                                 th:if="${user.stdId == questionBoard.author.stdId
+             or user.grade.name() == 'PROF'
+             or user.grade.name() == 'TA'
+             or user.grade.name() == 'LEAD'}">
+                                <!-- Edit Button -->
+                                <a th:href="@{/questionBoards/edit/{lectureId}/{questionId}(lectureId=${selectedLecture.lectureId}, questionId=${questionBoard.questionId})}"
+                                   class="btn btn-sm btn-secondary"
+                                   onclick="event.stopPropagation();">
+                                    [[#{questionBoard.list.edit}]]
+                                </a>
+
+                                <!-- Delete Button -->
                                 <form th:action="@{/questionBoards/delete/{lectureId}/{questionId}(lectureId=${selectedLecture.lectureId}, questionId=${questionBoard.questionId})}"
                                       th:hx-confirm="#{delete.confirm}" method="post" class="d-inline" onclick="event.stopPropagation();">
                                     <button type="submit" class="btn btn-sm btn-secondary">[[#{questionBoard.list.delete}]]</button>

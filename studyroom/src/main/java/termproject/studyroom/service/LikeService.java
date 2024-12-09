@@ -36,23 +36,28 @@ public class LikeService {
         User user = userRepository.findById(likeDTO.getAuthor().getStdId())
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
-        // 게시글 확인 (boardType에 따라 게시판 구분)
         BoardType boardType = likeDTO.getBoardType();
 
-        CommunicationBoard communicationBoard = communicationBoardRepository.findById(likeDTO.getPostId())
-                .orElseThrow(() -> new IllegalArgumentException("CommunicationBoard not found"));
-
-        // 좋아요 수가 최대값에 도달했는지 확인
-        if (communicationBoard.getLikeCount() >= communicationBoard.getMaxnum()) {
-            throw new IllegalStateException("Maximum likes reached");
-        }
-
+        // 공통 로직: 좋아요 존재 여부 확인
         Like existingLike = likeRepository.findByUserAndPostIdAndBoardType(user, likeDTO.getPostId(), boardType);
+
         if (existingLike != null) {
+            // 좋아요 취소
             likeRepository.delete(existingLike);
             updateLikeCount(likeDTO.getPostId(), boardType, -1);
             return -1; // 좋아요 취소됨
         } else {
+            if (boardType == BoardType.COMMUNICATION_BOARD) {
+                CommunicationBoard communicationBoard = communicationBoardRepository.findById(likeDTO.getPostId())
+                        .orElseThrow(() -> new IllegalArgumentException("CommunicationBoard not found"));
+
+                // 좋아요 수 제한 확인
+                if (communicationBoard.getLikeCount() >= communicationBoard.getMaxnum()) {
+                    throw new IllegalStateException("Maximum likes reached");
+                }
+            }
+
+            // 좋아요 추가
             Like like = new Like();
             like.setUser(user);
             like.setPostId(likeDTO.getPostId());
