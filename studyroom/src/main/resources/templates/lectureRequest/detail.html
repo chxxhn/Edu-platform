@@ -33,7 +33,7 @@
     </div>
     <div class="d-flex justify-content-end mt-4">
         <!-- Back Button -->
-        <a th:href="@{/lectureRequests}" class="btn btn-outline-primary">
+        <a th:href="@{/lectureRequests/{lectureId}(lectureId=${selectedLecture.lectureId})}" class="btn btn-outline-primary">
             Back to Lecture Request
         </a>
     </div>

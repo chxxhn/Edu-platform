@@ -18,7 +18,7 @@
                     <thead>
                         <tr>
                             <th scope="col">Id</th>
-                            <th scope="col">content</th>
+                            <th scope="col">Title</th>
                             <th scope="col">[[#{communicationBoard.author.label}]]</th>
                             <th scope="col">Lecture</th>
                             <th scope="col">[[#{communicationBoard.maxnum.label}]]</th>
@@ -31,7 +31,7 @@
                             th:onclick="|window.location='/communicationBoards/detail/' + ${selectedLecture.lectureId} + '/' + ${communicationBoard.comnId}|"
                             style="cursor: pointer;">
                             <td>[[${communicationBoard.comnId}]]</td>
-                            <td>[[${communicationBoard.content}]]</td>
+                            <td>[[${communicationBoard.title}]]</td>
                             <td>
                                 <span th:class="${communicationBoard.author.grade.name() == 'TA'} ? 'fw-bold text-primary'
                                    : (${communicationBoard.author.grade.name() == 'PROF'} ? 'fw-bold text-info' : 'text-dark')"
