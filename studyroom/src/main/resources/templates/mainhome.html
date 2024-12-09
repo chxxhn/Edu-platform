@@ -2,102 +2,168 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Lecture List</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" />
+    <link th:href="@{https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css}" rel="stylesheet" />
     <style>
         body {
-            background-color: #78c2ad;
-            color: white;
-            font-family: Arial, sans-serif;
-            text-align: center;
+            background-color: #e9f5f2; /* 부드러운 민트 배경 */
+            color: #495057;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
+
         .container {
-            margin-top: 5%;
+            max-width: 800px;
+            margin: 50px auto;
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
         }
-        .lecture-item {
-            margin: 15px;
+
+        h1, h2 {
+            color: #78c2ad;
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: bold;
         }
-        .btn {
-            margin-top: 10px;
-            padding: 10px 20px;
-            font-size: 16px;
+
+        .alert {
+            text-align: center;
+            border-radius: 8px;
+        }
+
+        /* Input and Form Elements */
+        input[type="text"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        button, input[type="submit"] {
+            background-color: #78c2ad; /* Primary 색상 */
             color: white;
-            background-color: #28a745;
             border: none;
             border-radius: 5px;
-            cursor: pointer;
-            text-decoration: none;
+            padding: 10px 15px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
         }
-        .btn:hover {
-            background-color: #218838;
+
+        button:hover, input[type="submit"]:hover {
+            background-color: #67af9b; /* 진한 Primary 색상 */
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
-        .message {
-            margin-top: 20px;
-            font-size: 18px;
+
+        /* List Styling */
+        ul {
+            list-style: none;
+            padding: 0;
+            margin-top: 10px;
         }
-        .error {
-            color: #ff6666;
+
+        li {
+            background-color: #f8f9fa;
+            padding: 10px 15px;
+            margin-bottom: 10px;
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
         }
-        .success {
-            color: #66ff66;
+
+        /* Sections */
+        .section {
+            margin-top: 30px;
+        }
+
+        /* Admin Section */
+        .admin-section {
+            margin-top: 40px;
+            border-top: 2px solid #78c2ad;
+            padding-top: 20px;
         }
     </style>
 </head>
 <body>
-<div th:if="${MSG_ERROR}" class="alert alert-danger">
-    <p th:text="${MSG_ERROR}"></p>
-</div>
-<div th:if="${MSG_SUCCESS}" class="alert alert-success">
-    <p th:text="${MSG_SUCCESS}"></p>
-</div>
+
 <div class="container">
+    <!-- 에러 및 성공 메시지 -->
+    <div th:if="${MSG_ERROR}" class="alert alert-danger">
+        <p th:text="${MSG_ERROR}"></p>
+    </div>
+    <div th:if="${MSG_SUCCESS}" class="alert alert-success">
+        <p th:text="${MSG_SUCCESS}"></p>
+    </div>
+
+    <!-- 페이지 제목 -->
     <h1>Lecture List</h1>
-
-    <form th:action="@{/lectureLists/submitLectureCode}" method="post">
-        <input type="number" name="lectureCode" placeholder="Enter Lecture Code" required>
-        <button type="submit">Submit</button>
-    </form>
-
-    <div th:if="${success}">
-        <p th:text="${success}"></p>
-    </div>
-    <div th:if="${error}">
-        <p th:text="${error}"></p>
-    </div>
-
-    <h2>Available Lectures</h2>
-    <ul>
-        <li th:each="lecture : ${lectureLists}">
-            <span th:text="${lecture.name}"></span>
-        </li>
-    </ul>
-
-    <h2>My Registered Lectures</h2>
-    <ul th:if="${not #lists.isEmpty(myLectures)}">
-        <form th:action="@{/lecture/select}" method="post">
-            <select name="lectureId" required>
-                <option th:each="lecture : ${myLectures}" th:value="${lecture.lectureId}" th:text="${lecture.name
-                }"></option>
-            </select>
-            <button type="submit">Go to Lecture</button>
+    <hr style="width: 50%; border: none; border-top: 5px solid #dcdcdc; margin: 20px auto;">
+    <!-- Lecture 코드 입력 폼 -->
+    <div class="section">
+        <h2>Submit Lecture Code</h2>
+        <form th:action="@{/lectureLists/submitLectureCode}" method="post">
+            <input type="number" name="lectureCode" placeholder="Enter Lecture Code" required />
+            <button type="submit">Submit</button>
         </form>
-    </ul>
-    <p th:if="${#lists.isEmpty(myLectures)}">No registered lectures found.</p>
+    </div>
 
-    <!-- 강의 생성 섹션 (admin role만 표시) -->
-    <div th:if="${role == 'admin'}" class="mt-5">
-        <div class="d-flex flex-wrap mb-4">
-            <h1 class="flex-grow-1">Add New Lecture</h1>
+    <!-- 성공/에러 메시지 -->
+    <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+    <!-- Available Lectures -->
+    <div class="section">
+        <h2>Available Lectures</h2>
+        <ul>
+            <li th:each="lecture : ${lectureLists}">
+                <i class="bi bi-book"></i> <span th:text="${lecture.name}"></span>
+            </li>
+        </ul>
+    </div>
+
+    <!-- My Registered Lectures -->
+    <div class="section">
+        <h2>My Registered Lectures</h2>
+        <div th:if="${not #lists.isEmpty(myLectures)}">
+            <form th:action="@{/lecture/select}" method="post">
+                <select name="lectureId" required>
+                    <option th:each="lecture : ${myLectures}" th:value="${lecture.lectureId}" th:text="${lecture.name}"></option>
+                </select>
+                <button type="submit">Go to Lecture</button>
+            </form>
         </div>
-        <form th:action="@{/lectureLists/add}" method="post">
-            <label for="name">Lecture Name:</label><br>
-            <input type="text" id="name" name="lectureName" required><br><br>
-
-            <label for="lectureNumber">Lecture Id:</label><br>
-            <input type="text" id="lectureNumber" name="lectureNumber" required><br><br>
-
-            <input type="submit" value="Add Lecture" class="btn btn-primary mt-4" />
-        </form>
-
+        <p th:if="${#lists.isEmpty(myLectures)}" class="text-muted">No registered lectures found.</p>
     </div>
+
+    <!-- Admin Lecture 생성 섹션 -->
+    <div th:if="${role == 'admin'}" class="admin-section">
+        <h2>Add New Lecture</h2>
+        <form th:action="@{/lectureLists/add}" method="post">
+            <label for="name" class="form-label">Lecture Name:</label>
+            <input type="text" id="name" name="lectureName" placeholder="Enter lecture name" required />
+
+            <label for="lectureNumber" class="form-label">Lecture ID:</label>
+            <input type="text" id="lectureNumber" name="lectureNumber" placeholder="Enter lecture ID" required />
+
+            <input type="submit" value="Add Lecture" />
+        </form>
+    </div>
+
+    <!-- Add Home Button -->
+    <div class="text-end mt-4">
+        <a th:href="@{/}" class="btn btn-outline-secondary">
+            <i class="bi bi-house-door"></i> Back to list
+        </a>
+    </div>
+
 </div>
+
 </body>
 </html>
