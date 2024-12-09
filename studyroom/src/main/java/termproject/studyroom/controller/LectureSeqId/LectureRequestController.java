@@ -13,6 +13,8 @@ import termproject.studyroom.config.auto.CustomUserDetails;
 import termproject.studyroom.domain.LectureList;
 import termproject.studyroom.domain.LectureRequest;
 import termproject.studyroom.domain.User;
+import termproject.studyroom.model.Grade;
+import termproject.studyroom.model.LectureListDTO;
 import termproject.studyroom.model.LectureRequestDTO;
 import termproject.studyroom.repos.LectureListRepository;
 import termproject.studyroom.repos.LectureRequestRepository;
@@ -101,13 +103,45 @@ public class LectureRequestController {
     @GetMapping("/edit/{lectureId}/{rqId}")
     public String edit(@PathVariable(name = "lectureId") Integer lectureId,
             @PathVariable(name = "rqId") final Integer rqId, final Model model,
-                       @AuthenticationPrincipal CustomUserDetails user) {
+                       @AuthenticationPrincipal CustomUserDetails user,
+                       final RedirectAttributes redirectAttributes) {
         LectureList lecture = lectureListRepository.findById(lectureId)
                 .orElseThrow(() -> new IllegalArgumentException("Lecture not found"));
+        User currentUser = user.getUser();
         model.addAttribute("selectedLecture", lecture);
+        model.addAttribute("rqId",rqId);
         model.addAttribute("lectureRequest", lectureRequestService.get(rqId));
         model.addAttribute("user", user != null ? user.getUser() : "Anonymous User");
+        // TA의 경우 승인 여부 화면으로 이동
+        if (currentUser.getGrade() == Grade.PROF) {
+            model.addAttribute("isPROF", true);
+            return "lectureRequest/approve";
+        }
+
         return "lectureRequest/edit";
+    }
+
+    @PostMapping("/approve/{lectureId}/{rqId}")
+    public String approve(@PathVariable(name = "lectureId") final Integer lectureId,
+                          @PathVariable(name = "rqId") final Integer rqId,
+                          final RedirectAttributes redirectAttributes,
+                          @AuthenticationPrincipal CustomUserDetails user ) {
+        User currentUser = user.getUser();
+        if (currentUser == null || currentUser.getGrade() != Grade.PROF) {
+            redirectAttributes.addFlashAttribute(WebUtils.MSG_ERROR, WebUtils.getMessage("권한이 없습니다."));
+            return "redirect:/lectureRequests/"+lectureId;
+        }
+        LectureRequestDTO lectureRequest = lectureRequestService.get(rqId);
+        if (lectureRequest != null) {
+            lectureRequest.setLectureValid(true);
+            lectureRequestService.update(rqId, lectureRequest);
+            redirectAttributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("승인이 완료되었습니다."));
+        } else {
+            redirectAttributes.addFlashAttribute(WebUtils.MSG_ERROR, WebUtils.getMessage("해당 요청을 찾을 수 없습니다."));
+        }
+
+
+        return "redirect:/lectureRequests/" + lectureId;
     }
 
     @PostMapping("/edit/{lectureId}/{rqId}")
