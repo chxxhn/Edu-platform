@@ -35,13 +35,6 @@
             <a th:href="@{/communicationBoards/{lectureId}(lectureId=${selectedLecture.lectureId})}"  class="btn btn-outline-danger">🤝 만남 게시판</a>
         </div>
     </div>
-    <!-- 추가된 강의 관련 데이터 -->
-    <div class="lecture-info mt-4">
-        <h2>강의 정보</h2>
-        <p th:if="${selectedLecture}" th:text="'강의 이름: ' + ${selectedLecture.name}"></p>
-        <p th:if="${selectedLecture}" th:text="'강의 ID: ' + ${selectedLecture.lectureId}"></p>
-        <p th:if="${error}" th:text="${error}"></p>
-    </div>
 </div>
 </body>
 </html>

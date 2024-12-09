@@ -18,7 +18,6 @@
                 <table class="table table-striped table-hover align-middle">
                     <thead>
                         <tr>
-                            <th scope="col">[[#{groupProject.gpId.label}]]</th>
                             <th scope="col">[[#{groupProject.groupValid.label}]]</th>
                             <th scope="col">[[#{groupProject.groupName.label}]]</th>
                             <th scope="col">[[#{groupProject.createdUserId.label}]]</th>
@@ -30,7 +29,6 @@
                         <tr th:each="groupProject : ${paging.content}"
                             th:onclick="|window.location='/groupProjects/detail/' + ${selectedLecture.lectureId} + '/' + ${groupProject.gpId}|"
                             style="cursor: pointer;">
-                            <td>[[${groupProject.gpId}]]</td>
                             <td>[[${groupProject.groupValid}]]</td>
                             <td>[[${groupProject.groupName}]]</td>
                             <td>[[${groupProject.createdUserId.name}]]</td>

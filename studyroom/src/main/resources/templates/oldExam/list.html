@@ -17,7 +17,6 @@
                 <table class="table table-striped table-hover align-middle">
                     <thead>
                         <tr>
-                            <th scope="col">Id</th>
                             <th scope="col">[[#{oldExam.title.label}]]</th>
                             <th scope="col">[[#{oldExam.author.label}]]</th>
                             <th scope="col">Lecture</th>
@@ -28,7 +27,6 @@
                         <tr th:each="oldExam : ${paging.content}"
                             th:onclick="|window.location='/oldExams/detail/' + ${selectedLecture.lectureId} + '/' + ${oldExam.oeId}|"
                             style="cursor: pointer;">
-                            <td>[[${oldExam.oeId}]]</td>
                             <td>[[${oldExam.title}]]</td>
                             <td>
                                 <span th:class="${oldExam.author.grade.name() == 'TA'} ? 'fw-bold text-primary'

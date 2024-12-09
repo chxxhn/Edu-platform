@@ -3,13 +3,9 @@ VALUES
     (45, '김예슬', '예쓸', '1234', 'Ys@', 'STD', NOW(), NOW()),
     (46, '김예슬1', '예쓸1', '1234', 'Ys1@', 'STD', NOW(), NOW()),
     (47, '김예슬2', '예쓸2', '1234', 'Ys2@', 'STD', NOW(), NOW()),
-    (48, '김예슬3', '예쓸3', '1234', 'Ys3@', 'STD', NOW(), NOW()),
-    (333333333, '리더', 'lead1', '1234', 'lead1@','LEAD', NOW(), NOW());
+    (48, '김예슬3', '예쓸3', '1234', 'Ys3@', 'STD', NOW(), NOW());
 
-INSERT INTO lecture_lists (lecture_id, name, std_id_id, date_created, last_updated)
-VALUES
-    (1, 'DataBase', 111111111, NOW(), NOW()),
-    (2, 'DataStructures', 111111111, NOW(), NOW());
+
 
 -- SELECT * FROM Users WHERE std_id = 1;
 --

@@ -20,7 +20,6 @@
                 <table class="table table-striped table-hover align-middle">
                     <thead>
                         <tr>
-                            <th scope="col">Id</th>
                             <th scope="col">[[#{noticeBoard.title.label}]]</th>
                             <th scope="col">[[#{noticeBoard.author.label}]]</th>
                             <th scope="col">Lecture</th>
@@ -31,7 +30,6 @@
                     <tr th:each="noticeBoard : ${paging.content}"
                         th:onclick="|window.location='/noticeBoards/detail/' + ${selectedLecture.lectureId} + '/' + ${noticeBoard.noticeId}|"
                         style="cursor: pointer;">
-                        <td>[[${noticeBoard.noticeId}]]</td>
                         <td>[[${noticeBoard.title}]]</td>
                         <td>[[${noticeBoard.author.nickname + '(' + noticeBoard.author.grade + ')'}]]</td>
                         <td>[[${noticeBoard.lectureId.name}]]</td>

@@ -17,7 +17,6 @@
                 <table class="table table-striped table-hover align-middle">
                     <thead>
                         <tr>
-                            <th scope="col">[[#{groupBoard.gbId.label}]]</th>
                             <th scope="col">[[#{groupBoard.title.label}]]</th>
                             <th scope="col">[[#{groupBoard.author.label}]]</th>
                             <th scope="col">[[#{groupBoard.gpId.label}]]</th>
@@ -26,7 +25,6 @@
                     </thead>
                     <tbody>
                         <tr th:each="groupBoard : ${groupBoards}">
-                            <td>[[${groupBoard.gbId}]]</td>
                             <td>[[${groupBoard.title}]]</td>
                             <td>[[${groupBoard.author}]]</td>
                             <td>[[${groupBoard.gpId}]]</td>
