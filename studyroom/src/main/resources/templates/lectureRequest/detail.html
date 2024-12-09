@@ -30,6 +30,14 @@
                             onclick="handleLikeButtonClick(this)">
                         👍 Like <span class="badge bg-warning like-count" th:text="${lectureRequest.likeCount}"></span>
                     </button>
+                    <button
+                            class="btn btn-outline-danger btn-sm me-3"
+                            th:data-post-id="${lectureRequest.rqId}"
+                            th:data-user-id="${user.stdId}"
+                            th:data-board-type="LECTURE_REQUEST"
+                            onclick="handleWarnButtonClick(this)">
+                        👎 Warn <span class="badge bg-danger warn-count" th:text="${lectureRequest.warnCount}"></span>
+                    </button>
                 </div>
                 <div class="d-flex align-items-center text-muted">
                     <span>Author: </span>
@@ -87,6 +95,46 @@
                 .catch(error => {
                     console.error("Error:", error);
                     alert("좋아요 처리 중 오류가 발생했습니다.");
+                });
+        }
+        function handleWarnButtonClick(button) {
+            const postId = button.getAttribute("data-post-id");
+            const userId = button.getAttribute("data-user-id");
+            const boardType = button.getAttribute("data-board-type");
+
+            fetch(`/warns/add`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    postId: postId,
+                    boardType: boardType,
+                    author: { stdId: userId }
+                })
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        return response.json().then(error => { throw new Error(error.message || "Error occurred") });
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const warnCountElement = button.querySelector(".warn-count");
+                    warnCountElement.textContent = data.warnCount; // likeCount 업데이트
+
+                    // 버튼 상태 업데이트
+                    if (data.status === -1) {
+                        button.classList.remove("btn-outline-danger");
+                        button.classList.add("btn-outline-danger");
+                        button.innerHTML = "👎 Warn <span class='badge bg-danger'>" + data.warnCount + "</span>";
+                    } else {
+                        button.classList.remove("btn-outline-danger");
+                        button.classList.add("btn-outline-danger");
+                        button.innerHTML = "👎 Warn <span class='badge bg-danger'>" + data.warnCount + "</span>";
+                    }
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    alert("싫어요 처리 중 오류가 발생했습니다.");
                 });
         }
     </script>

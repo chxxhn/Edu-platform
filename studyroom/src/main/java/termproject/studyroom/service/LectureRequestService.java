@@ -56,6 +56,9 @@ public class LectureRequestService {
         if(lectureRequest.getLikeCount()==null){
             lectureRequest.setLikeCount(0);
         }
+        if(lectureRequest.getWarnCount()==null){
+            lectureRequest.setWarnCount(0);
+        }
         return lectureRequestRepository.save(lectureRequest).getRqId();
     }
 
@@ -67,6 +70,9 @@ public class LectureRequestService {
         lectureRequest.setLectureValid(lectureRequestDTO.getLectureValid());
         if (lectureRequestDTO.getLikeCount() != null) {
             lectureRequest.setLikeCount(lectureRequestDTO.getLikeCount());
+        }
+        if (lectureRequestDTO.getWarnCount() != null) {
+            lectureRequest.setWarnCount(lectureRequestDTO.getWarnCount());
         }
         lectureRequestRepository.save(lectureRequest);
     }
@@ -81,6 +87,7 @@ public class LectureRequestService {
         lectureRequestDTO.setTitle(lectureRequest.getTitle());
         lectureRequestDTO.setContent(lectureRequest.getContent());
         lectureRequestDTO.setLikeCount(lectureRequest.getLikeCount());
+        lectureRequestDTO.setWarnCount(lectureRequest.getWarnCount());
         lectureRequestDTO.setLectureValid(lectureRequest.getLectureValid());
         lectureRequestDTO.setAuthor(lectureRequest.getAuthor() == null ? null : lectureRequest.getAuthor());
         lectureRequestDTO.setLectureId(lectureRequest.getLectureId() == null ? null : lectureRequest.getLectureId());
@@ -93,6 +100,7 @@ public class LectureRequestService {
         lectureRequest.setContent(lectureRequestDTO.getContent());
         lectureRequest.setLectureValid(lectureRequestDTO.getLectureValid());
         lectureRequest.setLikeCount(lectureRequestDTO.getLikeCount());
+        lectureRequest.setWarnCount(lectureRequestDTO.getWarnCount());
         final LectureList lectureId = lectureRequestDTO.getLectureId() == null ? null : lectureListRepository.findById(lectureRequestDTO.getLectureId().getLectureId())
                 .orElseThrow(() -> new NotFoundException("lectureId not found"));
         lectureRequest.setLectureId(lectureId);

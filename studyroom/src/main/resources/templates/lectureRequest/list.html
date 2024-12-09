@@ -22,6 +22,7 @@
                             <th scope="col">Author</th>
                             <th scope="col">Lecture</th>
                             <th scope="col">Like</th>
+                            <th scope="col">Warn</th>
                             <th scope="col">Approval</th>
                             <th><!-- --></th>
                         </tr>
@@ -35,6 +36,7 @@
                             <td>[[${lectureRequest.author.nickname + '(' + lectureRequest.author.grade + ')'}]]</td>
                             <td>[[${lectureRequest.lectureId.name}]]</td>
                             <td>[[${lectureRequest.likeCount}]]</td>
+                            <td>[[${lectureRequest.warnCount}]]</td>
                             <td>[[${lectureRequest.lectureValid}]]</td>
                             <td>
                                 <div class="float-end text-nowrap" th:if="${user.grade.name() == 'LEADER' or user.stdId == lectureRequest.author.stdId}">

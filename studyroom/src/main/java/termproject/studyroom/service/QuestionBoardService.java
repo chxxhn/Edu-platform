@@ -75,6 +75,9 @@ public class QuestionBoardService {
         if (questionBoardDTO.getLikeCount() != null) {
             questionBoard.setLikeCount(questionBoardDTO.getLikeCount());
         }
+        if (questionBoardDTO.getWarnCount() != null) {
+            questionBoard.setWarnCount(questionBoardDTO.getWarnCount());
+        }
         questionBoardRepository.save(questionBoard);
     }
 
