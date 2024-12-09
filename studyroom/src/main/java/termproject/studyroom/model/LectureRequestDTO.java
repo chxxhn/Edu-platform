@@ -24,6 +24,10 @@ public class LectureRequestDTO {
     @NotNull
     private User author;
 
+    private Integer likeCount;
+
+    private Integer warnCount;
+
     @NotNull
     private Boolean lectureValid;
 

@@ -20,14 +20,16 @@ public class LikeService {
     private final QuestionBoardRepository questionBoardRepository;
     private final CommunicationBoardRepository communicationBoardRepository;
     private final SharingBoardRepository sharingBoardRepository;
+    private final LectureRequestRepository lectureRequestRepository;
 
     public LikeService(final LikeRepository likeRepository,
-                       final UserRepository userRepository, QuestionBoardRepository questionBoardRepository, CommunicationBoardRepository communicationBoardRepository, SharingBoardRepository sharingBoardRepository) {
+                       final UserRepository userRepository, QuestionBoardRepository questionBoardRepository, CommunicationBoardRepository communicationBoardRepository, SharingBoardRepository sharingBoardRepository, LectureRequestRepository lectureRequestRepository) {
         this.likeRepository = likeRepository;
         this.userRepository = userRepository;
         this.questionBoardRepository = questionBoardRepository;
         this.communicationBoardRepository = communicationBoardRepository;
         this.sharingBoardRepository = sharingBoardRepository;
+        this.lectureRequestRepository = lectureRequestRepository;
     }
 
     public Integer addLike(LikeDTO likeDTO) {
@@ -84,9 +86,15 @@ public class LikeService {
             }
             case COMMUNICATION_BOARD -> {
                 CommunicationBoard communicationBoard = communicationBoardRepository.findById(postId)
-                        .orElseThrow(() -> new IllegalArgumentException("QuestionBoard not found"));
+                        .orElseThrow(() -> new IllegalArgumentException("CommunicationBoard not found"));
                 communicationBoard.setLikeCount(communicationBoard.getLikeCount() + increment);
                 communicationBoardRepository.save(communicationBoard);
+            }
+            case LECTURE_REQUEST -> {
+                LectureRequest lectureRequest = lectureRequestRepository.findById(postId)
+                        .orElseThrow(() -> new IllegalArgumentException("LectureRequest not found"));
+                lectureRequest.setLikeCount(lectureRequest.getLikeCount() + increment);
+                lectureRequestRepository.save(lectureRequest);
             }
 
             default -> throw new IllegalArgumentException("Unsupported BoardType");

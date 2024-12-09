@@ -64,7 +64,6 @@ public class CommunicationBoardService {
     public void update(final Integer comnId, final CommunicationBoardDTO communicationBoardDTO) {
         final CommunicationBoard communicationBoard = communicationBoardRepository.findById(comnId)
                 .orElseThrow(NotFoundException::new);
-//        mapToEntity(communicationBoardDTO, communicationBoard);
         communicationBoard.setTitle(communicationBoardDTO.getTitle());
         communicationBoard.setContent(communicationBoardDTO.getContent());
         communicationBoard.setMaxnum(communicationBoardDTO.getMaxnum());
