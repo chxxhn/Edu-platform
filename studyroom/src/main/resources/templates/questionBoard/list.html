@@ -21,8 +21,8 @@
                             <th scope="col">[[#{questionBoard.title.label}]]</th>
                             <th scope="col">[[#{questionBoard.author.label}]]</th>
                             <th scope="col">Lecture</th>
-                            <th scope="col">warn</th>
                             <th scope="col">like</th>
+                            <th scope="col">warn</th>
                             <th><!-- --></th>
                         </tr>
                     </thead>
@@ -38,8 +38,8 @@
                                   th:text="${questionBoard.author.nickname + ' (' + questionBoard.author.grade + ')'}"></span>
                         </td>
                         <td>[[${questionBoard.lectureId.name}]]</td>
-                        <td>[[${questionBoard.warnCount}]]</td>
                         <td>[[${questionBoard.likeCount}]]</td>
+                        <td>[[${questionBoard.warnCount}]]</td>
                         <td>
                             <div class="float-end text-nowrap">
                                 <a th:href="@{/questionBoards/edit/{lectureId}/{questionId}(lectureId=${selectedLecture.lectureId}, questionId=${questionBoard.questionId})}" class="btn btn-sm btn-secondary"
