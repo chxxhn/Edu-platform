@@ -8,10 +8,7 @@ import org.springframework.stereotype.Service;
 import termproject.studyroom.domain.*;
 import termproject.studyroom.model.BoardType;
 import termproject.studyroom.model.LikeDTO;
-import termproject.studyroom.repos.CommunicationBoardRepository;
-import termproject.studyroom.repos.LikeRepository;
-import termproject.studyroom.repos.QuestionBoardRepository;
-import termproject.studyroom.repos.UserRepository;
+import termproject.studyroom.repos.*;
 import termproject.studyroom.util.NotFoundException;
 
 
@@ -22,13 +19,15 @@ public class LikeService {
     private final UserRepository userRepository;
     private final QuestionBoardRepository questionBoardRepository;
     private final CommunicationBoardRepository communicationBoardRepository;
+    private final SharingBoardRepository sharingBoardRepository;
 
     public LikeService(final LikeRepository likeRepository,
-                       final UserRepository userRepository, QuestionBoardRepository questionBoardRepository, CommunicationBoardRepository communicationBoardRepository) {
+                       final UserRepository userRepository, QuestionBoardRepository questionBoardRepository, CommunicationBoardRepository communicationBoardRepository, SharingBoardRepository sharingBoardRepository) {
         this.likeRepository = likeRepository;
         this.userRepository = userRepository;
         this.questionBoardRepository = questionBoardRepository;
         this.communicationBoardRepository = communicationBoardRepository;
+        this.sharingBoardRepository = sharingBoardRepository;
     }
 
     public Integer addLike(LikeDTO likeDTO) {
@@ -77,12 +76,12 @@ public class LikeService {
                 questionBoard.setLikeCount(questionBoard.getLikeCount() + increment);
                 questionBoardRepository.save(questionBoard);
             }
-//        case SHARING_BOARD -> {
-//            SharingBoard sharingBoard = sharingBoardRepository.findById(postId)
-//                    .orElseThrow(() -> new IllegalArgumentException("SharingBoard not found"));
-//            sharingBoard.setLikeCount(sharingBoard.getLikeCount() + increment);
-//            sharingBoardRepository.save(sharingBoard);
-//        }
+            case SHARING_BOARD -> {
+                SharingBoard sharingBoard = sharingBoardRepository.findById(postId)
+                        .orElseThrow(() -> new IllegalArgumentException("SharingBoard not found"));
+                sharingBoard.setLikeCount(sharingBoard.getLikeCount() + increment);
+                sharingBoardRepository.save(sharingBoard);
+            }
             case COMMUNICATION_BOARD -> {
                 CommunicationBoard communicationBoard = communicationBoardRepository.findById(postId)
                         .orElseThrow(() -> new IllegalArgumentException("QuestionBoard not found"));

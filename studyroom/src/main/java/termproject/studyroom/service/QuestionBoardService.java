@@ -70,7 +70,6 @@ public class QuestionBoardService {
     public void update(final Integer questionId, final QuestionBoardDTO questionBoardDTO) {
         final QuestionBoard questionBoard = questionBoardRepository.findById(questionId)
                 .orElseThrow(NotFoundException::new);
-//        mapToEntity(questionBoardDTO, questionBoard);
         questionBoard.setTitle(questionBoardDTO.getTitle());
         questionBoard.setContent(questionBoardDTO.getContent());
         if (questionBoardDTO.getLikeCount() != null) {

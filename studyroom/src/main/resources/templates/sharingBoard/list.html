@@ -21,6 +21,7 @@
                             <th scope="col">[[#{sharingBoard.title.label}]]</th>
                             <th scope="col">Author</th>
                             <th scope="col">Lecture</th>
+                            <th scope="col">Like</th>
                             <th scope="col">Warn</th>
                             <th><!-- --></th>
                         </tr>
@@ -37,9 +38,14 @@
                                       th:text="${sharingBoard.userId.nickname + ' (' + sharingBoard.userId.grade + ')'}"></span>
                             </td>
                             <td>[[${sharingBoard.lectureId.name}]]</td>
+                            <td>[[${sharingBoard.likeCount}]]</td>
                             <td>[[${sharingBoard.warnCount}]]</td>
                             <td>
-                                <div class="float-end text-nowrap">
+                                <div class="float-end text-nowrap"
+                                     th:if="${user.stdId == sharingBoard.userId.stdId
+             or user.grade.name() == 'PROF'
+             or user.grade.name() == 'TA'
+             or user.grade.name() == 'LEAD'}">
                                     <a th:href="@{/sharingBoards/edit/{lectureId}/{sharingId}(lectureId=${selectedLecture.lectureId}, sharingId=${sharingBoard.sharingId})}" class="btn btn-sm btn-secondary"
                                        onclick="event.stopPropagation();">[[#{sharingBoard.list.edit}]]</a>
                                     <form th:action="@{/sharingBoards/delete/{lectureId}/{sharingId}(lectureId=${selectedLecture.lectureId}, sharingId=${sharingBoard.sharingId})}"
