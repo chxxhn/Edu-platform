@@ -100,6 +100,7 @@ public class LectureListService {
     private LectureList mapToEntity(final LectureListDTO lectureListDTO,
             final LectureList lectureList) {
         lectureList.setName(lectureListDTO.getName());
+        lectureList.setLectureId(lectureListDTO.getLectureId());
         final User stdId = lectureListDTO.getStdId() == null ? null : userRepository.findById(lectureListDTO.getStdId())
                 .orElseThrow(() -> new NotFoundException("stdId not found"));
         lectureList.setStdId(stdId);

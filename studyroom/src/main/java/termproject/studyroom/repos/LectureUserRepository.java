@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import termproject.studyroom.domain.LectureList;
 import termproject.studyroom.domain.LectureUser;
 import termproject.studyroom.domain.LectureUserId;
+import termproject.studyroom.domain.User;
 
 import java.util.List;
 
@@ -15,4 +16,14 @@ public interface LectureUserRepository extends JpaRepository<LectureUser, Lectur
 
     @Query("SELECT lu.lecture FROM LectureUser lu WHERE lu.user.id = :userId")
     List<LectureList> findLectureListsByUserId(@Param("userId") Integer userId);
+
+    @Query("SELECT l FROM LectureUser l WHERE l.lecture.lectureId = :lectureId")
+    List<LectureUser> findByLectureId(@Param("lectureId") Integer lectureId);
+
+
+    @Query("SELECT lu FROM LectureUser lu WHERE lu.lecture.lectureId = :lectureId AND lu.user.stdId NOT IN " +
+            "(SELECT gu.user.stdId FROM GroupUser gu WHERE gu.lectureList.lectureId = :lectureId)")
+    List<LectureUser> findAvailableLectureUsers(@Param("lectureId") Integer lectureId);
+
+
 }

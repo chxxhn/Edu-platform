@@ -52,3 +52,48 @@ BEGIN
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
+
+ALTER TABLE group_user
+    DROP CONSTRAINT fkc6tpqk1plmbxmslbrn2kdm9i9;
+
+ALTER TABLE group_user
+    ADD CONSTRAINT fkc6tpqk1plmbxmslbrn2kdm9i9
+        FOREIGN KEY (group_id) REFERENCES group_projects(gp_id) ON DELETE CASCADE;
+
+
+DROP TRIGGER IF EXISTS delete_groupusers_trigger ON group_projects;
+
+CREATE OR REPLACE FUNCTION delete_related_groupusers()
+    RETURNS TRIGGER
+    LANGUAGE plpgsql
+AS $$
+BEGIN
+    DELETE FROM group_user WHERE group_id = OLD.gp_id;
+    RETURN OLD;
+END;
+$$;
+
+ALTER FUNCTION delete_related_groupusers() OWNER TO "gim-yeseul";
+
+CREATE TRIGGER delete_groupusers_trigger
+    AFTER DELETE ON group_projects
+    FOR EACH ROW
+EXECUTE FUNCTION delete_related_groupusers();
+
+
+CREATE OR REPLACE FUNCTION insert_into_group_approve()
+    RETURNS TRIGGER AS $$
+BEGIN
+    -- value 값이 true로 변경될 때 동작
+    IF NEW.value = TRUE AND OLD.value IS DISTINCT FROM TRUE THEN
+        INSERT INTO group_approve (group_id, lecture_id)
+        VALUES (NEW.group_id, NEW.lecture_id);
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_insert_into_group_approve
+    AFTER UPDATE ON group_projects -- value를 변경하는 테이블 이름
+    FOR EACH ROW
+EXECUTE FUNCTION insert_into_group_approve();

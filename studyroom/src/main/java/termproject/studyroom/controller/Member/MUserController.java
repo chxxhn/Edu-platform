@@ -51,7 +51,7 @@ public class MUserController {
         }
         userService.create(userDTO);
         redirectAttributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("user.create.success"));
-        return "redirect:/users";
+        return "redirect:/login";
     }
 
     @GetMapping("/edit/{stdId}")

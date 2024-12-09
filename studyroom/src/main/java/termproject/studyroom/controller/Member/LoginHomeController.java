@@ -8,7 +8,10 @@ import org.springframework.web.bind.annotation.*;
 import termproject.studyroom.config.auto.CustomUserDetails;
 import termproject.studyroom.domain.LectureList;
 import termproject.studyroom.repos.LectureListRepository;
+import termproject.studyroom.repos.LectureUserRepository;
+import termproject.studyroom.service.LectureUserService;
 
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -16,9 +19,13 @@ public class LoginHomeController {
 
 
     private final LectureListRepository lectureRepository;
+    private final LectureUserService lectureUserService;
+    private final LectureUserRepository lectureUserRepository;
 
-    public LoginHomeController(LectureListRepository lectureListRepository) {
+    public LoginHomeController(LectureListRepository lectureListRepository, LectureUserService lectureUserService, LectureUserRepository lectureUserRepository) {
         this.lectureRepository = lectureListRepository;
+        this.lectureUserService = lectureUserService;
+        this.lectureUserRepository = lectureUserRepository;
     }
 
     @ModelAttribute("user")
@@ -56,6 +63,11 @@ public class LoginHomeController {
                               Model model) {
         // 강의 이름으로 강의를 검색
         Optional<LectureList> selectedLecture = lectureRepository.findByName(lectureName);
+
+        // 등록된 강의 목록 가져오기
+        List<LectureList> myLectures = lectureUserRepository.findLectureListsByUserId(user.getUser().getStdId());
+        model.addAttribute("myLectures", myLectures);        // 사용자와 강의 연결
+
         if (selectedLecture.isPresent()) {
             model.addAttribute("selectedLecture", selectedLecture.get());
         } else {

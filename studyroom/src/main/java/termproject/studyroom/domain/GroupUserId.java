@@ -9,14 +9,12 @@ public class GroupUserId implements Serializable {
 
     private Integer userId;
     private Integer lectureId;
-    private Integer groupId;
 
     public GroupUserId() {}
 
-    public GroupUserId(Integer userId, Integer lectureId, Integer groupId) {
+    public GroupUserId(Integer userId, Integer lectureId) {
         this.userId = userId;
         this.lectureId = lectureId;
-        this.groupId = groupId;
     }
 
     // Getter and Setter
@@ -36,13 +34,6 @@ public class GroupUserId implements Serializable {
         this.lectureId = lectureId;
     }
 
-    public Integer getGroupId() {
-        return groupId;
-    }
-
-    public void setGroupId(Integer groupId) {
-        this.groupId = groupId;
-    }
 
     // equals() and hashCode() 구현
     @Override
@@ -51,12 +42,11 @@ public class GroupUserId implements Serializable {
         if (o == null || getClass() != o.getClass()) return false;
         GroupUserId that = (GroupUserId) o;
         return Objects.equals(userId, that.userId) &&
-                Objects.equals(lectureId, that.lectureId) &&
-                Objects.equals(groupId, that.groupId);
+                Objects.equals(lectureId, that.lectureId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userId, lectureId, groupId);
+        return Objects.hash(userId, lectureId);
     }
 }

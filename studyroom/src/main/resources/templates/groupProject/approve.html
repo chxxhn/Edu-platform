@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Group Project Approval</title>
+</head>
+<body>
+<h1>Group Project Approval</h1>
+<p>Group Name: <span th:text="${groupProject.groupName}"></span></p>
+<p>Group Details: <span th:text="${groupProject.groupDetail}"></span></p>
+
+<form th:action="@{/groupProjects/approve/{lectureId}/{gpId}(lectureId=${selectedLecture.lectureId},gpId=${groupProject.gpId})}" method="post">
+  <label for="approval">승인하시겠습니까?</label>
+  <input type="checkbox" id="approval" name="approval" required />
+  <button type="submit">승인</button>
+</form>
+<a th:href="@{/groupProjects/{lectureId}(lectureId=${selectedLecture.lectureId})}">취소</a>
+</body>
+</html>
