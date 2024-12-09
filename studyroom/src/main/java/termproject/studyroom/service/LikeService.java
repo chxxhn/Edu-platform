@@ -38,8 +38,16 @@ public class LikeService {
 
         // 게시글 확인 (boardType에 따라 게시판 구분)
         BoardType boardType = likeDTO.getBoardType();
-        Like existingLike = likeRepository.findByUserAndPostIdAndBoardType(user, likeDTO.getPostId(), boardType);
 
+        CommunicationBoard communicationBoard = communicationBoardRepository.findById(likeDTO.getPostId())
+                .orElseThrow(() -> new IllegalArgumentException("CommunicationBoard not found"));
+
+        // 좋아요 수가 최대값에 도달했는지 확인
+        if (communicationBoard.getLikeCount() >= communicationBoard.getMaxnum()) {
+            throw new IllegalStateException("Maximum likes reached");
+        }
+
+        Like existingLike = likeRepository.findByUserAndPostIdAndBoardType(user, likeDTO.getPostId(), boardType);
         if (existingLike != null) {
             likeRepository.delete(existingLike);
             updateLikeCount(likeDTO.getPostId(), boardType, -1);

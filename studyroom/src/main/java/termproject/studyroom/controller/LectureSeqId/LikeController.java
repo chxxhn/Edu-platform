@@ -1,5 +1,6 @@
 package termproject.studyroom.controller.LectureSeqId;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -35,14 +36,19 @@ public class LikeController {
     // 좋아요 추가 요청
     @PostMapping("/add")
     public ResponseEntity<Map<String, Object>> addLike(@RequestBody LikeDTO likeDTO) {
-        Integer status = likeService.addLike(likeDTO); // 1 = 추가됨, -1 = 취소됨
-        int likeCount = likeService.getLikeCount(likeDTO.getPostId());
+        try {
+            Integer status = likeService.addLike(likeDTO);
+            int likeCount = likeService.getLikeCount(likeDTO.getPostId());
 
-        Map<String, Object> response = new HashMap<>();
-        response.put("status", status);
-        response.put("likeCount", likeCount);
-
-        return ResponseEntity.ok(response);
+            Map<String, Object> response = new HashMap<>();
+            response.put("status", status);
+            response.put("likeCount", likeCount);
+            return ResponseEntity.ok(response);
+        } catch (IllegalStateException e) {
+            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("message", "Unexpected error"));
+        }
     }
 
 }

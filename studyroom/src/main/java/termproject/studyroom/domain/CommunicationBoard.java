@@ -52,9 +52,6 @@ public class CommunicationBoard {
     @Column(nullable = false)
     private Integer likeCount = 0;
 
-    @Column
-    private Boolean valid;
-
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "author_id", nullable = false)
     private User author;

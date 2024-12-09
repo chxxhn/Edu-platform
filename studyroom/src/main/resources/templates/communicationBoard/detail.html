@@ -29,6 +29,14 @@
       margin-right: 8px;
       color: #78c2ad;
     }
+
+    /* 별로면 빼기 */
+    button[disabled] {
+      cursor: not-allowed;
+      background-color: #e0e0e0 !important;
+      color: #a0a0a0 !important;
+      border-color: #d0d0d0 !important;
+    }
   </style>
 </head>
 <body>
@@ -49,13 +57,15 @@
       <div class="d-flex justify-content-between">
         <div class="d-flex align-items-center">
           <!-- 좋아요 버튼 -->
+          <!-- 좋아요 버튼 -->
           <button
                   class="btn btn-outline-warning btn-sm me-3"
                   th:data-post-id="${communicationBoard.comnId}"
                   th:data-user-id="${user.stdId}"
                   th:data-user-name="${user.name}"
                   th:data-board-type="COMMUNICATION_BOARD"
-                  onclick="handleLikeButtonClick(this)">
+                  th:onclick="${user.grade.name() == 'PROF' || user.grade.name() == 'TA'} ? '' : 'handleLikeButtonClick(this)'"
+                  th:disabled="${user.grade.name() == 'PROF' || user.grade.name() == 'TA'}">
             👍 Like <span class="badge bg-warning like-count" th:text="${communicationBoard.likeCount}"></span>
           </button>
         </div>
@@ -133,7 +143,13 @@
           author: { stdId: userId }
         })
       })
-              .then(response => response.json())
+              .then(response => {
+                if (!response.ok) {
+                  // 상태 코드가 400번대, 500번대일 때 에러 처리
+                  return response.json().then(error => { throw new Error(error.message || "Error occurred") });
+                }
+                return response.json();
+              })
               .then(data => {
                 const likeCountElement = button.querySelector(".like-count");
                 likeCountElement.textContent = data.likeCount;
@@ -145,7 +161,11 @@
                   addUserToList(userName);
                 }
               })
-              .catch(error => console.error("Error:", error));
+              .catch(error => {
+                // 좋아요 제한 메시지 표시
+                console.error("Error:", error);
+                alert("좋아요 최대 수에 도달했습니다."); // 사용자에게 알림
+              });
     }
   </script>
 </div>
