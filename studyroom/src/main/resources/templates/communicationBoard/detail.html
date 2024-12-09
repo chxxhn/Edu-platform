@@ -3,6 +3,33 @@
       layout:decorate="~{layout}">
 <head>
   <title>Communication board detail</title>
+  <style>
+    /* Liked By 섹션 스타일 */
+    .liked-by-container {
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .liked-by-container li {
+      padding: 8px 10px;
+      margin-bottom: 5px;
+      border-bottom: 1px solid #e9ecef;
+      color: #495057;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+    }
+
+    .liked-by-container li:last-child {
+      border-bottom: none;
+    }
+
+    /* 이름 앞에 아이콘 추가 */
+    .liked-by-container li::before {
+      content: "👤"; /* 사용자 아이콘 */
+      margin-right: 8px;
+      color: #78c2ad;
+    }
+  </style>
 </head>
 <body>
 <div layout:fragment="content" class="container mt-3">
@@ -19,8 +46,20 @@
 
       <!-- Metadata -->
       <hr>
-      <div class="d-flex justify-content-end">
-        <div class="text-muted">
+      <div class="d-flex justify-content-between">
+        <div class="d-flex align-items-center">
+          <!-- 좋아요 버튼 -->
+          <button
+                  class="btn btn-outline-warning btn-sm me-3"
+                  th:data-post-id="${communicationBoard.comnId}"
+                  th:data-user-id="${user.stdId}"
+                  th:data-user-name="${user.name}"
+                  th:data-board-type="COMMUNICATION_BOARD"
+                  onclick="handleLikeButtonClick(this)">
+            👍 Like <span class="badge bg-warning like-count" th:text="${communicationBoard.likeCount}"></span>
+          </button>
+        </div>
+        <div class="d-flex align-items-center text-muted">
           <span>Author:</span>
           <span class="fw-bold ms-2"
                 th:class="${communicationBoard.author.grade.name() == 'TA'} ? 'fw-bold ms-2 text-primary'
@@ -35,12 +74,80 @@
       </div>
     </div>
   </div>
+  <div class="mt-4">
+    <h5 class="fw-bold mb-3">Liked by:</h5>
+    <div class="liked-by-container border p-3 rounded" style="max-height: 150px; overflow-y: auto; background-color: #f8f9fa;">
+      <ul id="likerList" class="list-unstyled mb-0">
+        <!-- 좋아요를 누른 사용자의 이름이 동적으로 추가됨 -->
+      </ul>
+    </div>
+  </div>
   <div class="d-flex justify-content-end mt-4">
     <!-- Back Button -->
     <a th:href="@{/communicationBoards/{lectureId}(lectureId=${selectedLecture.lectureId})}" class="btn btn-outline-primary">
       Back to Communication Board
     </a>
   </div>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const postId = document.querySelector("button[data-post-id]").getAttribute("data-post-id");
+      const boardType = document.querySelector("button[data-board-type]").getAttribute("data-board-type");
+
+      fetch(`/likes/add/${postId}/${boardType}`)
+              .then(response => response.json())
+              .then(data => {
+                const likerList = document.getElementById("likerList");
+                likerList.innerHTML = ""; // 초기화
+                data.forEach(userName => addUserToList(userName));
+              })
+              .catch(error => console.error("Failed to load like users:", error));
+    });
+
+    function addUserToList(userName) {
+      const likerList = document.getElementById("likerList");
+      const userItem = document.createElement("li");
+      userItem.textContent = userName;
+      userItem.id = `user-${userName}`;
+      likerList.appendChild(userItem);
+    }
+
+    function removeUserFromList(userName) {
+      const userItem = document.getElementById(`user-${userName}`);
+      if (userItem) {
+        userItem.remove();
+      }
+    }
+
+    function handleLikeButtonClick(button) {
+      const postId = button.getAttribute("data-post-id");
+      const userId = button.getAttribute("data-user-id");
+      const userName = button.getAttribute("data-user-name");
+      const boardType = button.getAttribute("data-board-type");
+
+      fetch('/likes/add', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          postId: postId,
+          boardType: boardType,
+          author: { stdId: userId }
+        })
+      })
+              .then(response => response.json())
+              .then(data => {
+                const likeCountElement = button.querySelector(".like-count");
+                likeCountElement.textContent = data.likeCount;
+
+                // 버튼 상태 및 목록 업데이트
+                if (data.status === -1) {
+                  removeUserFromList(userName);
+                } else {
+                  addUserToList(userName);
+                }
+              })
+              .catch(error => console.error("Error:", error));
+    }
+  </script>
 </div>
 </body>
 </html>

@@ -21,7 +21,7 @@
                             <th scope="col">Title</th>
                             <th scope="col">[[#{communicationBoard.author.label}]]</th>
                             <th scope="col">Lecture</th>
-                            <th scope="col">[[#{communicationBoard.maxnum.label}]]</th>
+                            <th scope="col">Attendee</th>
                             <th scope="col">[[#{communicationBoard.valid.label}]]</th>
                             <th><!-- --></th>
                         </tr>
@@ -38,7 +38,7 @@
                                       th:text="${communicationBoard.author.nickname + ' (' + communicationBoard.author.grade + ')'}"></span>
                             </td>
                             <td>[[${communicationBoard.lectureId.name}]]</td>
-                            <td>[[${communicationBoard.maxnum}]]</td>
+                            <td>[[${communicationBoard.likeCount}]] / [[${communicationBoard.maxnum}]]</td>
                             <td>[[${communicationBoard.valid}]]</td>
                             <td>
                                 <div class="float-end text-nowrap">
