@@ -2,14 +2,11 @@ package termproject.studyroom.service;
 
 import java.util.List;
 
-import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import termproject.studyroom.domain.GroupBoard;
-import termproject.studyroom.domain.GroupProject;
-import termproject.studyroom.domain.LectureList;
-import termproject.studyroom.domain.User;
+import termproject.studyroom.domain.*;
 import termproject.studyroom.model.GroupProjectDTO;
 import termproject.studyroom.repos.GroupBoardRepository;
 import termproject.studyroom.repos.GroupProjectRepository;
@@ -20,7 +17,7 @@ import termproject.studyroom.util.ReferencedWarning;
 import termproject.studyroom.util.WebUtils;
 
 
-@Transactional
+
 @Service
 public class GroupProjectService {
 
@@ -68,10 +65,24 @@ public class GroupProjectService {
         return groupProjectRepository.save(groupProject);
     }
 
+//    public void update(final Integer gpId, final GroupProjectDTO groupProjectDTO) {
+//        final GroupProject groupProject = groupProjectRepository.findById(gpId)
+//                .orElseThrow(NotFoundException::new);
+//        mapToEntity(groupProjectDTO, groupProject);
+//        groupProjectRepository.save(groupProject);
+//    }
+
     public void update(final Integer gpId, final GroupProjectDTO groupProjectDTO) {
         final GroupProject groupProject = groupProjectRepository.findById(gpId)
                 .orElseThrow(NotFoundException::new);
+
+        // GroupUser 관계 유지
+        List<GroupUser> existingUsers = groupProject.getGroupUsers();
         mapToEntity(groupProjectDTO, groupProject);
+
+        // 관계 복원
+        groupProject.setGroupUsers(existingUsers);
+
         groupProjectRepository.save(groupProject);
     }
 
@@ -120,6 +131,7 @@ public class GroupProjectService {
         }
         return null;
     }
+
 
     @Transactional
     public void createGroupProjectWithMembers(GroupProjectDTO groupProjectDTO, LectureList lecture,

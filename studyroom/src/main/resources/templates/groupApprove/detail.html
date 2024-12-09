@@ -1,0 +1,91 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+  <title>Group Blog</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+  </div>
+  <!-- 에러 메시지 표시 -->
+  <div th:if="${MSG_ERROR}" class="alert alert-danger alert-dismissible fade show d-flex align-items-center" role="alert">
+    <i class="bi bi-exclamation-circle-fill me-2"></i>
+    <span th:text="${MSG_ERROR}"></span>
+  </div>
+  <!-- 에러 메시지 표시 -->
+  <div th:if="${MSG_INFO}" class="alert alert-danger alert-dismissible fade show d-flex align-items-center" role="alert">
+    <i class="bi bi-exclamation-circle-fill me-2"></i>
+    <span th:text="${MSG_INFO}"></span>
+  </div>
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="text-primary">Group Blog for Lecture [[${lectureId}]] - Group [[${gpId}]]</h1>
+    <a th:href="@{/logout}" class="btn btn-outline-danger">
+      <i class="bi bi-box-arrow-right"></i> 로그아웃
+    </a>
+  </div>
+
+  <div class="card mt-4">
+    <div class="card-header">
+      Group Details
+    </div>
+    <div class="card-body">
+      <p><strong>강의 ID:</strong> [[${groupApprove.lectureList.name}]]</p>
+      <p><strong>그룹 ID:</strong> [[${groupApprove.groupProject.gpId}]]</p>
+      <p><strong>그룹 Name:</strong>[[${groupApprove.groupProject.groupName}]]</p>
+    </div>
+  </div>
+
+  <div class="mt-4">
+    <h2>[[${groupApprove.groupProject.groupName}]]</h2>
+    <p>[[${groupApprove.groupProject.groupDetail}]]</p>
+    <p><strong>TeamLeader: </strong>[[${groupApprove.groupProject.createdUserId.name}]]</p>
+
+  </div>
+  <div layout:fragment="content">
+    <div class="d-flex flex-wrap mb-4">
+      <h1 class="flex-grow-1">[[#{groupBoard.list.headline}]]</h1>
+      <div>
+        <a th:href="@{/groupBoards/add/{lectureId}/{gpId}(lectureId=${lectureId}, gpId=${gpId})}"
+           class="btn btn-primary ms-2">[[#{groupBoard.list.createNew}]]</a>
+      </div>
+    </div>
+    <div th:if="${groupBoards.empty}">[[#{groupBoard.list.empty}]]</div>
+    <div th:if="${!groupBoards.empty}" class="table-responsive">
+      <table class="table table-striped table-hover align-middle">
+        <thead>
+        <tr>
+          <th scope="col">[[#{groupBoard.title.label}]]</th>
+          <th scope="col">[[#{groupBoard.author.label}]]</th>
+          <th><!-- --></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="groupBoard : ${groupBoards}"
+            th:onclick="|window.location='/groupBoards/detail/' + ${lectureId} + '/' + ${gpId}+'/'+${groupBoard.gbId}|"
+            style="cursor: pointer;">
+          <td>[[${groupBoard.title}]]</td>
+          <td>[[${groupBoard.author.name}]]</td>
+          <td>
+            <div class="float-end text-nowrap">
+              <a th:href="@{/groupBoards/edit/{lectureId}/{gpId}/{gbId}(lectureId=${lectureId},gpId=${gpId},gbId=${groupBoard.gbId})}" class="btn btn-sm btn-secondary">[[#{groupBoard.list.edit}]]</a>
+              <form th:action="@{/groupBoards/delete/{lectureId}/{gpId}/{gbId}(lectureId=${lectureId},gpId=${gpId},gbId=${groupBoard.gbId})}"
+                    th:hx-confirm="#{delete.confirm}" method="post" class="d-inline">
+                <button type="submit" class="btn btn-sm btn-secondary">[[#{groupBoard.list.delete}]]</button>
+              </form>
+            </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="mt-4">
+    <a th:href="@{/groupProjects/{lectureId}(lectureId=${lectureId})}" class="btn btn-secondary">뒤로 가기</a>
+  </div>
+</div>
+</body>
+</html>

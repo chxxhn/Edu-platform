@@ -19,12 +19,11 @@
           method="post">
         <div th:replace="~{fragments/forms::inputRow(object='groupProject', field='groupName', required=true)}" />
         <div th:replace="~{fragments/forms::inputRow(object='groupProject', field='groupDetail', type='textarea')}" />
-        <div th:if="${user.grade == 'TA'}">
+        <div th:if="${lectureUsers == null}">
             <input type="hidden" th:name="createdUserId" th:value="${user}" />
         </div>
-        <div th:if="${user.grade != 'TA'}">
+        <div th:if="${lectureUsers != null}">
             <div th:replace="~{fragments/forms::inputRow(object='groupProject', field='createdUserId', required=true, type='select')}" />
-            <div th:replace="~{fragments/forms::inputRow(object='groupProject', field='groupValid',required=true, type='checkbox')}" />
         </div>
         <input type="hidden" th:name="lectureId" th:value="${selectedLecture.lectureId}" />
         <input type="text" name="stdId1" placeholder="Student ID 1" class="form-control mb-2" />

@@ -1,54 +1,21 @@
--- INSERT INTO Users (std_id, name, nickname, password, email, grade, date_created, last_updated)
--- VALUES
---     (000000000, 'admin', 'admin', 'admin', 'admin@pusan.ac.kr', 'PROF', NOW(), NOW());
--- INSERT INTO Users (std_id, name, nickname, password, email, grade, date_created, last_updated)
--- VALUES
---     (111111111, 'std', 'std', 'std', 'std@pusan.ac.kr', 'STD', NOW(), NOW());
--- INSERT INTO Users (std_id, name, nickname, password, email, grade, date_created, last_updated)
--- VALUES
---     (222222222, 'ta', 'ta', 'ta', 'ta@pusan.ac.kr', 'TA', NOW(), NOW());
--- INSERT INTO Users (std_id, name, nickname, password, email, grade, date_created, last_updated)
--- VALUES
---     (333333333, 'lead', 'lead', 'lead', 'lead@pusan.ac.kr', 'LEAD', NOW(), NOW());
---
--- LectureList 테이블 초기 데이터 삽입
-
 INSERT INTO Users (std_id, name, nickname, password, email, grade, date_created, last_updated)
 VALUES
-    (0, 'prof', 'Prof', '1234', 'admin@pusan.ac.kr', 'PROF', NOW(), NOW());
+    (45, '김예슬', '예쓸', '1234', 'Ys@', 'STD', NOW(), NOW()),
+    (46, '김예슬1', '예쓸1', '1234', 'Ys1@', 'STD', NOW(), NOW()),
+    (47, '김예슬2', '예쓸2', '1234', 'Ys2@', 'STD', NOW(), NOW()),
+    (48, '김예슬3', '예쓸3', '1234', 'Ys3@', 'STD', NOW(), NOW()),
+    (333333333, '리더', 'lead1', '1234', 'lead1@',null, NOW(), NOW());
 
 INSERT INTO lecture_lists (lecture_id, name, std_id_id, date_created, last_updated)
 VALUES
     (1, 'DataBase', 111111111, NOW(), NOW()),
     (2, 'DataStructures', 111111111, NOW(), NOW());
 
-INSERT INTO Users (std_id, name, nickname, password, email, grade)
-VALUES (1, '조교', 'ta', '1234', 'john@example.com', NULL);
+-- SELECT * FROM Users WHERE std_id = 1;
+--
+-- INSERT INTO group_projects (gp_id, group_valid, group_name, group_detail, created_user_id_id, lecture_id_id, date_created, last_updated)
+-- VALUES (nextval('primary_sequence_gp'), FALSE, 'GroupName1', 'This is a group detail.', 45, 1, NOW(), NOW()),
+--  (nextval('primary_sequence_gp'), FALSE, 'GroupName1', 'This is a group detail.', 45, 2, NOW(), NOW());
+--
 
-SELECT * FROM Users WHERE std_id = 1;
 
-INSERT INTO Users (std_id, name, nickname, password, email, grade, date_created, last_updated)
-VALUES
-    (3, 'prof', 'Prof', '1234', 'prof@pusan.ac.kr', 'PROF', NOW(), NOW());
-
-INSERT INTO Users (std_id, name, nickname, password, email, grade, date_created, last_updated)
-VALUES
-    (4, 'Ta', 'Ta', '1234', 'Ta@pusan.ac.kr', 'TA', NOW(), NOW());
-
-INSERT INTO Users (std_id, name, nickname, password, email, grade, date_created, last_updated)
-VALUES
-    (111111111, '학생1', 'std1', '1234', '1234@pusan.ac.kr',null, NOW(), NOW());
-
-INSERT INTO Users (std_id, name, nickname, password, email, grade, date_created, last_updated)
-VALUES
-    (222222222, '리더', 'lead1', '1234', '1234@pusan.ac.kr',null, NOW(), NOW());
-
-UPDATE Users
-SET grade = 'PROF'
-WHERE std_id = 0;
-
--- GroupUser 테이블 내용 삭제
-DELETE FROM group_user;
-
--- GroupProject 테이블 내용 삭제
-DELETE FROM group_projects;

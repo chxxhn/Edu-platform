@@ -7,7 +7,7 @@
     <body>
         <div layout:fragment="content">
             <div class="d-flex flex-wrap mb-4">
-                <h1 class="flex-grow-1">팀플게시판</h1>
+                <h2 class="flex-grow-1">팀플신청</h2>
                 <div th:if="${prof != 'prof'}">
                 <a th:href="@{/groupProjects/add/{lectureId}(lectureId=${selectedLecture.lectureId})}"
                    class="btn btn-primary ms-2">[[#{groupProject.list.createNew}]]</a>
@@ -36,20 +36,57 @@
                             <td>[[${groupProject.createdUserId.name}]]</td>
                             <td>[[${groupProject.lectureId.name}]]</td>
                             <td>
-                                <div class="float-end text-nowrap">
-                                    <a th:href="@{/groupProjects/edit/{lectureId}/{gpId}(lectureId=${selectedLecture.lectureId}, gpId=${groupProject.gpId})}" class="btn btn-sm btn-secondary"
-                                       onclick="event.stopPropagation();">
-                                    [[#{groupProject.list.edit}]]</a>
-                                    <form th:action="@{/groupProjects/delete/{lectureId}/{gpId}(lectureId=${selectedLecture.lectureId},gpId=${groupProject.gpId})}"
+                            <td>
+                                <div class="float-end text-nowrap" th:if="${!groupProject.groupValid}">
+                                    <!-- Edit/Approve Button -->
+                                    <div th:if="${role}=='admin'">
+                                        <a th:href="@{/groupProjects/edit/{lectureId}/{gpId}(lectureId=${selectedLecture.lectureId}, gpId=${groupProject.gpId})}" class="btn btn-sm btn-secondary"
+                                           onclick="event.stopPropagation();">
+                                            [[#{groupProject.list.approve}]]</a>
+                                    </div>
+                                    <div th:if="${role}=='consumer'">
+                                        <a th:href="@{/groupProjects/edit/{lectureId}/{gpId}(lectureId=${selectedLecture.lectureId}, gpId=${groupProject.gpId})}" class="btn btn-sm btn-secondary"
+                                           onclick="event.stopPropagation();">
+                                            [[#{groupProject.list.edit}]]</a>
+                                    </div>
+
+                                    <!-- Delete Button -->
+                                    <form th:action="@{/groupProjects/delete/{lectureId}/{gpId}(lectureId=${selectedLecture.lectureId}, gpId=${groupProject.gpId})}"
                                           th:hx-confirm="#{delete.confirm}" method="post" class="d-inline" onclick="event.stopPropagation();">
                                         <button type="submit" class="btn btn-sm btn-secondary">[[#{groupProject.list.delete}]]</button>
                                     </form>
                                 </div>
                             </td>
+
+                            </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
+
+            <h2>팀플 승인 현황</h2>
+            <div th:if="${groupApproves.empty}">승인된 팀플이 없습니다.</div>
+            <div th:if="${!groupApproves.empty}" class="table-responsive">
+                <table class="table table-striped table-hover align-middle">
+                    <thead>
+                    <tr>
+                        <th scope="col">승인 ID</th>
+                        <th scope="col">강의 ID</th>
+                        <th scope="col">그룹 ID</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="approve : ${groupApproves}"
+                        th:onclick="|window.location='/groupApproves/detail/' + ${approve.lectureList.lectureId} + '/' + ${approve.groupProject.gpId}|"
+                        style="cursor: pointer;">
+                        <td>[[${approve.approveId}]]</td>
+                        <td>[[${approve.lectureList.lectureId}]]</td>
+                        <td>[[${approve.groupProject.gpId}]]</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
+
     </body>
 </html>
