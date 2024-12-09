@@ -163,6 +163,10 @@ public class UserService {
         return userRepository.existsByNicknameIgnoreCase(nickname);
     }
 
+    public boolean stdIdExists(final Integer stdId) {
+        return userRepository.existsById(stdId);
+    }
+
     public boolean emailExists(final String email) {
         return userRepository.existsByEmailIgnoreCase(email);
     }

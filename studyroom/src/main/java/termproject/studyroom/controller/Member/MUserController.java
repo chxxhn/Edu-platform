@@ -49,6 +49,12 @@ public class MUserController {
         if (bindingResult.hasErrors()) {
             return "user/add";
         }
+        Integer stdId = userDTO.getStdId();
+        if (userService.stdIdExists(stdId)) {
+            redirectAttributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("user_STdId is exits"));
+            return "redirect:/users/add";
+        }
+        userDTO.setGrade(Grade.STD);
         userService.create(userDTO);
         redirectAttributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("user.create.success"));
         return "redirect:/login";
