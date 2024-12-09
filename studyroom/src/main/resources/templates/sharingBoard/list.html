@@ -52,13 +52,13 @@
                     </tbody>
                 </table>
             </div>
-            <div class="d-flex justify-content-center mt-3">
+            <div class="d-flex justify-content-center mt-3" th:if="${not #lists.isEmpty(sharingBoards)}">
                 <!-- Pagination -->
                 <nav class="pagination-container">
                     <ul class="pagination mb-0">
                         <!-- Previous Page -->
                         <li th:classappend="${paging.first} ? 'disabled' : ''" class="page-item">
-                            <a class="page-link" th:href="@{/sharingBoards(page=${paging.number - 1})}" aria-label="Previous">
+                            <a class="page-link" th:href="@{/sharingBoards/{lectureId}(lectureId=${lectureId}, page=${paging.number - 1})}" aria-label="Previous">
                                 <span aria-hidden="true">&laquo;</span>
                             </a>
                         </li>
@@ -67,12 +67,12 @@
                         <li th:each="i : ${#numbers.sequence(0, paging.totalPages - 1)}"
                             th:classappend="${i == paging.number} ? 'active' : ''"
                             class="page-item">
-                            <a class="page-link" th:href="@{/sharingBoards(page=${i})}" th:text="${i + 1}">1</a>
+                            <a class="page-link" th:href="@{/sharingBoards/{lectureId}(lectureId=${lectureId}, page=${i})}" th:text="${i + 1}">1</a>
                         </li>
 
                         <!-- Next Page -->
                         <li th:classappend="${paging.last} ? 'disabled' : ''" class="page-item">
-                            <a class="page-link" th:href="@{/sharingBoards(page=${paging.number + 1})}" aria-label="Next">
+                            <a class="page-link" th:href="@{/sharingBoards/{lectureId}(lectureId=${lectureId}, page=${paging.number + 1})}" aria-label="Next">
                                 <span aria-hidden="true">&raquo;</span>
                             </a>
                         </li>

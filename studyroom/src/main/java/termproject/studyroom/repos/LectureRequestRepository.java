@@ -8,6 +8,8 @@ import termproject.studyroom.domain.*;
 
 public interface LectureRequestRepository extends JpaRepository<LectureRequest, Integer> {
 
+    LectureRequest findFirstByAuthor(User user);
+
     LectureRequest findFirstByLectureId(LectureList lectureList);
 
     Page<LectureRequest> findAll(Pageable pageable);

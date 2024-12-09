@@ -64,6 +64,7 @@ public class LectureRequestController {
         model.addAttribute("lectureRequests", lectureRequestService.findAll());
         // 사용자 정보 추가
         model.addAttribute("user", user != null ? user.getUser() : "Anonymous User");
+
         return "lectureRequest/list";
     }
 
@@ -91,6 +92,7 @@ public class LectureRequestController {
         User author = userRepository.findByEmail(user.getUsername())
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
+        lectureRequestDTO.setAuthor(author);
         lectureRequestService.create(lectureRequestDTO);
         redirectAttributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("lectureRequest.create.success"));
         return "redirect:/lectureRequests/" + lectureId;
@@ -114,11 +116,11 @@ public class LectureRequestController {
             @ModelAttribute("lectureRequest") final LectureRequestDTO lectureRequestDTO,
             final BindingResult bindingResult, final RedirectAttributes redirectAttributes,
                        @AuthenticationPrincipal CustomUserDetails user) {
-        // 세션 유저 정보를 조회
-//        User author = userRepository.findByEmail(user.getUsername())
-//                .orElseThrow(() -> new IllegalArgumentException("User not found"));
-//        // DTO에 강의 및 작성자 설정
-//        lectureRequestDTO.setAuthor(author);
+//         세션 유저 정보를 조회
+        User author = userRepository.findByEmail(user.getUsername())
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        // DTO에 강의 및 작성자 설정
+        lectureRequestDTO.setAuthor(author);
         lectureRequestService.update(rqId, lectureRequestDTO);
         redirectAttributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("lectureRequest.update.success"));
         return "redirect:/lectureRequests/" + lectureId;

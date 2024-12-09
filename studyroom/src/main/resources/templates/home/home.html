@@ -4,37 +4,89 @@
     <title>[[#{home.index.headline}]]</title>
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <style>
+        /* 전체 페이지 스타일 */
         body {
-            background-color:#78c2ad; /* 초록색 배경 */
-            color: white;
-            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #e9f5f2; /* Minty 테마의 부드러운 배경색 */
+            color: #495057;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
             text-align: center;
         }
+
+        /* 메인 컨테이너 */
         .container {
-            margin-top: 15%;
+            background-color: #ffffff; /* 흰색 컨텐츠 영역 */
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 90%;
         }
+
+        /* 제목 스타일 */
+        h1 {
+            color: #78c2ad; /* Minty 테마 Primary 색상 */
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        h1 .secondary {
+            color: #e38d94; /* 원하는 핑크색 */
+            font-weight: bold;
+        }
+
+        p {
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            color: #6c757d;
+        }
+
+        /* 버튼 스타일 */
         .btn {
             display: inline-block;
             margin: 10px;
-            padding: 15px 30px;
+            padding: 12px 25px;
             font-size: 18px;
+            font-weight: bold;
             text-decoration: none;
-            color: white;
-            border: 2px solid white;
+            color: #ffffff;
+            background-color: #78c2ad; /* Primary 색상 */
+            border: none;
             border-radius: 5px;
-            transition: background-color 0.3s, color 0.3s;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
+
         .btn:hover {
-            background-color: white;
-            color: #28a745;
+            background-color: #67af9b; /* Primary 색상에서 약간 진한 색 */
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        /* 반응형 스타일 */
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2rem;
+            }
+            .btn {
+                font-size: 16px;
+                padding: 10px 20px;
+            }
         }
     </style>
 </head>
 <body>
 <div layout:fragment="content">
     <div class="container">
-        <h1>Welcome to StudyRoom!</h1>
-        <p>관리 시스템에 오신 것을 환영합니다. 회원가입 또는 로그인을 진행하세요.</p>
+        <h1>
+            Welcome to <span class="secondary">prof Joe's</span> StudyRoom!
+        </h1>
+<!--        <p>회원가입 또는 로그인을 진행하세요.</p>-->
         <a th:href="@{/users/add}" class="btn">회원가입</a>
         <a th:href="@{/login}" class="btn">로그인</a>
     </div>

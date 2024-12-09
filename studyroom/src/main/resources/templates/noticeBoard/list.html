@@ -9,7 +9,7 @@
             <div class="d-flex flex-wrap mb-4">
                 <h1 class="flex-grow-1">공지게시판</h1>
                 <div>
-                    <a th:href="@{/noticeBoards/add}" class="btn btn-primary ms-2">[[#{noticeBoard.list.createNew}]]</a>
+                    <a th:href="@{/noticeBoards/add/{lectureId}(lectureId=${selectedLecture.lectureId})}" class="btn btn-primary ms-2">[[#{noticeBoard.list.createNew}]]</a>
                 </div>
             </div>
             <div th:if="${noticeBoards.empty}">[[#{noticeBoard.list.empty}]]</div>
@@ -25,8 +25,8 @@
                         </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="noticeBoard : ${noticeBoards}"
-                        th:onclick="|window.location='@{/noticeBoards/detail/{noticeId}(noticeId=${noticeBoard.noticeId})}'|"
+                    <tr th:each="noticeBoard : ${paging.content}"
+                        th:onclick="|window.location='/noticeBoards/detail/' + ${selectedLecture.lectureId} + '/' + ${noticeBoard.noticeId}|"
                         style="cursor: pointer;">
                         <td>[[${noticeBoard.noticeId}]]</td>
                         <td>[[${noticeBoard.title}]]</td>
@@ -35,11 +35,11 @@
                         <td>
                             <div class="float-end text-nowrap">
                                 <!-- Edit Button -->
-                                <a th:href="@{/noticeBoards/edit/{noticeId}(noticeId=${noticeBoard.noticeId})}"
+                                <a th:href="@{/noticeBoards/edit/{lectureId}/{noticeId}(lectureId=${selectedLecture.lectureId}, noticeId=${noticeBoard.noticeId})}"
                                    class="btn btn-sm btn-secondary"
                                    onclick="event.stopPropagation();">[[#{noticeBoard.list.edit}]]</a>
                                 <!-- Delete Button -->
-                                <form th:action="@{/noticeBoards/delete/{noticeId}(noticeId=${noticeBoard.noticeId})}"
+                                <form th:action="@{/noticeBoards/delete/{lectureId}/{noticeId}(lectureId=${selectedLecture.lectureId}, noticeId=${noticeBoard.noticeId})}"
                                       th:hx-confirm="#{delete.confirm}" method="post" class="d-inline"
                                       onclick="event.stopPropagation();">
                                     <button type="submit" class="btn btn-sm btn-secondary">[[#{noticeBoard.list.delete}]]</button>
@@ -50,18 +50,29 @@
                     </tbody>
                 </table>
             </div>
-            <div class="d-flex justify-content-center mt-3">
+            <div class="d-flex justify-content-center mt-3" th:if="${not #lists.isEmpty(noticeBoards)}">
                 <!-- Pagination -->
                 <nav class="pagination-container">
                     <ul class="pagination mb-0">
-                        <li class="page-item">
-                            <a class="page-link" th:href="@{/questionBoards?page=1}">1</a>
+                        <!-- Previous Page -->
+                        <li th:classappend="${paging.first} ? 'disabled' : ''" class="page-item">
+                            <a class="page-link" th:href="@{/noticeBoards/{lectureId}(lectureId=${lectureId}, page=${paging.number - 1})}" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
                         </li>
-                        <li class="page-item">
-                            <a class="page-link" th:href="@{/questionBoards?page=2}">2</a>
+
+                        <!-- Page Numbers -->
+                        <li th:each="i : ${#numbers.sequence(0, paging.totalPages - 1)}"
+                            th:classappend="${i == paging.number} ? 'active' : ''"
+                            class="page-item">
+                            <a class="page-link" th:href="@{/noticeBoards/{lectureId}(lectureId=${lectureId}, page=${i})}" th:text="${i + 1}">1</a>
                         </li>
-                        <li class="page-item">
-                            <a class="page-link" th:href="@{/questionBoards?page=3}">3</a>
+
+                        <!-- Next Page -->
+                        <li th:classappend="${paging.last} ? 'disabled' : ''" class="page-item">
+                            <a class="page-link" th:href="@{/noticeBoards/{lectureId}(lectureId=${lectureId}, page=${paging.number + 1})}" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
                         </li>
                     </ul>
                 </nav>

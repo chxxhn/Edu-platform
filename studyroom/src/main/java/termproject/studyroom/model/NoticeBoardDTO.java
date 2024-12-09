@@ -30,8 +30,8 @@ public class NoticeBoardDTO {
 
     @NotNull
     private LectureList lectureId;
-
-    @NotNull
-    private LocalDateTime dateCreated;
+//
+//    @NotNull
+//    private LocalDateTime dateCreated;
 
 }

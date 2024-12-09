@@ -17,7 +17,6 @@
                   th:object="${sharingBoard}">
                 <div th:replace="~{fragments/forms::inputRow(object='sharingBoard', field='title', required=true)}" />
                 <div th:replace="~{fragments/forms::inputRow(object='sharingBoard', field='content', required=true, type='textarea')}" />
-                <div th:replace="~{fragments/forms::inputRow(object='sharingBoard', field='warnCount', required=true, type='number')}" />
                 <!-- 사용자와 강의 정보를 히든 필드로 포함 -->
                 <input type="hidden" th:name="userId" th:value="${user}"/>
                 <input type="hidden" th:name="lectureId" th:value="${selectedLecture.lectureId}" />

@@ -40,6 +40,9 @@ public class CommunicationBoard {
     )
     private Integer comnId;
 
+    @Column(nullable = false, length = 30)
+    private String title;
+
     @Column(nullable = false, columnDefinition = "text")
     private String content;
 

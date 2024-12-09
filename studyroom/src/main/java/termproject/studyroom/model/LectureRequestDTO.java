@@ -21,8 +21,8 @@ public class LectureRequestDTO {
     @NotNull
     private String content;
 
-//    @NotNull
-//    private Integer numberDesired;
+    @NotNull
+    private User author;
 
     @NotNull
     private Boolean lectureValid;
