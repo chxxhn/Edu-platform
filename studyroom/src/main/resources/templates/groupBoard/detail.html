@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>group board detail</title>
+</head>
+<body>
+<div layout:fragment="content" class="container mt-3">
+    <!-- Title -->
+    <div class="mb-4">
+        <h1 class="fw-bold text-primary" th:text="${groupBoard.title}"></h1>
+    </div>
+
+    <!-- Notice Card -->
+    <div class="card">
+        <div class="card-body">
+            <!-- Content -->
+            <p class="card-text fs-5" th:text="${groupBoard.content}"></p>
+
+            <!-- Metadata -->
+            <hr>
+            <div class="d-flex justify-content-end">
+                <div class="text-muted">
+                    <span class="text-muted ms-3">Lecture:</span>
+                    <span class="fw-bold text-dark" th:text="${selectedLecture.name}"></span>
+                    <!-- <span class="fw-bold text-dark">Created At:</span> -->
+                    <!-- <span class="fw-bold text-dark" th:text="${#dates.format(noticeBoard.dateCreated, 'yyyy-MM-dd HH:mm')}"></span> -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="d-flex justify-content-end mt-4">
+        <!-- Back Button -->
+        <a th:href="@{/groupApproves/detail/{lectureId}/{gpId}(lectureId=${selectedLecture.lectureId},gpId=${gpId})}" class="btn btn-secondary">
+            Back to group Board
+        </a>
+    </div>
+</div>
+</body>
+</html>

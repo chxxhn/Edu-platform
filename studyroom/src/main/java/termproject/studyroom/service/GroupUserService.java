@@ -26,10 +26,16 @@ public class GroupUserService {
         this.lectureUserRepository = lectureUserRepository;
     }
 
+    public String getTeamByUserIdAndGroupId(Integer userId, Integer groupId) {
+        return groupUserRepository.findTeamByUserIdAndGroupId(userId, groupId);
+    }
+
+
+
 
     @Transactional(readOnly = true)
     public boolean isUserInGroup(Integer userId, Integer gpId) {
-        return groupUserRepository.existsByUserIdAndLectureId(userId, gpId);
+        return groupUserRepository.existsByUserIdAndLectureId(userId,gpId);
     }
 
     @Transactional

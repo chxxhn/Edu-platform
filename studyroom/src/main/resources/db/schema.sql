@@ -6,26 +6,6 @@ ALTER TABLE group_user
         FOREIGN KEY (group_id) REFERENCES group_projects(gp_id) ON DELETE CASCADE;
 
 
-DROP TRIGGER IF EXISTS delete_groupusers_trigger ON group_projects;
-
-CREATE OR REPLACE FUNCTION delete_related_groupusers()
-    RETURNS TRIGGER
-    LANGUAGE plpgsql
-AS $$
-BEGIN
-    DELETE FROM group_user WHERE group_id = OLD.gp_id;
-    RETURN OLD;
-END;
-$$;
-
-ALTER FUNCTION delete_related_groupusers() OWNER TO "gim-yeseul";
-
-CREATE TRIGGER delete_groupusers_trigger
-    AFTER DELETE ON group_projects
-    FOR EACH ROW
-EXECUTE FUNCTION delete_related_groupusers();
-
-
 CREATE OR REPLACE FUNCTION insert_into_group_approve()
     RETURNS TRIGGER AS $$
 BEGIN
@@ -63,6 +43,7 @@ CREATE TRIGGER set_grade_based_on_stdId_trigger
     BEFORE INSERT OR UPDATE ON Users
     FOR EACH ROW
 EXECUTE FUNCTION set_grade_based_on_stdId();
+
 
 
 -- CREATE OR REPLACE FUNCTION delete_related_approves()

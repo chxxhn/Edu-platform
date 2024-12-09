@@ -22,8 +22,9 @@
     <!-- Form Card -->
     <div class="card shadow-sm">
         <div class="card-body">
-            <form th:action="${requestUri}" method="post">
-                <!-- Title Field -->
+            <form th:action="@{/groupBoards/add/{lectureId}/{gpId}(lectureId=${lectureId},gpId=${gpId})}"
+                  th:object="${groupBoard}"
+                  method="post">                <!-- Title Field -->
                 <div class="mb-3">
                     <div th:replace="~{fragments/forms::inputRow(object='groupBoard', field='title', required=true)}"></div>
                 </div>
@@ -35,12 +36,9 @@
 
                 <!-- Author Field -->
                 <div class="mb-3">
-                    <div th:replace="~{fragments/forms::inputRow(object='groupBoard', field='author', required=true, type='select')}"></div>
-                </div>
-
-                <!-- Group ID Field -->
-                <div class="mb-3">
-                    <div th:replace="~{fragments/forms::inputRow(object='groupBoard', field='gpId', required=true, type='select')}"></div>
+                    <input type="hidden" th:name="author" th:value="${user.stdId}" />
+                    <input type="hidden" th:name="gpId" th:value="${gpId}" />
+                    <input type="hidden" th:name="lectureId" th:value="${lectureId}" />
                 </div>
 
                 <!-- Submit Button -->

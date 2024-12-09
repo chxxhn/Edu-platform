@@ -46,11 +46,11 @@ public class GroupBoard {
     @Column(nullable = false, columnDefinition = "text")
     private String content;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "author_id", nullable = false)
     private User author;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "gp_id_id", nullable = false)
     private GroupProject gpId;
 

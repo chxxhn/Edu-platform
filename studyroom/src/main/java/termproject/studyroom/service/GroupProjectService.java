@@ -2,9 +2,9 @@ package termproject.studyroom.service;
 
 import java.util.List;
 
-import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import termproject.studyroom.domain.*;
 import termproject.studyroom.model.GroupProjectDTO;
@@ -131,6 +131,7 @@ public class GroupProjectService {
         }
         return null;
     }
+
 
     @Transactional
     public void createGroupProjectWithMembers(GroupProjectDTO groupProjectDTO, LectureList lecture,
