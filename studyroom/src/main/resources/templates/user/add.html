@@ -1,87 +1,43 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title>Signup</title>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" />
-    <link th:href="@{/css/app.css}" rel="stylesheet" />
-    <link th:href="@{https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css}" rel="stylesheet">
-    <script th:src="@{/webjars/bootstrap/5.3.3/js/bootstrap.bundle.min.js}" defer></script>
-</head>
-<body class="bg-light">
-<div class="container vh-100 d-flex justify-content-center align-items-center">
-    <!-- Signup Card -->
-    <div class="card shadow-sm p-4" style="max-width: 500px; width: 100%;">
-        <div class="card-body">
-            <div class="text-center mb-4">
-                <h2 class="fw-bold text-primary">회원가입</h2>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+    <head>
+        <head>
+            <title layout:title-pattern="$CONTENT_TITLE | $LAYOUT_TITLE">signup</title>
+            <meta charset="utf-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1" />
+            <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+            <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" />
+            <link th:href="@{/css/app.css}" rel="stylesheet" />
+            <script th:src="@{/webjars/bootstrap/5.3.3/js/bootstrap.bundle.min.js}" defer></script>
+            <script th:src="@{/webjars/htmx.org/2.0.3/dist/htmx.min.js}" defer></script>
+            <script th:src="@{/js/app.js}" defer></script>
+        </head>
+    </head>
+    <body>
+
+        <div layout:fragment="content">
+            <div th:if="${MSG_ERROR}" class="alert alert-danger">
+                <p th:text="${MSG_ERROR}"></p>
             </div>
-
-            <!-- Global Errors -->
-            <div th:replace="~{fragments/forms::globalErrors('user')}"></div>
-
-            <!-- Signup Form -->
+            <div th:if="${MSG_SUCCESS}" class="alert alert-success">
+                <p th:text="${MSG_SUCCESS}"></p>
+            </div>
+            <div class="d-flex flex-wrap mb-4">
+                <h1 class="flex-grow-1">[[#{user.add.headline}]]</h1>
+                <div>
+                    <a th:href="@{/users}" class="btn btn-secondary">[[#{user.add.back}]]</a>
+                </div>
+            </div>
+            <div th:replace="~{fragments/forms::globalErrors('user')}" />
             <form th:action="${requestUri}" method="post">
-                <!-- Student ID Field -->
-                <div class="mb-3">
-                    <label for="stdId" class="form-label">학번</label>
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="bi bi-person-badge"></i></span>
-                        <input type="text" id="stdId" name="stdId" class="form-control" placeholder="Enter your student ID" required>
-                    </div>
-                </div>
-
-                <!-- Name Field -->
-                <div class="mb-3">
-                    <label for="name" class="form-label">이름</label>
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="bi bi-person"></i></span>
-                        <input type="text" id="name" name="name" class="form-control" placeholder="Enter your name" required>
-                    </div>
-                </div>
-
-                <!-- Nickname Field -->
-                <div class="mb-3">
-                    <label for="nickname" class="form-label">닉네임</label>
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="bi bi-person-circle"></i></span>
-                        <input type="text" id="nickname" name="nickname" class="form-control" placeholder="Enter your nickname" required>
-                    </div>
-                </div>
-
-                <!-- Password Field -->
-                <div class="mb-3">
-                    <label for="password" class="form-label">비밀번호</label>
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="bi bi-lock"></i></span>
-                        <input type="password" id="password" name="password" class="form-control" placeholder="Enter your password" required>
-                    </div>
-                </div>
-
-                <!-- Email Field -->
-                <div class="mb-3">
-                    <label for="email" class="form-label">이메일</label>
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="bi bi-envelope"></i></span>
-                        <input type="email" id="email" name="email" class="form-control" placeholder="Enter your email" required>
-                    </div>
-                </div>
-
-                <!-- Submit Button -->
-                <div class="d-grid mt-4">
-                    <button type="submit" class="btn btn-primary btn-lg">회원가입</button>
-                </div>
+                <div th:replace="~{fragments/forms::inputRow(object='user', field='stdId', required=true)}" />
+                <div th:replace="~{fragments/forms::inputRow(object='user', field='name', required=true)}" />
+                <div th:replace="~{fragments/forms::inputRow(object='user', field='nickname', required=true)}" />
+                <div th:replace="~{fragments/forms::inputRow(object='user', field='password', required=true)}" />
+                <div th:replace="~{fragments/forms::inputRow(object='user', field='email', required=true)}" />
+<!--                <div th:replace="~{fragments/forms::inputRow(object='user', field='grade', required=true, type='select')}" />-->
+                <input type="submit" th:value="#{user.add.headline}" class="btn btn-primary mt-4" />
             </form>
-
-            <!-- Back Button -->
-            <div class="text-center mt-3">
-                <a th:href="@{/}"
-                   class="btn btn-outline-secondary">
-                    <i class="bi bi-house-door-fill" style="color: #adb5bd;"></i> 홈으로
-                </a>
-            </div>
-
         </div>
     </div>
 </div>

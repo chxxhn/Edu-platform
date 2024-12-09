@@ -19,8 +19,8 @@ VALUES
 
 INSERT INTO lecture_lists (lecture_id, name, std_id_id, date_created, last_updated)
 VALUES
-    (1, 'DataBase', 000000000, NOW(), NOW()),
-    (2, 'DataStructures', 000000000, NOW(), NOW());
+    (1, 'DataBase', 111111111, NOW(), NOW()),
+    (2, 'DataStructures', 111111111, NOW(), NOW());
 
 INSERT INTO Users (std_id, name, nickname, password, email, grade)
 VALUES (1, '조교', 'ta', '1234', 'john@example.com', NULL);
