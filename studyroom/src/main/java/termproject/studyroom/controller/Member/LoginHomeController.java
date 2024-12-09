@@ -7,6 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import termproject.studyroom.config.auto.CustomUserDetails;
 import termproject.studyroom.domain.LectureList;
+import termproject.studyroom.domain.User;
 import termproject.studyroom.repos.LectureListRepository;
 import termproject.studyroom.repos.LectureUserRepository;
 import termproject.studyroom.service.LectureUserService;
@@ -67,14 +68,14 @@ public class LoginHomeController {
         // 등록된 강의 목록 가져오기
         List<LectureList> myLectures = lectureUserRepository.findLectureListsByUserId(user.getUser().getStdId());
         model.addAttribute("myLectures", myLectures);        // 사용자와 강의 연결
-
+        User loginuser = user.getUser();
         if (selectedLecture.isPresent()) {
             model.addAttribute("selectedLecture", selectedLecture.get());
         } else {
             model.addAttribute("error", "Lecture not found.");
         }
-        model.addAttribute("username", user != null ? user.getUsername() : "Anonymous User");
-        model.addAttribute("user", user != null ? user.getUser() : "Anonymous User");
+        model.addAttribute("username", loginuser != null ?loginuser.getNickname () : "Anonymous User");
+        model.addAttribute("user", loginuser != null ?loginuser: "Anonymous User");
         return "home/index";
     }
 

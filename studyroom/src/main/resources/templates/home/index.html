@@ -8,26 +8,31 @@
 <body>
 <div layout:fragment="content">
     <div class="centralize-container">
-        <!-- 사용자 이름 표시 -->
-        <h1 th:text="'안녕하세요 ' + ${username} + '님'">안녕하세요!</h1>
-        <h2 th:if="${selectedLecture}" th:text="'이곳은 ' + ${selectedLecture.name} + '입니다.'"></h2>
-
-        <!-- 폼 추가 -->
-        <ul th:if="${not #lists.isEmpty(myLectures)}">
-            <form th:action="@{/lecture/select}" method="post">
-                <select name="lectureId" required>
-                    <option th:each="lecture : ${myLectures}" th:value="${lecture.lectureId}" th:text="${lecture.name
-            }"></option>
-                </select>
-                <button type="submit">Go to Lecture</button>
+        <div class="text-center mb-4">
+            <h1 th:text="'안녕하세요, ' + ${username} + '님!'">안녕하세요!</h1>
+            <h2 th:if="${selectedLecture}" th:text="'이곳은 ' + ${selectedLecture.name} + '입니다.'"></h2>
+        </div>
+        <!-- 강의 선택 폼 -->
+        <div class="d-flex justify-content-center">
+            <form th:action="@{/lecture/select}" method="post" class="d-flex align-items-center p-3 border rounded shadow-sm bg-light">
+                <div class="form-group mb-0 mr-3">
+                    <label for="lectureSelect" class="font-weight-bold mb-2">강의 선택:</label>
+                    <select name="lectureId" id="lectureSelect" class="form-control" required>
+                        <option value="" disabled selected>강의를 선택하세요</option>
+                        <option th:each="lecture : ${myLectures}" th:value="${lecture.lectureId}" th:text="${lecture.name}">
+                        </option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">강의로 이동</button>
             </form>
-        </ul>
+        </div>
+
 
 
         <div class="d-flex justify-content-center mt-2">
-            <a th:href="@{/groupProjects}" class="btn btn-outline-warning me-2">👨‍👩‍👧‍👦 팀플 시작</a>
-            <a th:href="@{/sharingBoards}" class="btn btn-outline-info me-2">📝 수업필기</a>
-            <a th:href="@{/communicationBoards}" class="btn btn-outline-danger">🤝 만남 게시판</a>
+            <a th:href="@{/groupProjects/{lectureId}(lectureId=${selectedLecture.lectureId})}" class="btn btn-outline-warning me-2">👨‍👩‍👧‍👦 팀플 시작</a>
+            <a th:href="@{/sharingBoards/{lectureId}(lectureId=${selectedLecture.lectureId})}"class="btn btn-outline-info me-2">📝 수업필기</a>
+            <a th:href="@{/communicationBoards/{lectureId}(lectureId=${selectedLecture.lectureId})}"  class="btn btn-outline-danger">🤝 만남 게시판</a>
         </div>
     </div>
     <!-- 추가된 강의 관련 데이터 -->
@@ -36,29 +41,6 @@
         <p th:if="${selectedLecture}" th:text="'강의 이름: ' + ${selectedLecture.name}"></p>
         <p th:if="${selectedLecture}" th:text="'강의 ID: ' + ${selectedLecture.lectureId}"></p>
         <p th:if="${error}" th:text="${error}"></p>
-    </div>
-
-    <!-- 전체 리스트 영역 -->
-    <div class="col-md-4 mb-5">
-        <div class="list-group">
-            <a th:href="@{/users}" class="list-group-item list-group-item-action">[[#{user.list.headline}]]</a>
-            <a th:href="@{/lectureLists}" class="list-group-item list-group-item-action">[[#{lectureList.list.headline}]]</a>
-            <a th:href="@{/groupProjects}" class="list-group-item list-group-item-action">[[#{groupProject.list.headline}]]</a>
-            <a th:href="@{/groupBoards}" class="list-group-item list-group-item-action">[[#{groupBoard.list.headline}]]</a>
-            <a th:href="@{/groupBoardFiles}" class="list-group-item list-group-item-action">[[#{groupBoardFile.list.headline}]]</a>
-            <a th:href="@{/groupBoardComments}" class="list-group-item list-group-item-action">[[#{groupBoardComment.list.headline}]]</a>
-            <a th:href="@{/noticeBoards}" class="list-group-item list-group-item-action">[[#{noticeBoard.list.headline}]]</a>
-            <a th:href="@{/questionBoards}" class="list-group-item list-group-item-action">[[#{questionBoard.list.headline}]]</a>
-            <a th:href="@{/questionComments}" class="list-group-item list-group-item-action">[[#{questionComment.list.headline}]]</a>
-            <a th:href="@{/sharingBoards}" class="list-group-item list-group-item-action">[[#{sharingBoard.list.headline}]]</a>
-            <a th:href="@{/sharingComments}" class="list-group-item list-group-item-action">[[#{sharingComment.list.headline}]]</a>
-            <a th:href="@{/oldExams}" class="list-group-item list-group-item-action">[[#{oldExam.list.headline}]]</a>
-            <a th:href="@{/oldExamFiles}" class="list-group-item list-group-item-action">[[#{oldExamFile.list.headline}]]</a>
-            <a th:href="@{/lectureRequests}" class="list-group-item list-group-item-action">[[#{lectureRequest.list.headline}]]</a>
-            <a th:href="@{/communicationBoards}" class="list-group-item list-group-item-action">[[#{communicationBoard.list.headline}]]</a>
-            <a th:href="@{/alarms}" class="list-group-item list-group-item-action">[[#{alarm.list.headline}]]</a>
-            <a th:href="@{/sharingFiles}" class="list-group-item list-group-item-action">[[#{sharingFile.list.headline}]]</a>
-        </div>
     </div>
 </div>
 </body>

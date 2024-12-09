@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Lecture Request Approval</title>
+</head>
+<body>
+<h1>강의요청 승인</h1>
+<p>name: <span th:text="${lectureRequest.title}"></span></p>
+<p>Details: <span th:text="${lectureRequest.content}"></span></p>
+
+<form th:action="@{/lectureRequests/approve/{lectureId}/{rqId}(lectureId=${selectedLecture.lectureId},rqId=${rqId})}" method="post">
+  <label for="approval">승인하시겠습니까?</label>
+  <input type="checkbox" id="approval" name="approval" required />
+  <button type="submit">승인</button>
+</form>
+</body>
+</html>
