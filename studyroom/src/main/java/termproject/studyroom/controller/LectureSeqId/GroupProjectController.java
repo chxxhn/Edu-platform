@@ -21,6 +21,7 @@ import termproject.studyroom.util.ReferencedWarning;
 import termproject.studyroom.util.WebUtils;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 
 @Controller
@@ -33,19 +34,22 @@ public class GroupProjectController {
     private final GroupProjectRepository groupProjectRepository;
     private final LectureUserRepository lectureUserRepository;
     private final GroupUserService groupUserService;
+    private final GroupApproveRepository groupApproveRepository;
 
     public GroupProjectController(final GroupProjectService groupProjectService,
                                   final UserRepository userRepository,
                                   final LectureListRepository lectureListRepository,
                                   GroupProjectRepository groupProjectRepository,
                                   GroupUserService groupUserService,
-                                  LectureUserRepository lectureUserRepository) {
+                                  LectureUserRepository lectureUserRepository,
+                                  GroupApproveRepository groupApproveRepository) {
         this.groupProjectService = groupProjectService;
         this.userRepository = userRepository;
         this.lectureListRepository = lectureListRepository;
         this.groupProjectRepository = groupProjectRepository;
         this.lectureUserRepository = lectureUserRepository;
         this.groupUserService = groupUserService;
+        this.groupApproveRepository = groupApproveRepository;
     }
 
     @ModelAttribute("user")
@@ -94,7 +98,9 @@ public class GroupProjectController {
                 // 모든 항목 페이징 처리
                 paging = groupProjectRepository.findByLectureIdWithPaging(lecture, PageRequest.of(page, 10));
             }
-
+            // 승인된 그룹 프로젝트 조회
+            List<GroupApprove> groupApproves = groupApproveRepository.findByLectureList(lecture);
+            model.addAttribute("groupApproves", groupApproves);
             model.addAttribute("paging", paging);
 //            model.addAttribute("questionBoards", groupProjectService.findAll());
         } else {
@@ -114,7 +120,7 @@ public class GroupProjectController {
         model.addAttribute("user", loginuser);
 
         List<LectureUser> lectureUsers = null; // 기본값을 null로 설정
-        if (loginuser.getGrade() != Grade.TA) {
+        if (loginuser.getGrade() == Grade.TA) {
             lectureUsers = lectureUserRepository.findAvailableLectureUsers(lectureId);
 //
         }
@@ -142,16 +148,16 @@ public class GroupProjectController {
             User author = userRepository.findByEmail(user.getUsername())
                     .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
-            groupProjectDTO.setCreatedUserId(author.getStdId());
+            if (groupProjectDTO.getCreatedUserId() == null ) { groupProjectDTO.setCreatedUserId(author.getStdId()); }
 
-            // 팀원 ID 리스트 생성
-            List<Integer> teamMemberIds = List.of(stdId1, stdId2, stdId3).stream()
+// 팀원 ID 리스트 생성
+            List<Integer> teamMemberIds = Stream.of(stdId1, stdId2, stdId3)
                     .filter(java.util.Objects::nonNull) // null 값 제외
                     .toList();
             model.addAttribute("selectedLecture", lecture);
 
             // 서비스 호출
-            groupProjectService.createGroupProjectWithMembers(groupProjectDTO, lecture, author.getStdId(), teamMemberIds);
+            groupProjectService.createGroupProjectWithMembers(groupProjectDTO, lecture,groupProjectDTO.getCreatedUserId(), teamMemberIds);
 
             redirectAttributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("groupProject.create.success"));
         } catch (Exception e) {

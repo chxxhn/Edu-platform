@@ -1,21 +1,3 @@
-ALTER TABLE Users
-    ALTER COLUMN date_created SET DEFAULT NOW();
-ALTER TABLE Users
-    ALTER COLUMN last_updated SET DEFAULT NOW();
-
-CREATE OR REPLACE FUNCTION update_last_updated_column()
-    RETURNS TRIGGER AS $$
-BEGIN
-    NEW.last_updated = NOW();
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER update_last_updated
-    BEFORE UPDATE ON Users
-    FOR EACH ROW
-EXECUTE FUNCTION update_last_updated_column();
-
 ALTER TABLE group_user
     DROP CONSTRAINT fkc6tpqk1plmbxmslbrn2kdm9i9;
 
@@ -48,9 +30,9 @@ CREATE OR REPLACE FUNCTION insert_into_group_approve()
     RETURNS TRIGGER AS $$
 BEGIN
     -- value 값이 true로 변경될 때 동작
-    IF NEW.value = TRUE AND OLD.value IS DISTINCT FROM TRUE THEN
-        INSERT INTO group_approve (group_id, lecture_id)
-        VALUES (NEW.group_id, NEW.lecture_id);
+    IF NEW.group_valid = TRUE AND OLD.group_valid IS DISTINCT FROM TRUE THEN
+        INSERT INTO group_approve (approve_id,group_id, lecture_id)
+        VALUES (nextval('primary_sequence_ap_id'),NEW.gp_id, NEW.lecture_id_id);
     END IF;
     RETURN NEW;
 END;
@@ -81,5 +63,18 @@ CREATE TRIGGER set_grade_based_on_stdId_trigger
     BEFORE INSERT OR UPDATE ON Users
     FOR EACH ROW
 EXECUTE FUNCTION set_grade_based_on_stdId();
+
+
+-- CREATE OR REPLACE FUNCTION delete_related_approves()
+--     RETURNS TRIGGER AS $$
+-- BEGIN
+--     DELETE FROM group_approve WHERE group_id = OLD.gp_id;
+--     RETURN OLD;
+-- END;
+-- $$ LANGUAGE plpgsql;
+-- CREATE TRIGGER trigger_delete_related_approves
+--     AFTER DELETE ON group_projects
+--     FOR EACH ROW
+-- EXECUTE FUNCTION delete_related_approves();
 
 

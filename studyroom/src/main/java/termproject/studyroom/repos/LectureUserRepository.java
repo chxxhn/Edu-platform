@@ -25,5 +25,13 @@ public interface LectureUserRepository extends JpaRepository<LectureUser, Lectur
             "(SELECT gu.user.stdId FROM GroupUser gu WHERE gu.lectureList.lectureId = :lectureId)")
     List<LectureUser> findAvailableLectureUsers(@Param("lectureId") Integer lectureId);
 
+    @Query("SELECT COUNT(lu) > 0 FROM LectureUser lu " +
+            "WHERE lu.lecture.lectureId = :lectureId " +
+            "AND lu.user.stdId = :stdId " +
+            "AND lu.user.stdId NOT IN " +
+            "(SELECT gu.user.stdId FROM GroupUser gu WHERE gu.lectureList.lectureId = :lectureId)")
+    boolean isUserAvailableForLecture(@Param("lectureId") Integer lectureId, @Param("stdId") Integer stdId);
+
+
 
 }
