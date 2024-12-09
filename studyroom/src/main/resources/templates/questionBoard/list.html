@@ -33,9 +33,11 @@
                         <td>[[${questionBoard.questionId}]]</td>
                         <td>[[${questionBoard.title}]]</td>
                         <td>
-                            <span th:class="${questionBoard.author.grade.name() == 'TA'} ? 'fw-bold text-primary'
-                                   : (${questionBoard.author.grade.name() == 'PROF'} ? 'fw-bold text-info' : 'text-dark')"
-                                  th:text="${questionBoard.author.nickname + ' (' + questionBoard.author.grade + ')'}"></span>
+                            <span th:class="${user.stdId == questionBoard.author.stdId} ? 'fw-bold text-danger'
+               : (${questionBoard.author.grade.name() == 'TA'} ? 'fw-bold text-primary'
+               : (${questionBoard.author.grade.name() == 'PROF'} ? 'fw-bold text-info' : 'text-dark'))"
+                                  th:text="${questionBoard.author.nickname + ' (' + questionBoard.author.grade + ')'}">
+    </span>
                         </td>
                         <td>[[${questionBoard.lectureId.name}]]</td>
                         <td>[[${questionBoard.likeCount}]]</td>

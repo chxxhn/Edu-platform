@@ -12,7 +12,6 @@
         <h1 th:text="'안녕하세요 ' + ${username} + '님'">안녕하세요!</h1>
         <h2 th:if="${selectedLecture}" th:text="'이곳은 ' + ${selectedLecture.name} + '입니다.'"></h2>
 
-
         <!-- 폼 추가 -->
         <form th:action="@{/redirectToOtherController}" method="post">
             <input type="hidden" name="lectureId" th:value="${selectedLecture.lectureId}" />
@@ -20,7 +19,6 @@
             <button type="submit" class="btn btn-primary">다른 컨트롤러로 이동</button>
         </form>
 
-        <p>오늘은 어디로 가시겠어요?</p>
         <div class="d-flex justify-content-center mt-2">
             <a th:href="@{/groupProjects}" class="btn btn-outline-warning me-2">👨‍👩‍👧‍👦 팀플 시작</a>
             <a th:href="@{/sharingBoards}" class="btn btn-outline-info me-2">📝 수업필기</a>

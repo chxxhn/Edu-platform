@@ -33,7 +33,11 @@
                             style="cursor: pointer;">
                             <td>[[${lectureRequest.rqId}]]</td>
                             <td>[[${lectureRequest.title}]]</td>
-                            <td>[[${lectureRequest.author.nickname + '(' + lectureRequest.author.grade + ')'}]]</td>
+                            <td>
+    <span th:class="${lectureRequest.author.stdId == user.stdId} ? 'fw-bold text-danger' : ''"
+          th:text="${lectureRequest.author.nickname + ' (' + lectureRequest.author.grade + ')'}">
+    </span>
+                            </td>
                             <td>[[${lectureRequest.lectureId.name}]]</td>
                             <td>[[${lectureRequest.likeCount}]]</td>
                             <td>[[${lectureRequest.warnCount}]]</td>
