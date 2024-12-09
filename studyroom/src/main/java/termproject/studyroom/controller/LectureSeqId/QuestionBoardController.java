@@ -151,7 +151,6 @@ public class QuestionBoardController {
                          @AuthenticationPrincipal CustomUserDetails user) {
         QuestionBoardDTO question = questionBoardService.get(questionId);
 
-
         // 댓글 조회
         List<QuestionCommentDTO> comments = questionCommentService.findByQuestionId(questionId);
 

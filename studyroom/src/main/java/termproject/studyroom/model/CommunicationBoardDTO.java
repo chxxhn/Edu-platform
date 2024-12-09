@@ -26,6 +26,8 @@ public class CommunicationBoardDTO {
 
     private Boolean valid;
 
+    private Integer likeCount;
+
     @NotNull
     private User author;
 

@@ -49,6 +49,9 @@ public class CommunicationBoard {
     @Column(nullable = false)
     private Integer maxnum;
 
+    @Column(nullable = false)
+    private Integer likeCount = 0;
+
     @Column
     private Boolean valid;
 

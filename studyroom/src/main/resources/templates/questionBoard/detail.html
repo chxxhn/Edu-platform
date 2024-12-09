@@ -28,7 +28,7 @@
                     <button
                             class="btn btn-outline-warning btn-sm me-3"
                             th:data-post-id="${questionBoard.questionId}"
-                            th:data-user-id=0
+                            th:data-user-id="${user.stdId}"
                             th:data-board-type="QUESTION_BOARD"
                             onclick="handleLikeButtonClick(this)">
                         👍 Like <span class="badge bg-warning like-count" th:text="${questionBoard.likeCount}"></span>

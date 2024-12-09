@@ -72,18 +72,6 @@ public class QuestionBoardService {
         questionBoardRepository.deleteById(questionId);
     }
 
-    public void incrementWarnCount(Integer questionId) {
-        // Fetch the QuestionBoard entity by questionId
-        QuestionBoard questionBoard = questionBoardRepository.findById(questionId)
-                .orElseThrow(() -> new NotFoundException("Question board not found"));
-
-        // Increment the warnCount
-        questionBoard.setWarnCount(questionBoard.getWarnCount() + 1);
-
-        // Save the updated QuestionBoard entity
-        questionBoardRepository.save(questionBoard);
-    }
-
     private QuestionBoardDTO mapToDTO(final QuestionBoard questionBoard,
             final QuestionBoardDTO questionBoardDTO) {
         questionBoardDTO.setQuestionId(questionBoard.getQuestionId());

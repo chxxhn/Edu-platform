@@ -55,13 +55,23 @@ public class CommunicationBoardService {
     public Integer create(final CommunicationBoardDTO communicationBoardDTO) {
         final CommunicationBoard communicationBoard = new CommunicationBoard();
         mapToEntity(communicationBoardDTO, communicationBoard);
+        if(communicationBoard.getLikeCount()==null){
+            communicationBoard.setLikeCount(0);
+        }
         return communicationBoardRepository.save(communicationBoard).getComnId();
     }
 
     public void update(final Integer comnId, final CommunicationBoardDTO communicationBoardDTO) {
         final CommunicationBoard communicationBoard = communicationBoardRepository.findById(comnId)
                 .orElseThrow(NotFoundException::new);
-        mapToEntity(communicationBoardDTO, communicationBoard);
+//        mapToEntity(communicationBoardDTO, communicationBoard);
+        communicationBoard.setTitle(communicationBoardDTO.getTitle());
+        communicationBoard.setContent(communicationBoardDTO.getContent());
+        communicationBoard.setMaxnum(communicationBoardDTO.getMaxnum());
+        communicationBoard.setValid(communicationBoardDTO.getValid());
+        if (communicationBoardDTO.getLikeCount() != null) {
+            communicationBoard.setLikeCount(communicationBoardDTO.getLikeCount());
+        }
         communicationBoardRepository.save(communicationBoard);
     }
 
@@ -74,6 +84,7 @@ public class CommunicationBoardService {
         communicationBoardDTO.setComnId(communicationBoard.getComnId());
         communicationBoardDTO.setContent(communicationBoard.getContent());
         communicationBoardDTO.setMaxnum(communicationBoard.getMaxnum());
+        communicationBoardDTO.setLikeCount(communicationBoard.getLikeCount());
         communicationBoardDTO.setValid(communicationBoard.getValid());
         communicationBoardDTO.setTitle(communicationBoard.getTitle());
         communicationBoardDTO.setAuthor(communicationBoard.getAuthor() == null ? null : communicationBoard.getAuthor());
@@ -87,6 +98,7 @@ public class CommunicationBoardService {
         communicationBoard.setContent(communicationBoardDTO.getContent());
         communicationBoard.setMaxnum(communicationBoardDTO.getMaxnum());
         communicationBoard.setValid(communicationBoardDTO.getValid());
+        communicationBoard.setLikeCount(communicationBoardDTO.getLikeCount());
         final User author = communicationBoardDTO.getAuthor() == null ? null : userRepository.findById(communicationBoardDTO.getAuthor().getStdId())
                 .orElseThrow(() -> new NotFoundException("author not found"));
         communicationBoard.setAuthor(author);
