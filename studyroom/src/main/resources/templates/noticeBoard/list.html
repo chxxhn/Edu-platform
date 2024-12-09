@@ -8,8 +8,11 @@
         <div layout:fragment="content">
             <div class="d-flex flex-wrap mb-4">
                 <h1 class="flex-grow-1">공지게시판</h1>
-                <div>
-                    <a th:href="@{/noticeBoards/add/{lectureId}(lectureId=${selectedLecture.lectureId})}" class="btn btn-primary ms-2">[[#{noticeBoard.list.createNew}]]</a>
+                <div th:if="${user.grade.name() == 'PROF' || user.grade.name() == 'TA'}">
+                    <a th:href="@{/noticeBoards/add/{lectureId}(lectureId=${selectedLecture.lectureId})}"
+                       class="btn btn-primary ms-2">
+                        [[#{noticeBoard.list.createNew}]]
+                    </a>
                 </div>
             </div>
             <div th:if="${noticeBoards.empty}">[[#{noticeBoard.list.empty}]]</div>
@@ -33,7 +36,7 @@
                         <td>[[${noticeBoard.author.nickname + '(' + noticeBoard.author.grade + ')'}]]</td>
                         <td>[[${noticeBoard.lectureId.name}]]</td>
                         <td>
-                            <div class="float-end text-nowrap">
+                            <div class="float-end text-nowrap" th:if="${user.stdId == noticeBoard.author.stdId}">
                                 <!-- Edit Button -->
                                 <a th:href="@{/noticeBoards/edit/{lectureId}/{noticeId}(lectureId=${selectedLecture.lectureId}, noticeId=${noticeBoard.noticeId})}"
                                    class="btn btn-sm btn-secondary"
