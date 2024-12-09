@@ -59,13 +59,26 @@ public class SharingBoardService {
     public Integer create(final SharingBoardDTO sharingBoardDTO) {
         final SharingBoard sharingBoard = new SharingBoard();
         mapToEntity(sharingBoardDTO, sharingBoard);
+        if(sharingBoard.getLikeCount()==null){
+            sharingBoard.setLikeCount(0);
+        }
+        if(sharingBoard.getWarnCount()==null){
+            sharingBoard.setWarnCount(0);
+        }
         return sharingBoardRepository.save(sharingBoard).getSharingId();
     }
 
     public void update(final Integer sharingId, final SharingBoardDTO sharingBoardDTO) {
         final SharingBoard sharingBoard = sharingBoardRepository.findById(sharingId)
                 .orElseThrow(NotFoundException::new);
-        mapToEntity(sharingBoardDTO, sharingBoard);
+        sharingBoard.setTitle(sharingBoardDTO.getTitle());
+        sharingBoard.setContent(sharingBoardDTO.getContent());
+        if (sharingBoardDTO.getLikeCount() != null) {
+            sharingBoard.setLikeCount(sharingBoardDTO.getLikeCount());
+        }
+        if (sharingBoardDTO.getWarnCount() != null) {
+            sharingBoard.setWarnCount(sharingBoardDTO.getWarnCount());
+        }
         sharingBoardRepository.save(sharingBoard);
     }
 
@@ -78,7 +91,8 @@ public class SharingBoardService {
         sharingBoardDTO.setSharingId(sharingBoard.getSharingId());
         sharingBoardDTO.setTitle(sharingBoard.getTitle());
         sharingBoardDTO.setContent(sharingBoard.getContent());
-//        sharingBoardDTO.setWarnCount(sharingBoard.getWarnCount());
+        sharingBoardDTO.setWarnCount(sharingBoard.getWarnCount());
+        sharingBoardDTO.setLikeCount(sharingBoard.getLikeCount());
         sharingBoardDTO.setUserId(sharingBoard.getUserId() == null ? null : sharingBoard.getUserId());
         sharingBoardDTO.setLectureId(sharingBoard.getLectureId() == null ? null : sharingBoard.getLectureId());
         return sharingBoardDTO;
@@ -88,7 +102,8 @@ public class SharingBoardService {
             final SharingBoard sharingBoard) {
         sharingBoard.setTitle(sharingBoardDTO.getTitle());
         sharingBoard.setContent(sharingBoardDTO.getContent());
-//        sharingBoard.setWarnCount(sharingBoardDTO.getWarnCount());
+        sharingBoard.setWarnCount(sharingBoardDTO.getWarnCount());
+        sharingBoard.setLikeCount(sharingBoardDTO.getLikeCount());
         final User userId = sharingBoardDTO.getUserId() == null ? null : userRepository.findById(sharingBoardDTO.getUserId().getStdId())
                 .orElseThrow(() -> new NotFoundException("userId not found"));
         sharingBoard.setUserId(userId);

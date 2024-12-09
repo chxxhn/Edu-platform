@@ -8,10 +8,7 @@ import org.springframework.stereotype.Service;
 import termproject.studyroom.domain.*;
 import termproject.studyroom.model.BoardType;
 import termproject.studyroom.model.LikeDTO;
-import termproject.studyroom.repos.CommunicationBoardRepository;
-import termproject.studyroom.repos.LikeRepository;
-import termproject.studyroom.repos.QuestionBoardRepository;
-import termproject.studyroom.repos.UserRepository;
+import termproject.studyroom.repos.*;
 import termproject.studyroom.util.NotFoundException;
 
 
@@ -22,13 +19,17 @@ public class LikeService {
     private final UserRepository userRepository;
     private final QuestionBoardRepository questionBoardRepository;
     private final CommunicationBoardRepository communicationBoardRepository;
+    private final SharingBoardRepository sharingBoardRepository;
+    private final LectureRequestRepository lectureRequestRepository;
 
     public LikeService(final LikeRepository likeRepository,
-                       final UserRepository userRepository, QuestionBoardRepository questionBoardRepository, CommunicationBoardRepository communicationBoardRepository) {
+                       final UserRepository userRepository, QuestionBoardRepository questionBoardRepository, CommunicationBoardRepository communicationBoardRepository, SharingBoardRepository sharingBoardRepository, LectureRequestRepository lectureRequestRepository) {
         this.likeRepository = likeRepository;
         this.userRepository = userRepository;
         this.questionBoardRepository = questionBoardRepository;
         this.communicationBoardRepository = communicationBoardRepository;
+        this.sharingBoardRepository = sharingBoardRepository;
+        this.lectureRequestRepository = lectureRequestRepository;
     }
 
     public Integer addLike(LikeDTO likeDTO) {
@@ -36,15 +37,28 @@ public class LikeService {
         User user = userRepository.findById(likeDTO.getAuthor().getStdId())
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
-        // 게시글 확인 (boardType에 따라 게시판 구분)
         BoardType boardType = likeDTO.getBoardType();
+
+        // 공통 로직: 좋아요 존재 여부 확인
         Like existingLike = likeRepository.findByUserAndPostIdAndBoardType(user, likeDTO.getPostId(), boardType);
 
         if (existingLike != null) {
+            // 좋아요 취소
             likeRepository.delete(existingLike);
             updateLikeCount(likeDTO.getPostId(), boardType, -1);
             return -1; // 좋아요 취소됨
         } else {
+            if (boardType == BoardType.COMMUNICATION_BOARD) {
+                CommunicationBoard communicationBoard = communicationBoardRepository.findById(likeDTO.getPostId())
+                        .orElseThrow(() -> new IllegalArgumentException("CommunicationBoard not found"));
+
+                // 좋아요 수 제한 확인
+                if (communicationBoard.getLikeCount() >= communicationBoard.getMaxnum()) {
+                    throw new IllegalStateException("Maximum likes reached");
+                }
+            }
+
+            // 좋아요 추가
             Like like = new Like();
             like.setUser(user);
             like.setPostId(likeDTO.getPostId());
@@ -64,17 +78,23 @@ public class LikeService {
                 questionBoard.setLikeCount(questionBoard.getLikeCount() + increment);
                 questionBoardRepository.save(questionBoard);
             }
-//        case SHARING_BOARD -> {
-//            SharingBoard sharingBoard = sharingBoardRepository.findById(postId)
-//                    .orElseThrow(() -> new IllegalArgumentException("SharingBoard not found"));
-//            sharingBoard.setLikeCount(sharingBoard.getLikeCount() + increment);
-//            sharingBoardRepository.save(sharingBoard);
-//        }
+            case SHARING_BOARD -> {
+                SharingBoard sharingBoard = sharingBoardRepository.findById(postId)
+                        .orElseThrow(() -> new IllegalArgumentException("SharingBoard not found"));
+                sharingBoard.setLikeCount(sharingBoard.getLikeCount() + increment);
+                sharingBoardRepository.save(sharingBoard);
+            }
             case COMMUNICATION_BOARD -> {
                 CommunicationBoard communicationBoard = communicationBoardRepository.findById(postId)
-                        .orElseThrow(() -> new IllegalArgumentException("QuestionBoard not found"));
+                        .orElseThrow(() -> new IllegalArgumentException("CommunicationBoard not found"));
                 communicationBoard.setLikeCount(communicationBoard.getLikeCount() + increment);
                 communicationBoardRepository.save(communicationBoard);
+            }
+            case LECTURE_REQUEST -> {
+                LectureRequest lectureRequest = lectureRequestRepository.findById(postId)
+                        .orElseThrow(() -> new IllegalArgumentException("LectureRequest not found"));
+                lectureRequest.setLikeCount(lectureRequest.getLikeCount() + increment);
+                lectureRequestRepository.save(lectureRequest);
             }
 
             default -> throw new IllegalArgumentException("Unsupported BoardType");

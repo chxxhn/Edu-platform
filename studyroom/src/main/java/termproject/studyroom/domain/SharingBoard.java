@@ -49,6 +49,9 @@ public class SharingBoard {
     @Column(nullable = false)
     private Integer warnCount = 0;
 
+    @Column(nullable = false)
+    private Integer likeCount = 0;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id_id", nullable = false)
     private User userId;

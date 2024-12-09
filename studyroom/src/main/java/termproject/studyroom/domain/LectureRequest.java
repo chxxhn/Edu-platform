@@ -57,6 +57,12 @@ public class LectureRequest {
     @JoinColumn(name = "lecture_id_id", nullable = false)
     private LectureList lectureId;
 
+    @Column(nullable = false)
+    private Integer warnCount = 0;
+
+    @Column(nullable = false)
+    private Integer likeCount = 0;
+
     @CreatedDate
     @Column(nullable = false, updatable = false)
     private OffsetDateTime dateCreated;

@@ -8,7 +8,7 @@
         <div layout:fragment="content">
             <div class="d-flex flex-wrap mb-4">
                 <h1 class="flex-grow-1">족보게시판</h1>
-                <div>
+                <div th:if="${user.grade.name() == 'PROF' || user.grade.name() == 'TA'}">
                     <a th:href="@{/oldExams/add/{lectureId}(lectureId=${selectedLecture.lectureId})}" class="btn btn-primary ms-2">[[#{oldExam.list.createNew}]]</a>
                 </div>
             </div>
@@ -37,7 +37,7 @@
                             </td>
                             <td>[[${oldExam.lectureId.name}]]</td>
                             <td>
-                                <div class="float-end text-nowrap">
+                                <div class="float-end text-nowrap" th:if="${user.stdId == oldExam.author.stdId}">
                                     <a th:href="@{/oldExams/edit/{lectureId}/{oeId}(lectureId=${selectedLecture.lectureId}, oeId=${oldExam.oeId})}" class="btn btn-sm btn-secondary"
                                       onclick="event.stopPropagation();">[[#{oldExam.list.edit}]]</a>
                                     <form th:action="@{/oldExams/delete/{lectureId}/{oeId}(lectureId=${selectedLecture.lectureId}, oeId=${oldExam.oeId})}"

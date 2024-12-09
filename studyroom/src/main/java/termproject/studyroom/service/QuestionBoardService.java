@@ -58,13 +58,26 @@ public class QuestionBoardService {
     public Integer create(final QuestionBoardDTO questionBoardDTO) {
         final QuestionBoard questionBoard = new QuestionBoard();
         mapToEntity(questionBoardDTO, questionBoard);
+        if(questionBoard.getLikeCount()==null){
+            questionBoard.setLikeCount(0);
+        }
+        if(questionBoard.getWarnCount()==null){
+            questionBoard.setWarnCount(0);
+        }
         return questionBoardRepository.save(questionBoard).getQuestionId();
     }
 
     public void update(final Integer questionId, final QuestionBoardDTO questionBoardDTO) {
         final QuestionBoard questionBoard = questionBoardRepository.findById(questionId)
                 .orElseThrow(NotFoundException::new);
-        mapToEntity(questionBoardDTO, questionBoard);
+        questionBoard.setTitle(questionBoardDTO.getTitle());
+        questionBoard.setContent(questionBoardDTO.getContent());
+        if (questionBoardDTO.getLikeCount() != null) {
+            questionBoard.setLikeCount(questionBoardDTO.getLikeCount());
+        }
+        if (questionBoardDTO.getWarnCount() != null) {
+            questionBoard.setWarnCount(questionBoardDTO.getWarnCount());
+        }
         questionBoardRepository.save(questionBoard);
     }
 

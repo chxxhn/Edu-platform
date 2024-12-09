@@ -40,10 +40,10 @@ public class QuestionBoard {
     private String content;
 
     @Column(nullable = false)
-    private Integer warnCount;
+    private Integer warnCount = 0;
 
     @Column(nullable = false)
-    private Integer likeCount;
+    private Integer likeCount = 0;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "author_id", nullable = false)

@@ -17,7 +17,6 @@
                 <div th:replace="~{fragments/forms::inputRow(object='communicationBoard', field='title', required=true)}" />
                 <div th:replace="~{fragments/forms::inputRow(object='communicationBoard', field='content', required=true, type='textarea')}" />
                 <div th:replace="~{fragments/forms::inputRow(object='communicationBoard', field='maxnum', required=true, type='number')}" />
-                <div th:replace="~{fragments/forms::inputRow(object='communicationBoard', field='valid', type='checkbox')}" />
                 <input type="hidden" th:name="authorId" th:value="${user}"/>
                 <input type="hidden" th:name="lectureId" th:value="${selectedLecture.lectureId}" />
                 <input type="submit" th:value="#{communicationBoard.edit.headline}" class="btn btn-primary mt-4" />

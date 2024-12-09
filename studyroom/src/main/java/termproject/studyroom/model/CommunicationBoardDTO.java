@@ -24,8 +24,6 @@ public class CommunicationBoardDTO {
     @NotNull
     private Integer maxnum;
 
-    private Boolean valid;
-
     private Integer likeCount;
 
     @NotNull

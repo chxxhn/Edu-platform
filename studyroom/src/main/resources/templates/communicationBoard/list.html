@@ -8,8 +8,11 @@
         <div layout:fragment="content">
             <div class="d-flex flex-wrap mb-4">
                 <h1 class="flex-grow-1">만남 게시판</h1>
-                <div>
-                    <a th:href="@{/communicationBoards/add/{lectureId}(lectureId=${selectedLecture.lectureId})}" class="btn btn-primary ms-2">[[#{communicationBoard.list.createNew}]]</a>
+                <div th:if="${user.grade.name() == 'PROF'}">
+                    <a th:href="@{/communicationBoards/add/{lectureId}(lectureId=${selectedLecture.lectureId})}"
+                       class="btn btn-primary ms-2">
+                        [[#{communicationBoard.list.createNew}]]
+                    </a>
                 </div>
             </div>
             <div th:if="${communicationBoards.empty}">[[#{communicationBoard.list.empty}]]</div>
@@ -22,7 +25,6 @@
                             <th scope="col">[[#{communicationBoard.author.label}]]</th>
                             <th scope="col">Lecture</th>
                             <th scope="col">Attendee</th>
-                            <th scope="col">[[#{communicationBoard.valid.label}]]</th>
                             <th><!-- --></th>
                         </tr>
                     </thead>
@@ -39,9 +41,8 @@
                             </td>
                             <td>[[${communicationBoard.lectureId.name}]]</td>
                             <td>[[${communicationBoard.likeCount}]] / [[${communicationBoard.maxnum}]]</td>
-                            <td>[[${communicationBoard.valid}]]</td>
                             <td>
-                                <div class="float-end text-nowrap">
+                                <div class="float-end text-nowrap" th:if="${user.grade.name() == 'PROF'}">
                                     <a th:href="@{/communicationBoards/edit/{lectureId}/{comnId}(lectureId=${selectedLecture.lectureId}, comnId=${communicationBoard.comnId})}" class="btn btn-sm btn-secondary"
                                        onclick="event.stopPropagation();">[[#{communicationBoard.list.edit}]]</a>
                                     <form th:action="@{/communicationBoards/delete/{lectureId}/{comnId}(lectureId=${selectedLecture.lectureId}, comnId=${communicationBoard.comnId})}"

@@ -19,11 +19,30 @@
 
             <!-- Metadata -->
             <hr>
-            <div class="d-flex justify-content-end">
-                <div class="text-muted">
-                    <span>Author:</span>
-                    <span class="fw-bold text-dark" th:text="${lectureRequest.author.name + ' (' + lectureRequest.author.grade + ')'}"></span>
-                    <span class="text-muted ms-3">Lecture:</span>
+            <div class="d-flex justify-content-between">
+                <div class="d-flex align-items-center">
+                    <!-- 좋아요 버튼 -->
+                    <button
+                            class="btn btn-outline-warning btn-sm me-3"
+                            th:data-post-id="${lectureRequest.rqId}"
+                            th:data-user-id="${user.stdId}"
+                            th:data-board-type="LECTURE_REQUEST"
+                            onclick="handleLikeButtonClick(this)">
+                        👍 Like <span class="badge bg-warning like-count" th:text="${lectureRequest.likeCount}"></span>
+                    </button>
+                    <button
+                            class="btn btn-outline-danger btn-sm me-3"
+                            th:data-post-id="${lectureRequest.rqId}"
+                            th:data-user-id="${user.stdId}"
+                            th:data-board-type="LECTURE_REQUEST"
+                            onclick="handleWarnButtonClick(this)">
+                        👎 Warn <span class="badge bg-danger warn-count" th:text="${lectureRequest.warnCount}"></span>
+                    </button>
+                </div>
+                <div class="d-flex align-items-center text-muted">
+                    <span>Author: </span>
+                    <span class="fw-bold text-dark" th:text="${lectureRequest.author.nickname + ' (' + lectureRequest.author.grade + ')'}"></span>
+                    <span class="text-muted ms-3">Lecture: </span>
                     <span class="fw-bold text-dark" th:text="${lectureRequest.lectureId.name}"></span>
                     <!-- <span class="fw-bold text-dark">Created At:</span> -->
                     <!-- <span class="fw-bold text-dark" th:text="${#dates.format(noticeBoard.dateCreated, 'yyyy-MM-dd HH:mm')}"></span> -->
@@ -37,6 +56,88 @@
             Back to Lecture Request
         </a>
     </div>
+    <script>
+        function handleLikeButtonClick(button) {
+            const postId = button.getAttribute("data-post-id");
+            const userId = button.getAttribute("data-user-id");
+            const boardType = button.getAttribute("data-board-type");
+
+            fetch(`/likes/add`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    postId: postId,
+                    boardType: boardType,
+                    author: { stdId: userId }
+                })
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        return response.json().then(error => { throw new Error(error.message || "Error occurred") });
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const likeCountElement = button.querySelector(".like-count");
+                    likeCountElement.textContent = data.likeCount; // likeCount 업데이트
+
+                    // 버튼 상태 업데이트
+                    if (data.status === -1) {
+                        button.classList.remove("btn-outline-warning");
+                        button.classList.add("btn-outline-warning");
+                        button.innerHTML = "👍 Like <span class='badge bg-warning'>" + data.likeCount + "</span>";
+                    } else {
+                        button.classList.remove("btn-outline-warning");
+                        button.classList.add("btn-outline-warning");
+                        button.innerHTML = "👍 Like <span class='badge bg-warning'>" + data.likeCount + "</span>";
+                    }
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    alert("좋아요 처리 중 오류가 발생했습니다.");
+                });
+        }
+        function handleWarnButtonClick(button) {
+            const postId = button.getAttribute("data-post-id");
+            const userId = button.getAttribute("data-user-id");
+            const boardType = button.getAttribute("data-board-type");
+
+            fetch(`/warns/add`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    postId: postId,
+                    boardType: boardType,
+                    author: { stdId: userId }
+                })
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        return response.json().then(error => { throw new Error(error.message || "Error occurred") });
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const warnCountElement = button.querySelector(".warn-count");
+                    warnCountElement.textContent = data.warnCount; // likeCount 업데이트
+
+                    // 버튼 상태 업데이트
+                    if (data.status === -1) {
+                        button.classList.remove("btn-outline-danger");
+                        button.classList.add("btn-outline-danger");
+                        button.innerHTML = "👎 Warn <span class='badge bg-danger'>" + data.warnCount + "</span>";
+                    } else {
+                        button.classList.remove("btn-outline-danger");
+                        button.classList.add("btn-outline-danger");
+                        button.innerHTML = "👎 Warn <span class='badge bg-danger'>" + data.warnCount + "</span>";
+                    }
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    alert("싫어요 처리 중 오류가 발생했습니다.");
+                });
+        }
+    </script>
 </div>
 </body>
 </html>

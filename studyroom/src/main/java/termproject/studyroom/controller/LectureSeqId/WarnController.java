@@ -6,43 +6,34 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import termproject.studyroom.model.BoardType;
 import termproject.studyroom.model.LikeDTO;
+import termproject.studyroom.model.WarnDTO;
 import termproject.studyroom.repos.UserRepository;
 import termproject.studyroom.service.LikeService;
+import termproject.studyroom.service.WarnService;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @Controller
-@RequestMapping("/likes")
-public class LikeController {
-    private final LikeService likeService;
-    private final UserRepository userRepository;
+@RequestMapping("/warns")
+public class WarnController {
+    private final WarnService warnService;
 
-    public LikeController(LikeService likeService, UserRepository userRepository) {
-        this.likeService = likeService;
-        this.userRepository = userRepository;
-    }
-
-    @GetMapping("/add/{postId}/{boardType}")
-    public ResponseEntity<List<String>> getLikeUsers(
-            @PathVariable Integer postId,
-            @PathVariable BoardType boardType) {
-
-        List<String> likerNames = likeService.getLikerNames(postId, boardType);
-        return ResponseEntity.ok(likerNames);
+    public WarnController(WarnService warnService) {
+        this.warnService = warnService;
     }
 
     // 좋아요 추가 요청
     @PostMapping("/add")
-    public ResponseEntity<Map<String, Object>> addLike(@RequestBody LikeDTO likeDTO) {
+    public ResponseEntity<Map<String, Object>> addLike(@RequestBody WarnDTO warnDTO) {
         try {
-            Integer status = likeService.addLike(likeDTO);
-            int likeCount = likeService.getLikeCount(likeDTO.getPostId());
+            Integer status = warnService.addWarn(warnDTO);
+            int warnCount = warnService.getWarnCount(warnDTO.getPostId());
 
             Map<String, Object> response = new HashMap<>();
             response.put("status", status);
-            response.put("likeCount", likeCount);
+            response.put("warnCount", warnCount);
             return ResponseEntity.ok(response);
         } catch (IllegalStateException e) {
             return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));

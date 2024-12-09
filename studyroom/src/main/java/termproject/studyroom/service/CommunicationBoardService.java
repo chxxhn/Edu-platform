@@ -64,11 +64,9 @@ public class CommunicationBoardService {
     public void update(final Integer comnId, final CommunicationBoardDTO communicationBoardDTO) {
         final CommunicationBoard communicationBoard = communicationBoardRepository.findById(comnId)
                 .orElseThrow(NotFoundException::new);
-//        mapToEntity(communicationBoardDTO, communicationBoard);
         communicationBoard.setTitle(communicationBoardDTO.getTitle());
         communicationBoard.setContent(communicationBoardDTO.getContent());
         communicationBoard.setMaxnum(communicationBoardDTO.getMaxnum());
-        communicationBoard.setValid(communicationBoardDTO.getValid());
         if (communicationBoardDTO.getLikeCount() != null) {
             communicationBoard.setLikeCount(communicationBoardDTO.getLikeCount());
         }
@@ -85,7 +83,6 @@ public class CommunicationBoardService {
         communicationBoardDTO.setContent(communicationBoard.getContent());
         communicationBoardDTO.setMaxnum(communicationBoard.getMaxnum());
         communicationBoardDTO.setLikeCount(communicationBoard.getLikeCount());
-        communicationBoardDTO.setValid(communicationBoard.getValid());
         communicationBoardDTO.setTitle(communicationBoard.getTitle());
         communicationBoardDTO.setAuthor(communicationBoard.getAuthor() == null ? null : communicationBoard.getAuthor());
         communicationBoardDTO.setLectureId(communicationBoard.getLectureId() == null ? null : communicationBoard.getLectureId());
@@ -97,7 +94,6 @@ public class CommunicationBoardService {
         communicationBoard.setTitle(communicationBoardDTO.getTitle());
         communicationBoard.setContent(communicationBoardDTO.getContent());
         communicationBoard.setMaxnum(communicationBoardDTO.getMaxnum());
-        communicationBoard.setValid(communicationBoardDTO.getValid());
         communicationBoard.setLikeCount(communicationBoardDTO.getLikeCount());
         final User author = communicationBoardDTO.getAuthor() == null ? null : userRepository.findById(communicationBoardDTO.getAuthor().getStdId())
                 .orElseThrow(() -> new NotFoundException("author not found"));
