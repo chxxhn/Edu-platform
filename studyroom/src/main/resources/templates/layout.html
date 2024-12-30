@@ -51,10 +51,21 @@
             <!-- 알림 및 로그인 정보 -->
             <div class="d-flex align-items-center">
                 <!-- 알람 버튼 -->
-                <div th:if="${user != null}">
-                    <span th:text="${user.getName()}">User</span>
-                    (<span th:text="${user.getGrade()}">Grade</span>)
-                    <a th:href="@{/logout}" class="btn btn-primary px-4">Logout</a>
+                <div class="dropdown" th:if="${user != null}">
+                    <ul class="navbar-nav mx-auto">
+                    <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" id="userDropdown" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                        <span th:text="${user.getName()}">User</span>
+                        (<span th:text="${user.getGrade()}">Grade</span>)
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                        <a class="dropdown-item" th:href="@{/users/profile/{lectureId}(lectureId=${selectedLecture.lectureId})}">프로필 보기</a>
+                        <a class="dropdown-item" th:href="@{/noticeBoards/{lectureId}(lectureId=${selectedLecture.lectureId})}" >알람 보기</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" th:href="@{/logout}">로그아웃</a>
+                    </div>
+                    </li>
+                    </ul>
                 </div>
             </div>
         </div>
