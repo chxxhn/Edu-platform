@@ -1,6 +1,5 @@
 package termproject.studyroom.controller.LectureSeqId;
 
-import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -14,8 +13,10 @@ import termproject.studyroom.config.auto.CustomUserDetails;
 import termproject.studyroom.domain.*;
 import termproject.studyroom.model.*;
 import termproject.studyroom.repos.*;
+import termproject.studyroom.service.AlarmService;
 import termproject.studyroom.service.GroupProjectService;
 import termproject.studyroom.service.GroupUserService;
+import termproject.studyroom.service.UserService;
 import termproject.studyroom.util.CustomCollectors;
 import termproject.studyroom.util.ReferencedWarning;
 import termproject.studyroom.util.WebUtils;
@@ -35,6 +36,8 @@ public class GroupProjectController {
     private final LectureUserRepository lectureUserRepository;
     private final GroupUserService groupUserService;
     private final GroupApproveRepository groupApproveRepository;
+    private final AlarmService alarmService;
+    private final UserService userService;
 
     public GroupProjectController(final GroupProjectService groupProjectService,
                                   final UserRepository userRepository,
@@ -42,7 +45,8 @@ public class GroupProjectController {
                                   GroupProjectRepository groupProjectRepository,
                                   GroupUserService groupUserService,
                                   LectureUserRepository lectureUserRepository,
-                                  GroupApproveRepository groupApproveRepository) {
+                                  GroupApproveRepository groupApproveRepository,
+                                  AlarmService alarmService, UserService userService) {
         this.groupProjectService = groupProjectService;
         this.userRepository = userRepository;
         this.lectureListRepository = lectureListRepository;
@@ -50,6 +54,8 @@ public class GroupProjectController {
         this.lectureUserRepository = lectureUserRepository;
         this.groupUserService = groupUserService;
         this.groupApproveRepository = groupApproveRepository;
+        this.alarmService = alarmService;
+        this.userService = userService;
     }
 
     @ModelAttribute("user")
@@ -160,6 +166,27 @@ public class GroupProjectController {
             groupProjectService.createGroupProjectWithMembers(groupProjectDTO, lecture,groupProjectDTO.getCreatedUserId(), teamMemberIds);
 
             redirectAttributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("groupProject.create.success"));
+
+
+            //조교한테 알람 가기.
+            //알람 DTO 에 등록
+            //조교 리스트 받기
+            List<UserDTO> userTA = userService.findGrade(Grade.TA);
+
+            AlarmDTO baseAlarmDTO = new AlarmDTO();
+            baseAlarmDTO.setAlarmType(AlarmType.GROUP_REQUEST);
+            baseAlarmDTO.setContent(lecture.getName() + "(" + lecture.getLectureId() + ")" + " 강의의 " + groupProjectDTO.getGroupName() + " 그룹 승인이 신청되었습니다.");
+            baseAlarmDTO.setLectureId(lectureId);
+            baseAlarmDTO.setBoardId(groupProjectDTO.getGpId());
+            for (UserDTO ta : userTA) {
+                AlarmDTO alarmDTO = new AlarmDTO();
+                alarmDTO.setAlarmType(baseAlarmDTO.getAlarmType());
+                alarmDTO.setContent(baseAlarmDTO.getContent());
+                alarmDTO.setUserId(ta.getStdId()); // 조교의 ID 설정
+                alarmDTO.setBoardId(baseAlarmDTO.getBoardId());
+                alarmDTO.setLectureId(baseAlarmDTO.getLectureId());
+                alarmService.create(alarmDTO);
+            }
         } catch (Exception e) {
             // 에러 발생 시 실패 메시지 전달
             redirectAttributes.addFlashAttribute(WebUtils.MSG_ERROR, WebUtils.getMessage("groupProject.create.failed", e.getMessage()));
@@ -212,10 +239,23 @@ public class GroupProjectController {
 
         // groupValid 값 변경
         GroupProjectDTO groupProject = groupProjectService.get(gpId);
+
+        LectureList lecture = lectureListRepository.findById(lectureId)
+                .orElseThrow(() -> new IllegalArgumentException("Lecture not found"));
+
         if (groupProject != null) {
             groupProject.setGroupValid(true);
             groupProjectService.update(gpId, groupProject);
             redirectAttributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("승인이 완료되었습니다."));
+            //알람 DTO 에 등록
+            AlarmDTO alarmDTO = new AlarmDTO();
+            alarmDTO.setAlarmType(AlarmType.GROUP_APPROVE);
+            alarmDTO.setContent(lecture.getName()+"("+lecture.getLectureId()+")"+"강의의 "+groupProject.getGroupName()+" 그룹 승인이 완료되었습니다.");
+            alarmDTO.setBoardId(groupProject.getGpId());
+            alarmDTO.setUserId(groupProject.getCreatedUserId());
+            alarmDTO.setLectureId(lectureId);
+            alarmService.create(alarmDTO);
+
         } else {
             redirectAttributes.addFlashAttribute(WebUtils.MSG_ERROR, WebUtils.getMessage("해당 그룹 프로젝트를 찾을 수 없습니다."));
         }

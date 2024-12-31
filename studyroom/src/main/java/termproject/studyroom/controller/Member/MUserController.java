@@ -1,6 +1,7 @@
 package termproject.studyroom.controller.Member;
 
 import jakarta.validation.Valid;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import termproject.studyroom.config.auto.CustomUserDetails;
 import termproject.studyroom.model.Grade;
 import termproject.studyroom.model.UserDTO;
 import termproject.studyroom.service.UserService;
@@ -37,6 +39,14 @@ public class MUserController {
         model.addAttribute("users", userService.findAll());
         return "user/list";
     }
+
+    @GetMapping("/profile/{lectureId}")
+    public String profile(@ModelAttribute("user") final UserDTO userDTO, @PathVariable(name = "lectureId", required = false) Integer lectureId ,
+                          @AuthenticationPrincipal CustomUserDetails user) {
+
+        return "user/profile";
+    }
+
 
     @GetMapping("/add")
     public String add(@ModelAttribute("user") final UserDTO userDTO) {

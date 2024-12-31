@@ -29,4 +29,6 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     Page<User> findByGrade(Grade grade, Pageable pageable);
 
     Optional<User> findByStdId(Integer stdId);
+
+    List<User> findByGrade(Grade grade);
 }

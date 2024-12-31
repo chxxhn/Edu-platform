@@ -20,6 +20,7 @@ import termproject.studyroom.domain.QuestionComment;
 import termproject.studyroom.domain.SharingBoard;
 import termproject.studyroom.domain.SharingComment;
 import termproject.studyroom.domain.User;
+import termproject.studyroom.model.Grade;
 import termproject.studyroom.model.UserDTO;
 import termproject.studyroom.repos.AlarmRepository;
 import termproject.studyroom.repos.CommunicationBoardRepository;
@@ -111,6 +112,13 @@ public class UserService {
 
     public List<UserDTO> findAll() {
         final List<User> users = userRepository.findAll(Sort.by("stdId"));
+        return users.stream()
+                .map(user -> mapToDTO(user, new UserDTO()))
+                .toList();
+    }
+
+    public List<UserDTO> findGrade(Grade grade) {
+        final List<User> users = userRepository.findByGrade(grade);
         return users.stream()
                 .map(user -> mapToDTO(user, new UserDTO()))
                 .toList();
