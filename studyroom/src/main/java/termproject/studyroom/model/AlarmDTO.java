@@ -13,15 +13,20 @@ public class AlarmDTO {
     private Integer alarmId;
 
     @NotNull
-    @Size(max = 30)
+    @Size(max = 100)
     private String content;
 
     private AlarmType alarmType;
 
-    @NotNull
-    private Boolean readState;
+
+    private Boolean readState = false;
 
     @NotNull
     private Integer userId;
+
+    @NotNull
+    private Integer lectureId;
+
+    private Integer BoardId = null;
 
 }

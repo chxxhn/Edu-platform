@@ -43,8 +43,15 @@ public class Alarm {
     )
     private Integer alarmId;
 
-    @Column(nullable = false, length = 30)
+    @Column(nullable = false, length = 50)
     private String content;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "lecture_id_id", nullable = false)
+    private LectureList lectureId;
+
+    @Column
+    private Integer BoardId;
 
     @Column
     @Enumerated(EnumType.STRING)
@@ -64,5 +71,6 @@ public class Alarm {
     @LastModifiedDate
     @Column(nullable = false)
     private OffsetDateTime lastUpdated;
+
 
 }

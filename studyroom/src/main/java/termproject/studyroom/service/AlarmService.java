@@ -4,9 +4,11 @@ import java.util.List;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import termproject.studyroom.domain.Alarm;
+import termproject.studyroom.domain.LectureList;
 import termproject.studyroom.domain.User;
 import termproject.studyroom.model.AlarmDTO;
 import termproject.studyroom.repos.AlarmRepository;
+import termproject.studyroom.repos.LectureListRepository;
 import termproject.studyroom.repos.UserRepository;
 import termproject.studyroom.util.NotFoundException;
 
@@ -16,15 +18,25 @@ public class AlarmService {
 
     private final AlarmRepository alarmRepository;
     private final UserRepository userRepository;
+    private final LectureListRepository lectureListRepository;
 
     public AlarmService(final AlarmRepository alarmRepository,
-            final UserRepository userRepository) {
+            final UserRepository userRepository,
+                        final LectureListRepository lectureListRepository) {
         this.alarmRepository = alarmRepository;
         this.userRepository = userRepository;
+        this.lectureListRepository = lectureListRepository;
     }
 
     public List<AlarmDTO> findAll() {
         final List<Alarm> alarms = alarmRepository.findAll(Sort.by("alarmId"));
+        return alarms.stream()
+                .map(alarm -> mapToDTO(alarm, new AlarmDTO()))
+                .toList();
+    }
+
+    public List<AlarmDTO> findAlarm(User user) {
+        final List<Alarm> alarms = alarmRepository.findByUserId(user);
         return alarms.stream()
                 .map(alarm -> mapToDTO(alarm, new AlarmDTO()))
                 .toList();
@@ -58,6 +70,8 @@ public class AlarmService {
         alarmDTO.setContent(alarm.getContent());
         alarmDTO.setAlarmType(alarm.getAlarmType());
         alarmDTO.setReadState(alarm.getReadState());
+        alarmDTO.setLectureId(alarm.getLectureId() == null ? null : alarm.getLectureId().getLectureId());
+        alarmDTO.setBoardId(alarm.getBoardId());
         alarmDTO.setUserId(alarm.getUserId() == null ? null : alarm.getUserId().getStdId());
         return alarmDTO;
     }
@@ -66,6 +80,11 @@ public class AlarmService {
         alarm.setContent(alarmDTO.getContent());
         alarm.setAlarmType(alarmDTO.getAlarmType());
         alarm.setReadState(alarmDTO.getReadState());
+        alarm.setBoardId(alarmDTO.getBoardId());
+        final LectureList lectureId = alarmDTO.getLectureId() == null ? null : lectureListRepository.findById(alarmDTO.getLectureId())
+                .orElseThrow(() -> new NotFoundException("lectureId not found"));
+        alarm.setLectureId(lectureId);
+
         final User userId = alarmDTO.getUserId() == null ? null : userRepository.findById(alarmDTO.getUserId())
                 .orElseThrow(() -> new NotFoundException("userId not found"));
         alarm.setUserId(userId);

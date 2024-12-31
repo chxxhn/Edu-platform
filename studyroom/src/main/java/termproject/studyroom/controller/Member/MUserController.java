@@ -43,8 +43,10 @@ public class MUserController {
     @GetMapping("/profile/{lectureId}")
     public String profile(@ModelAttribute("user") final UserDTO userDTO, @PathVariable(name = "lectureId", required = false) Integer lectureId ,
                           @AuthenticationPrincipal CustomUserDetails user) {
+
         return "user/profile";
     }
+
 
     @GetMapping("/add")
     public String add(@ModelAttribute("user") final UserDTO userDTO) {

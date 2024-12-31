@@ -1,0 +1,35 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>[[#{alarm.list.headline}]]</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="d-flex flex-wrap mb-4">
+        <h1 class="flex-grow-1">[[#{alarm.list.headline}]]</h1>
+    </div>
+    <div th:if="${alarms.empty}">[[#{alarm.list.empty}]]</div>
+    <div th:if="${!alarms.empty}" class="table-responsive">
+        <table class="table table-striped table-hover align-middle">
+            <thead>
+            <tr>
+                <th scope="col">[[#{alarm.content.label}]]</th>
+                <th><!-- --></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="alarm : ${alarms}">
+                <td>[[${alarm.content}]]</td>
+                <td>
+                    <div class="float-end text-nowrap">
+                        <a th:href="@{/alarms/edit/{alarmId}(alarmId=${alarm.alarmId})}" class="btn btn-sm btn-secondary">[[#{alarm.list.edit}]]</a>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>
