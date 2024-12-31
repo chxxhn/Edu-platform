@@ -50,11 +50,22 @@
                             <td>[[${lectureRequest.warnCount}]]</td>
                             <td>[[${lectureRequest.lectureValid}]]</td>
                             <td>
-                                <div class="float-end text-nowrap" th:if="${user.grade.name() == 'LEADER' or user.stdId == lectureRequest.author.stdId or user.grade.name() == 'PROF'} ">
-                                    <a th:href="@{/lectureRequests/edit/{lectureId}/{rqId}(lectureId=${selectedLecture.lectureId}, rqId=${lectureRequest.rqId})}" class="btn btn-sm btn-secondary"
-                                       onclick="event.stopPropagation();">[[#{lectureRequest.list.edit}]]</a>
-                                    <form th:action="@{/lectureRequests/delete/{lectureId}/{rqId}(lectureId=${selectedLecture.lectureId}, rqId=${lectureRequest.rqId})}"
-                                            th:hx-confirm="#{delete.confirm}" method="post" class="d-inline" onclick="event.stopPropagation();">
+                                <div class="float-end text-nowrap"
+                                     th:if="${user.grade.name() == 'LEADER' or user.stdId == lectureRequest.author.stdId or user.grade.name() == 'PROF'}">
+                                    <!-- Edit Button -->
+                                    <a th:href="@{/lectureRequests/edit/{lectureId}/{rqId}(lectureId=${selectedLecture.lectureId}, rqId=${lectureRequest.rqId})}"
+                                       class="btn btn-sm btn-secondary"
+                                       th:text="${user.grade.name() == 'PROF'} ? 'permit' : #{lectureRequest.list.edit}"
+                                       onclick="event.stopPropagation();">
+                                    </a>
+
+                                    <!-- Delete Button (Only visible if user is not 'PROF') -->
+                                    <form th:if="${user.grade.name() != 'PROF'}"
+                                          th:action="@{/lectureRequests/delete/{lectureId}/{rqId}(lectureId=${selectedLecture.lectureId}, rqId=${lectureRequest.rqId})}"
+                                          th:hx-confirm="#{delete.confirm}"
+                                          method="post"
+                                          class="d-inline"
+                                          onclick="event.stopPropagation();">
                                         <button type="submit" class="btn btn-sm btn-secondary">[[#{lectureRequest.list.delete}]]</button>
                                     </form>
                                 </div>

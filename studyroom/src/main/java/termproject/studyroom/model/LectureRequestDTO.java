@@ -28,7 +28,6 @@ public class LectureRequestDTO {
 
     private Integer warnCount;
 
-    @NotNull
     private Boolean lectureValid;
 
     @NotNull

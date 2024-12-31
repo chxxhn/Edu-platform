@@ -124,32 +124,37 @@ public class LectureRequestController {
     @PostMapping("/approve/{lectureId}/{rqId}")
     public String approve(@PathVariable(name = "lectureId") final Integer lectureId,
                           @PathVariable(name = "rqId") final Integer rqId,
+                          @RequestParam(name = "lectureValid", required = false, defaultValue = "false") boolean lectureValid,
                           final RedirectAttributes redirectAttributes,
-                          @AuthenticationPrincipal CustomUserDetails user ) {
+                          @AuthenticationPrincipal CustomUserDetails user) {
+        // 현재 사용자 확인
         User currentUser = user.getUser();
         if (currentUser == null || currentUser.getGrade() != Grade.PROF) {
             redirectAttributes.addFlashAttribute(WebUtils.MSG_ERROR, WebUtils.getMessage("권한이 없습니다."));
-            return "redirect:/lectureRequests/"+lectureId;
+            return "redirect:/lectureRequests/" + lectureId;
         }
+        System.out.println("Received lectureValid: " + lectureValid);
+        // LectureRequest 데이터 가져오기
         LectureRequestDTO lectureRequest = lectureRequestService.get(rqId);
         if (lectureRequest != null) {
-            lectureRequest.setLectureValid(true);
+            // lectureValid 값 업데이트
+            lectureRequest.setLectureValid(lectureValid);
             lectureRequestService.update(rqId, lectureRequest);
-            redirectAttributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("승인이 완료되었습니다."));
+            redirectAttributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage(
+                    lectureValid ? "승인이 완료되었습니다." : "승인이 취소되었습니다."));
         } else {
             redirectAttributes.addFlashAttribute(WebUtils.MSG_ERROR, WebUtils.getMessage("해당 요청을 찾을 수 없습니다."));
         }
 
-
         return "redirect:/lectureRequests/" + lectureId;
     }
+
 
     @PostMapping("/edit/{lectureId}/{rqId}")
     public String edit(@PathVariable(name = "lectureId") Integer lectureId,
             @PathVariable(name = "rqId") final Integer rqId,
             @ModelAttribute("lectureRequest") final LectureRequestDTO lectureRequestDTO,
-            final BindingResult bindingResult, final RedirectAttributes redirectAttributes,
-                       @AuthenticationPrincipal CustomUserDetails user) {
+            final RedirectAttributes redirectAttributes, @AuthenticationPrincipal CustomUserDetails user) {
 //         세션 유저 정보를 조회
         User author = userRepository.findByEmail(user.getUsername())
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));

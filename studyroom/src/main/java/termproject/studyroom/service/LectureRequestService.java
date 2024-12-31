@@ -59,6 +59,9 @@ public class LectureRequestService {
         if(lectureRequest.getWarnCount()==null){
             lectureRequest.setWarnCount(0);
         }
+        if(lectureRequest.getLectureValid()==null){
+            lectureRequest.setLectureValid(false);
+        }
         return lectureRequestRepository.save(lectureRequest).getRqId();
     }
 
@@ -67,12 +70,14 @@ public class LectureRequestService {
                 .orElseThrow(NotFoundException::new);
         lectureRequest.setTitle(lectureRequestDTO.getTitle());
         lectureRequest.setContent(lectureRequestDTO.getContent());
-        lectureRequest.setLectureValid(lectureRequestDTO.getLectureValid());
         if (lectureRequestDTO.getLikeCount() != null) {
             lectureRequest.setLikeCount(lectureRequestDTO.getLikeCount());
         }
         if (lectureRequestDTO.getWarnCount() != null) {
             lectureRequest.setWarnCount(lectureRequestDTO.getWarnCount());
+        }
+        if (lectureRequestDTO.getLectureValid() != null) {
+            lectureRequest.setLectureValid(lectureRequestDTO.getLectureValid());
         }
         lectureRequestRepository.save(lectureRequest);
     }
