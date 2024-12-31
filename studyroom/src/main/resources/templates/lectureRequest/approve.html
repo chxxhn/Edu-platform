@@ -1,17 +1,43 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
 <head>
   <title>Lecture Request Approval</title>
+  <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" /> <!-- Bootstrap CSS -->
 </head>
 <body>
-<h1>강의요청 승인</h1>
-<p>name: <span th:text="${lectureRequest.title}"></span></p>
-<p>Details: <span th:text="${lectureRequest.content}"></span></p>
+<div class="d-flex justify-content-center align-items-center" style="height: 80vh;" layout:fragment="content">
+  <div class="card" style="width: 400px;">
+    <div class="card-body">
+      <!-- Title Section -->
+      <h2 class="card-title text-center text-success">강의요청 승인</h2>
+      <hr />
 
-<form th:action="@{/lectureRequests/approve/{lectureId}/{rqId}(lectureId=${selectedLecture.lectureId},rqId=${rqId})}" method="post">
-  <label for="approval">승인하시겠습니까?</label>
-  <input type="checkbox" id="approval" name="approval" required />
-  <button type="submit">승인</button>
-</form>
+      <!-- Request Details -->
+      <div class="mb-4">
+        <p><strong>Title:</strong> <span th:text="${lectureRequest.title}"></span></p>
+        <p><strong>Content:</strong> <span th:text="${lectureRequest.content}"></span></p>
+        <div class="d-flex">
+          <p class="me-3"><strong>👍 Like:</strong> <span th:text="${lectureRequest.likeCount}"></span></p>
+          <p><strong>👎 Warn:</strong> <span th:text="${lectureRequest.warnCount}"></span></p>
+        </div>
+      </div>
+
+      <!-- Approval Form -->
+      <form th:action="@{/lectureRequests/approve/{lectureId}/{rqId}(lectureId=${selectedLecture.lectureId}, rqId=${rqId})}" method="post">
+        <!-- Checkbox for Lecture Valid -->
+        <div class="form-check mb-4">
+          <input class="form-check-input" type="checkbox" id="lectureValid" name="lectureValid" value="true" th:checked="${lectureRequest.lectureValid}" />
+          <label class="form-check-label" for="lectureValid">승인하시겠습니까?</label>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="d-grid">
+          <button type="submit" class="btn btn-success">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
 </body>
 </html>
