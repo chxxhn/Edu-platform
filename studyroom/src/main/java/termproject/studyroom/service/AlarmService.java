@@ -1,6 +1,9 @@
 package termproject.studyroom.service;
 
 import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import termproject.studyroom.domain.Alarm;
@@ -27,6 +30,18 @@ public class AlarmService {
         this.userRepository = userRepository;
         this.lectureListRepository = lectureListRepository;
     }
+
+
+    public void markAsRead(Integer alarmId) {
+        // get 메서드로 AlarmDTO 가져오기
+        AlarmDTO alarmDTO = get(alarmId);
+        // 읽음 상태 변경
+        alarmDTO.setReadState(true);
+        // update 메서드를 이용해 상태 업데이트
+        update(alarmId, alarmDTO);
+    }
+
+
 
     public List<AlarmDTO> findAll() {
         final List<Alarm> alarms = alarmRepository.findAll(Sort.by("alarmId"));
@@ -67,6 +82,7 @@ public class AlarmService {
 
     private AlarmDTO mapToDTO(final Alarm alarm, final AlarmDTO alarmDTO) {
         alarmDTO.setAlarmId(alarm.getAlarmId());
+        alarmDTO.setUrl(alarm.getUrl());
         alarmDTO.setContent(alarm.getContent());
         alarmDTO.setAlarmType(alarm.getAlarmType());
         alarmDTO.setReadState(alarm.getReadState());
@@ -81,6 +97,7 @@ public class AlarmService {
         alarm.setAlarmType(alarmDTO.getAlarmType());
         alarm.setReadState(alarmDTO.getReadState());
         alarm.setBoardId(alarmDTO.getBoardId());
+        alarm.setUrl(alarmDTO.getUrl());
         final LectureList lectureId = alarmDTO.getLectureId() == null ? null : lectureListRepository.findById(alarmDTO.getLectureId())
                 .orElseThrow(() -> new NotFoundException("lectureId not found"));
         alarm.setLectureId(lectureId);

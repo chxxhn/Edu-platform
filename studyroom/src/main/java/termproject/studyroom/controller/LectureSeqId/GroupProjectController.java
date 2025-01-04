@@ -185,6 +185,7 @@ public class GroupProjectController {
                 alarmDTO.setUserId(ta.getStdId()); // 조교의 ID 설정
                 alarmDTO.setBoardId(baseAlarmDTO.getBoardId());
                 alarmDTO.setLectureId(baseAlarmDTO.getLectureId());
+                alarmDTO.setUrl("/groupProjects/"+lectureId);
                 alarmService.create(alarmDTO);
             }
         } catch (Exception e) {
@@ -250,6 +251,7 @@ public class GroupProjectController {
             //알람 DTO 에 등록
             AlarmDTO alarmDTO = new AlarmDTO();
             alarmDTO.setAlarmType(AlarmType.GROUP_APPROVE);
+            alarmDTO.setUrl("/groupProjects/"+lectureId);
             alarmDTO.setContent(lecture.getName()+"("+lecture.getLectureId()+")"+"강의의 "+groupProject.getGroupName()+" 그룹 승인이 완료되었습니다.");
             alarmDTO.setBoardId(groupProject.getGpId());
             alarmDTO.setUserId(groupProject.getCreatedUserId());

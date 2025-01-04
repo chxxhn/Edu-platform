@@ -16,6 +16,10 @@ public class AlarmDTO {
     @Size(max = 100)
     private String content;
 
+    @NotNull
+    @Size(max = 256)
+    private String url;
+
     private AlarmType alarmType;
 
 

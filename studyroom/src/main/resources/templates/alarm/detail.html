@@ -4,6 +4,14 @@
 <head>
     <title>[[#{alarm.list.headline}]]</title>
 </head>
+<style>
+    .unread {
+        font-weight: bold;
+    }
+    .read {
+        color: gray;
+    }
+</style>
 <body>
 <div layout:fragment="content">
     <div class="d-flex flex-wrap mb-4">
@@ -19,17 +27,58 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="alarm : ${alarms}">
-                <td>[[${alarm.content}]]</td>
+            <tr th:each="alarm : ${alarms}" th:classappend="${alarm.readState} ? 'read' : 'unread'">
                 <td>
-                    <div class="float-end text-nowrap">
-                        <a th:href="@{/alarms/edit/{alarmId}(alarmId=${alarm.alarmId})}" class="btn btn-sm btn-secondary">[[#{alarm.list.edit}]]</a>
-                    </div>
+                    <!-- 상태에 따라 NEW 배지 표시 -->
+                    <span th:if="${alarm.readState == false}" class="badge bg-warning me-2">NEW</span>
+                    <a th:href="${alarm.url}" class="text-decoration-none" th:data-id="${alarm.alarmId}" th:data-url="${alarm.url}" onclick="markAsReadAndRedirect(this)">
+                        [[${alarm.content}]]
+                    </a>
                 </td>
             </tr>
+
             </tbody>
+
         </table>
     </div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const alarmLinks = document.querySelectorAll("a[data-id]");
+        alarmLinks.forEach(link => {
+            link.addEventListener("click", function (event) {
+                event.preventDefault(); // 기본 동작 막기
+                markAsReadAndRedirect(link);
+            });
+        });
+    });
+
+    function markAsReadAndRedirect(element) {
+        console.log("markAsReadAndRedirect 함수 실행");
+
+        const alarmId = element.getAttribute('data-id');
+        const url = element.getAttribute('data-url');
+
+        console.log(`alarmId: ${alarmId}, url: ${url}`);
+
+        // AJAX 요청 보내기
+        fetch(`/alarms/mark-read/${alarmId}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                alarmId: alarmId,
+            })
+        })
+            .then(response => {
+                if (response.ok) {
+                    console.log("알람 상태 업데이트 성공");
+                    window.location.href = url;
+                } else {
+                    alert('알람 상태를 업데이트하는 데 실패했습니다.');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    }
+</script>
 </div>
 </body>
 </html>

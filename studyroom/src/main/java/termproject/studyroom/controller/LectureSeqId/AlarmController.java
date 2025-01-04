@@ -2,6 +2,7 @@ package termproject.studyroom.controller.LectureSeqId;
 
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -52,6 +53,13 @@ public class AlarmController {
                 .stream()
                 .collect(CustomCollectors.toSortedMap(User::getStdId, User::getName)));
     }
+
+    @PostMapping("/mark-read/{alarmId}")
+    public ResponseEntity<Void> markAlarmAsRead(@PathVariable(name = "alarmId") Integer alarmId) {
+        alarmService.markAsRead(alarmId);
+        return ResponseEntity.ok().build();
+    }
+
 
     @GetMapping
     public String list(final Model model) {
