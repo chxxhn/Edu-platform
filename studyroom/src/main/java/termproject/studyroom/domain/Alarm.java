@@ -46,6 +46,10 @@ public class Alarm {
     @Column(nullable = false, length = 50)
     private String content;
 
+    @Column(nullable = false, length = 256)
+    private String url;
+
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "lecture_id_id", nullable = false)
     private LectureList lectureId;
