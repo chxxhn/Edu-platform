@@ -91,7 +91,12 @@ public class LectureListController {
         Optional<LectureList> optionalLecture = lectureListRepository.findById(lectureCode);
         if (optionalLecture.isEmpty()) {
             redirectAttributes.addFlashAttribute("error", "해당 과목 코드가 존재하지 않습니다.");
-            return "redirect:/mainhome";
+            return "redirect:/lectureLists";
+        }
+
+        if (lectureUserService.existsLectureIdAndStdId(lectureCode,loginUser.getStdId())) {
+            redirectAttributes.addFlashAttribute("error", "추가되어 있는 과목 입니다.");
+            return "redirect:/lectureLists";
         }
 
         LectureList lectureList = optionalLecture.get();
@@ -105,7 +110,7 @@ public class LectureListController {
 
         // 성공 메시지 전달
         redirectAttributes.addFlashAttribute("success", "과목 코드가 성공적으로 등록되었습니다.");
-        return "mainhome";
+        return "redirect:/lectureLists";
     }
 
 
@@ -125,9 +130,9 @@ public class LectureListController {
             lectureListDTO.setName(lectureName);
             lectureListDTO.setStdId(user.getUser().getStdId());
             lectureListService.create(lectureListDTO);
-            redirectAttributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("lectureList.create.success")); }
+            redirectAttributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("강의 생성을 성공하였습니다.")); }
         catch (Exception e) {
-            redirectAttributes.addFlashAttribute(WebUtils.MSG_ERROR, WebUtils.getMessage("lecture 생성 실패", e.getMessage()));
+            redirectAttributes.addFlashAttribute(WebUtils.MSG_ERROR, WebUtils.getMessage("강의 생성을 실패하였습니다. ", e.getMessage()));
         }
         return "redirect:/lectureLists";
     }

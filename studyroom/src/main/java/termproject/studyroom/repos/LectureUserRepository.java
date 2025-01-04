@@ -17,6 +17,9 @@ public interface LectureUserRepository extends JpaRepository<LectureUser, Lectur
     @Query("SELECT lu.lecture FROM LectureUser lu WHERE lu.user.id = :userId")
     List<LectureList> findLectureListsByUserId(@Param("userId") Integer userId);
 
+    boolean existsByLecture_LectureIdAndUser_StdId(Integer lectureId, Integer stdId);
+
+
     @Query("SELECT l FROM LectureUser l WHERE l.lecture.lectureId = :lectureId")
     List<LectureUser> findByLectureId(@Param("lectureId") Integer lectureId);
 

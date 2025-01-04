@@ -6,7 +6,10 @@ import termproject.studyroom.domain.LectureList;
 import termproject.studyroom.domain.LectureUser;
 import termproject.studyroom.domain.LectureUserId;
 import termproject.studyroom.domain.User;
+import termproject.studyroom.model.LectureUserDTO;
+import termproject.studyroom.model.UserDTO;
 import termproject.studyroom.repos.LectureUserRepository;
+import termproject.studyroom.util.NotFoundException;
 
 @Service
 @RequiredArgsConstructor
@@ -27,4 +30,9 @@ public class LectureUserService {
         // 데이터베이스에 저장
         lectureUserRepository.save(lectureUser);
     }
+    public boolean existsLectureIdAndStdId(final Integer lectureId, final Integer stdId ) {
+        return lectureUserRepository.existsByLecture_LectureIdAndUser_StdId(lectureId, stdId);
+    }
+
+
 }
