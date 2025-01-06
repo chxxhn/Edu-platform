@@ -133,7 +133,6 @@ public class LectureRequestController {
             redirectAttributes.addFlashAttribute(WebUtils.MSG_ERROR, WebUtils.getMessage("권한이 없습니다."));
             return "redirect:/lectureRequests/" + lectureId;
         }
-        System.out.println("Received lectureValid: " + lectureValid);
         // LectureRequest 데이터 가져오기
         LectureRequestDTO lectureRequest = lectureRequestService.get(rqId);
         if (lectureRequest != null) {
