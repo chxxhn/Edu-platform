@@ -103,6 +103,7 @@ CREATE TABLE QuestionBoard (
     content TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+```
 > 🔎 **더 자세한 데이터베이스 스키마는 프로젝트 내 [`schema.sql`](schema.sql) 파일에서 확인 가능**
 
 ---
